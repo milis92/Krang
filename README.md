@@ -12,7 +12,7 @@ Using plugins block:
 //build.gradle.kts
 plugins {
     kotlin("multiplatform") version "1.4.20"
-    id("com.milis92.krang") version "1.0.0-SNAPSHOT"
+    id("com.github.milis92.krang") version "1.0.0-SNAPSHOT"
 }
 ```
 
@@ -20,7 +20,7 @@ plugins {
 //build.gradle
 plugins {
     id 'org.jetbrains.kotlin.multiplatform' version '1.4.20'
-    id 'com.milis92.krang' version '1.0.0-SNAPSHOT'
+    id 'com.github.milis92.krang' version '1.0.0-SNAPSHOT'
 }
 ```
 
@@ -30,23 +30,23 @@ Or legacy apply plugin
 //root build.gradle
 buildscript {
     dependencies {
-        classpath("com.milis92.krang:krang:1.0.0-SNAPSHOT")
+        classpath("com.github.milis92.krang:krang:1.0.0-SNAPSHOT")
     }
 }
 
 //module build.gradle
-apply(plugin = "com.milis92.krang:krang")
+apply(plugin = "com.github.milis92.krang:krang")
 ```
 
 ```groovy
 //root build.gradle
 buildscript {
     dependencies {
-        classpath "com.milis92.krang:krang:1.0.0-SNAPSHOT"
+        classpath "com.github.milis92.krang:krang:1.0.0-SNAPSHOT"
     }
 }
 //module build.gradle
-apply plugin: "com.milis92.krang:krang"
+apply plugin: "com.github.milis92.krang:krang"
 ```
 
 > This plugin works only with kotlin 1.4.20 and with IR compiler backend.\
