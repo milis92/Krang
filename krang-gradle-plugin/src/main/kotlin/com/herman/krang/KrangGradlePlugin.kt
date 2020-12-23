@@ -16,7 +16,7 @@
 
 package com.herman.krang
 
-import com.milis92.krang.BuildConfig
+import com.github.milis92.krang.BuildConfig
 import org.gradle.api.Project
 import org.gradle.api.provider.Provider
 import org.jetbrains.kotlin.gradle.plugin.KotlinCompilation

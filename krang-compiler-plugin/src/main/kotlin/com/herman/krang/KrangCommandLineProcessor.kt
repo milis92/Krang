@@ -16,8 +16,8 @@
 
 package com.herman.krang
 
+import com.github.milis92.krang.BuildConfig
 import com.google.auto.service.AutoService
-import com.milis92.krang.BuildConfig
 import org.jetbrains.kotlin.compiler.plugin.AbstractCliOption
 import org.jetbrains.kotlin.compiler.plugin.CliOption
 import org.jetbrains.kotlin.compiler.plugin.CommandLineProcessor
