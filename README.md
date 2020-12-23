@@ -93,3 +93,5 @@ class Foo {
     }
 }
 ```
+> Big shutout to [Brian Norman](https://github.com/bnorm)
+> and his awesome [blog series](https://blog.bnorm.dev/writing-your-second-compiler-plugin-part-1) on Compiler plugins
