@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2020 Ivan Milisavljevic
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
 plugins {
     kotlin("jvm")
     kotlin("kapt")
@@ -48,61 +64,5 @@ signing {
 }
 
 publishing {
-    publications {
-        create<MavenPublication>("default") {
-
-            from(components["java"])
-            artifact(tasks["sourcesJar"])
-            artifact(tasks["dokkaJar"])
-
-            pom {
-                name.set(project.name)
-                description.set("Kotlin Compiler Plugin which adds logging interceptors to the functions")
-                url.set("https://github.com/milis92/Krang")
-
-                licenses {
-                    license {
-                        name.set("Apache License 2.0")
-                        url.set("https://github.com/milis92/Krang/blob/master/LICENSE.txt")
-                    }
-                }
-                scm {
-                    url.set("https://github.com/milis92/Krang")
-                    connection.set("https://github.com/milis92/Krang.git")
-                }
-                developers {
-                    developer {
-                        name.set("Ivan Milisavljevic")
-                        url.set("https://github.com/milis92")
-                    }
-                }
-            }
-        }
-    }
-
-    //TODO Check publishing configuration
-    repositories {
-        if (
-            hasProperty("sonatypeUsername") &&
-            hasProperty("sonatypePassword") &&
-            hasProperty("sonatypeSnapshotUrl") &&
-            hasProperty("sonatypeReleaseUrl")
-        ) {
-            maven {
-                val url = when {
-                    "SNAPSHOT" in version.toString() -> property("sonatypeSnapshotUrl")
-                    else -> property("sonatypeReleaseUrl")
-                } as String
-                setUrl(url)
-                credentials {
-                    username = property("sonatypeUsername") as String
-                    password = property("sonatypePassword") as String
-                }
-            }
-        }
-        maven {
-            name = "test"
-            setUrl("file://${rootProject.buildDir}/localMaven")
-        }
-    }
+    withDefaults(project, "Kotlin Compiler Plugin which intercepts and logs function calls")
 }
