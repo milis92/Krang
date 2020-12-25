@@ -16,6 +16,7 @@
 
 package com.herman.krang.runtime
 
-fun interface Tracer {
-    fun trace(function: String, vararg params: Any?)
+interface Tracer {
+    fun onFunctionEnter(functionSignature: String)
+    fun onFunctionExit(functionSignature: String)
 }

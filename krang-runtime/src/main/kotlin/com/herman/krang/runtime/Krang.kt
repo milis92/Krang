@@ -28,7 +28,11 @@ object Krang {
         tracers.remove(tracer)
     }
 
-    fun trace(function: String, vararg params: Any?) {
-        tracers.forEach { it.trace(function, params) }
+    fun traceFunctionEnter(functionSignature: String) {
+        tracers.forEach { it.onFunctionEnter(functionSignature) }
+    }
+
+    fun traceFunctionExit(functionSignature: String) {
+        tracers.forEach { it.onFunctionExit(functionSignature) }
     }
 }
