@@ -36,7 +36,7 @@ import org.gradle.kotlin.dsl.create
  */
 const val github = "https://github.com/milis92/Krang"
 
-fun PublishingExtension.withDefaults(project: Project, description: String) {
+fun PublishingExtension.withDefaults(project: Project, desc: String) {
     publications {
         create<MavenPublication>("default") {
 
@@ -46,7 +46,7 @@ fun PublishingExtension.withDefaults(project: Project, description: String) {
 
             pom {
                 name.set(project.name)
-                description.set(description)
+                description.set(desc)
                 url.set(github)
 
                 licenses {
