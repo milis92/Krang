@@ -23,11 +23,10 @@ plugins {
 }
 
 dependencies {
-    compileOnly(project(":krang-runtime"))
+    implementation(project(":krang-runtime"))
     compileOnly("org.jetbrains.kotlin:kotlin-compiler-embeddable")
     kapt("com.google.auto.service:auto-service:1.0-rc6")
     compileOnly("com.google.auto.service:auto-service-annotations:1.0-rc6")
-
 
     testImplementation(platform("org.junit:junit-bom:5.7.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
