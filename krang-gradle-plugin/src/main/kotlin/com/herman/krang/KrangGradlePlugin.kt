@@ -29,6 +29,7 @@ class KrangGradlePlugin : KotlinCompilerPluginSupportPlugin {
 
     override fun apply(target: Project): Unit = with(target) {
         extensions.create("krang", KrangGradleExtension::class.java)
+        dependencies.add("implementation", "com.herman.krang.runtime")
     }
 
     override fun isApplicable(kotlinCompilation: KotlinCompilation<*>): Boolean = true
