@@ -29,7 +29,6 @@ class KrangGradlePlugin : KotlinCompilerPluginSupportPlugin {
 
     override fun apply(target: Project): Unit = with(target) {
         extensions.create("krang", KrangGradleExtension::class.java)
-        dependencies.add("implementation", "com.herman.krang.runtime")
     }
 
     override fun isApplicable(kotlinCompilation: KotlinCompilation<*>): Boolean = true
@@ -51,6 +50,11 @@ class KrangGradlePlugin : KotlinCompilerPluginSupportPlugin {
     override fun applyToCompilation(
         kotlinCompilation: KotlinCompilation<*>
     ): Provider<List<SubpluginOption>> {
+
+        kotlinCompilation.dependencies {
+            implementation("${BuildConfig.PLUGIN_GROUP_ID}:krang-runtime:${BuildConfig.PLUGIN_VERSION}")
+        }
+
         val project = kotlinCompilation.target.project
         val extension = project.extensions.getByType(KrangGradleExtension::class.java)
         return project.provider {
