@@ -18,21 +18,17 @@ package com.herman.krang.runtime
 
 object Krang {
 
-    private val tracers = mutableListOf<Tracer>()
+    private val interceptors = mutableListOf<FunctionInterceptor>()
 
-    fun addTracer(tracer: Tracer) {
-        tracers.add(tracer)
+    fun addInterceptor(interceptor: FunctionInterceptor) {
+        interceptors.add(interceptor)
     }
 
-    fun removeTracer(tracer: Tracer) {
-        tracers.remove(tracer)
+    fun removeInterceptor(interceptor: FunctionInterceptor) {
+        interceptors.remove(interceptor)
     }
 
-    fun traceFunctionEnter(functionSignature: String) {
-        tracers.forEach { it.onFunctionEnter(functionSignature) }
-    }
-
-    fun traceFunctionExit(functionSignature: String) {
-        tracers.forEach { it.onFunctionExit(functionSignature) }
+    fun interceptFunctionCall(functionName: String, vararg arguments: Any?) {
+        interceptors.forEach { it.onInterceptFunctionCall(functionName, arguments) }
     }
 }

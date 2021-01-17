@@ -16,18 +16,18 @@
 
 package com.herman.krang
 
+import com.herman.krang.runtime.FunctionInterceptor
 import com.herman.krang.runtime.Krang
-import com.herman.krang.runtime.Tracer
 import com.tschuchort.compiletesting.KotlinCompilation
 import com.tschuchort.compiletesting.SourceFile
 import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.function.Executable
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ArgumentsSource
-import kotlin.test.assertTrue
 
 class CompilerTest {
 
@@ -45,14 +45,14 @@ class CompilerTest {
 
     @ParameterizedTest
     @ArgumentsSource(FunctionArgumentsProvider::class)
-    fun `compilation preserves original body`(arguments: List<Any>) {
+    fun `compilation preserves original body`(arguments: List<Any?>) {
 
         @Language("kotlin") val source =
             """
-                import com.herman.krang.runtime.annotations.Trace
+                import com.herman.krang.runtime.annotations.Intercept
 
                 class Main {
-                    @Trace
+                    @Intercept
                     fun foo(){
                         
                     }
@@ -63,19 +63,19 @@ class CompilerTest {
             .classLoader.loadClass("Main")
         val func = clazz.methods.single { it.name == "foo" }
 
-        assertTracerAfterInvoke("foo") {
+        assertAfterInvoke("foo", arguments) {
             func.invoke(clazz.newInstance())
         }
     }
 
     @Test
-    fun `when main is called then tracer is called`() {
+    fun `when main is called then interceptor is called`() {
 
         @Language("kotlin") val source =
             """
-                import com.herman.krang.runtime.annotations.Trace
+                import com.herman.krang.runtime.annotations.Intercept
 
-                @Trace
+                @Intercept
                 fun main(){}
                 """
 
@@ -83,21 +83,21 @@ class CompilerTest {
             .classLoader.loadClass("MainKt")
         val func = clazz.methods.single { it.name == "main" && it.parameterCount == 0 }
 
-        assertTracerAfterInvoke("main") {
+        assertAfterInvoke("main", emptyList()) {
             func.invoke(null)
         }
     }
 
     @ParameterizedTest
     @ArgumentsSource(FunctionArgumentsProvider::class)
-    fun `when class function is called then tracer is called`(arguments: List<Any>) {
+    fun `when class function is called then interceptor is called`(arguments: List<Any?>) {
 
         @Language("kotlin") val source =
             """
-                import com.herman.krang.runtime.annotations.Trace
+                import com.herman.krang.runtime.annotations.Intercept
 
                 class Main {
-                    @Trace
+                    @Intercept
                     fun foo(${arguments.toFunctionArguments()}){}
                 }
                 """
@@ -107,21 +107,21 @@ class CompilerTest {
 
         val func = clazz.methods.single { it.name == "foo" }
 
-        assertTracerAfterInvoke("foo") {
+        assertAfterInvoke("foo", arguments) {
             func.invoke(clazz.newInstance(), *arguments.toTypedArray())
         }
     }
 
     @ParameterizedTest
     @ArgumentsSource(FunctionArgumentsProvider::class)
-    fun `when function without a body is called then tracer is called`(arguments: List<Any>) {
+    fun `when function without a body is called then interceptor is called`(arguments: List<Any?>) {
 
         @Language("kotlin") val source =
             """
-                import com.herman.krang.runtime.annotations.Trace
+                import com.herman.krang.runtime.annotations.Intercept
 
                 class Main {
-                    @Trace
+                    @Intercept
                     fun foo(${arguments.toFunctionArguments()}) = true
                 }
                 """
@@ -130,21 +130,21 @@ class CompilerTest {
             .classLoader.loadClass("Main")
         val func = clazz.methods.single { it.name == "foo" }
 
-        assertTracerAfterInvoke("foo") {
+        assertAfterInvoke("foo", arguments) {
             func.invoke(clazz.newInstance(), *arguments.toTypedArray())
         }
     }
 
     @ParameterizedTest
     @ArgumentsSource(FunctionArgumentsProvider::class)
-    fun `when scope function is called then tracer is called`(arguments: List<Any>) {
+    fun `when scope function is called then interceptor is called`(arguments: List<Any?>) {
 
         @Language("kotlin") val source =
             """
-                import com.herman.krang.runtime.annotations.Trace
+                import com.herman.krang.runtime.annotations.Intercept
 
                 class Main {
-                    @Trace
+                    @Intercept
                     fun foo(${arguments.toFunctionArguments()}) = run {}
                 }
                 """
@@ -153,23 +153,23 @@ class CompilerTest {
             .classLoader.loadClass("Main")
         val func = clazz.methods.single { it.name == "foo" }
 
-        assertTracerAfterInvoke("foo") {
+        assertAfterInvoke("foo", arguments) {
             func.invoke(clazz.newInstance(), *arguments.toTypedArray())
         }
     }
 
     @ParameterizedTest
     @ArgumentsSource(FunctionArgumentsProvider::class)
-    fun `when inner function is called then tracer is called`(arguments: List<Any>) {
+    fun `when inner function is called then interceptor is called`(arguments: List<Any?>) {
 
         //TODO Add support for passing arguments to inner function
         @Language("kotlin") val source =
             """
-                import com.herman.krang.runtime.annotations.Trace
+                import com.herman.krang.runtime.annotations.Intercept
 
                 class Main {
                     fun foo() { 
-                       @Trace 
+                       @Intercept 
                        fun innerFunction(){}
                        innerFunction() 
                     }
@@ -180,20 +180,20 @@ class CompilerTest {
             .classLoader.loadClass("Main")
         val func = clazz.methods.single { it.name == "foo" }
 
-        assertTracerAfterInvoke("innerFunction") {
+        assertAfterInvoke("innerFunction", arguments) {
             func.invoke(clazz.newInstance())
         }
     }
 
     @ParameterizedTest
     @ArgumentsSource(FunctionArgumentsProvider::class)
-    fun `when extension function is called then tracer is called`(arguments: List<Any>) {
+    fun `when extension function is called then interceptor is called`(arguments: List<Any?>) {
 
         @Language("kotlin") val source =
             """
-                import com.herman.krang.runtime.annotations.Trace
+                import com.herman.krang.runtime.annotations.Intercept
 
-                @Trace
+                @Intercept
                 fun String.foo(${arguments.toFunctionArguments()}) {}
                 """
 
@@ -201,7 +201,7 @@ class CompilerTest {
             .classLoader.loadClass("MainKt")
         val func = clazz.methods.single { it.name == "foo" }
 
-        assertTracerAfterInvoke("foo") {
+        assertAfterInvoke("foo", arguments) {
             val injectReceiverArg = arguments.toMutableList().apply {
                 add(0, "Test")
             }
@@ -211,18 +211,18 @@ class CompilerTest {
 
     @ParameterizedTest
     @ArgumentsSource(FunctionArgumentsProvider::class)
-    fun `when overridden function is called than tracer is called`(arguments: List<Any>) {
+    fun `when overridden function is called than interceptor is called`(arguments: List<Any?>) {
 
         @Language("kotlin") val source =
             """
-                import com.herman.krang.runtime.annotations.Trace
+                import com.herman.krang.runtime.annotations.Intercept
 
                 interface Testable {
                     fun test(${arguments.toFunctionArguments()})
                 }
 
                 class Main : Testable {
-                    @Trace
+                    @Intercept
                     override fun test(${arguments.toFunctionArguments()}){}
                 }
                 """
@@ -231,21 +231,21 @@ class CompilerTest {
             .classLoader.loadClass("Main")
         val func = clazz.methods.single { it.name == "test" }
 
-        assertTracerAfterInvoke("test") {
+        assertAfterInvoke("test", arguments) {
             func.invoke(clazz.newInstance(), *arguments.toTypedArray())
         }
     }
 
     @ParameterizedTest
     @ArgumentsSource(FunctionArgumentsProvider::class)
-    fun `when function with annotated parent is called than tracer is called`(arguments: List<Any>) {
+    fun `when function with annotated parent is called than interceptor is called`(arguments: List<Any?>) {
 
         @Language("kotlin") val source =
             """
-                import com.herman.krang.runtime.annotations.Trace
+                import com.herman.krang.runtime.annotations.Intercept
 
                 interface Testable {
-                    @Trace
+                    @Intercept
                     fun test(${arguments.toFunctionArguments()})
                 }
 
@@ -258,17 +258,17 @@ class CompilerTest {
             .classLoader.loadClass("Main")
         val func = clazz.methods.single { it.name == "test" }
 
-        assertTracerAfterInvoke("test") {
+        assertAfterInvoke("test", arguments) {
             func.invoke(clazz.newInstance(), *arguments.toTypedArray())
         }
     }
 
-    private fun List<Any>.toFunctionArguments(): String {
+    private fun List<Any?>.toFunctionArguments(): String {
         return if (isNullOrEmpty()) {
             ""
         } else {
             joinToString {
-                "arg${indexOf(it)} : ${it::class.qualifiedName ?: Any::class::qualifiedName}"
+                "arg${indexOf(it)} : ${it!!::class.qualifiedName ?: Any::class::qualifiedName}"
             }
         }
     }
@@ -280,32 +280,43 @@ class CompilerTest {
         return result
     }
 
-    private fun assertTracerAfterInvoke(expectedLogStatement: String, invoke: () -> Unit) {
-        val tracer = AssertedTracer(expectedLogStatement)
-        Krang.addTracer(tracer)
+    private fun assertAfterInvoke(
+        expectedFunctionName: String,
+        expectedParameters: List<Any?>,
+        invoke: () -> Unit
+    ) {
+        val interceptor = AssertedInterceptor()
+        Krang.addInterceptor(interceptor)
         invoke()
-        Krang.removeTracer(tracer)
+        Krang.removeInterceptor(interceptor)
+
         assertAll(
             Executable {
-                assertTrue(tracer.functionEnterCalled, "Function enter not called")
-                assertTrue(tracer.functionExitCalled, "Function exit not called")
+                assertEquals(
+                    expectedFunctionName,
+                    interceptor.capturedFunctionName,
+                    "Function name doest not match expected $expectedFunctionName received " +
+                        "${interceptor.capturedFunctionName}"
+                )
+                if (!expectedParameters.isNullOrEmpty()) {
+                    assertTrue(
+                        expectedParameters.containsAll(interceptor.capturedParameters),
+                        "Function arguments not matching expected: ${expectedParameters.joinToString()} " +
+                            "received: ${interceptor.capturedParameters.joinToString()}"
+                    )
+                }
             }
         )
     }
 
-    private class AssertedTracer(
-        private val expectedLogStatement: String
-    ) : Tracer {
+    private class AssertedInterceptor : FunctionInterceptor {
 
-        var functionEnterCalled = false
-        var functionExitCalled = false
+        var capturedFunctionName: String? = null
+        var capturedParameters: MutableList<Any?> = mutableListOf()
 
-        override fun onFunctionEnter(functionSignature: String) {
-            functionEnterCalled = true
-        }
-
-        override fun onFunctionExit(functionSignature: String) {
-            functionExitCalled = true
+        override fun onInterceptFunctionCall(functionName: String, vararg parameters: Any?) {
+            capturedFunctionName = functionName
+            capturedParameters.addAll(parameters)
         }
     }
 }
