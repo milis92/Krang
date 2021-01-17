@@ -1,22 +1,15 @@
 package com.herman.krang.sample
 
 import com.herman.krang.runtime.Krang
-import com.herman.krang.runtime.Tracer
-import com.herman.krang.runtime.annotations.Trace
+import com.herman.krang.runtime.annotations.Intercept
 
 fun main() {
-    Krang.addTracer(object : Tracer {
-        override fun onFunctionEnter(functionSignature: String) {
-            println(functionSignature)
-        }
-
-        override fun onFunctionExit(functionSignature: String) {
-            println(functionSignature)
-        }
-    })
-    sampleTest("test")
+    Krang.addInterceptor { functionName, parameters ->
+        println("Function with name:$functionName and ${parameters.joinToString()} called")
+    }
+    testfunction("test", "df", "D")
 }
 
-@Trace
-fun sampleTest(param: String) {
+@Intercept
+fun testfunction(name: String, vararg test: Any?) {
 }
