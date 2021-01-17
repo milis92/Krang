@@ -4,7 +4,6 @@ import com.herman.krang.runtime.Krang
 import com.herman.krang.runtime.Tracer
 import com.herman.krang.runtime.annotations.Trace
 
-@Trace
 fun main() {
     Krang.addTracer(object : Tracer {
         override fun onFunctionEnter(functionSignature: String) {
@@ -15,4 +14,9 @@ fun main() {
             println(functionSignature)
         }
     })
+    sampleTest("test")
+}
+
+@Trace
+fun sampleTest(param: String) {
 }
