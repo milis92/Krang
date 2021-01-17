@@ -14,9 +14,8 @@
  *  limitations under the License.
  */
 
-package com.herman.krang.runtime
+package com.herman.krang.runtime.annotations
 
-interface Tracer {
-    fun onFunctionEnter(functionSignature: String)
-    fun onFunctionExit(functionSignature: String)
-}
+@Target(AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.SOURCE)
+annotation class Intercept

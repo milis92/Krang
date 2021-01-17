@@ -14,9 +14,8 @@
  *  limitations under the License.
  */
 
-package com.herman.krang.runtime.annotations
+package com.herman.krang.runtime
 
-@Target(AnnotationTarget.FUNCTION)
-@Retention(AnnotationRetention.BINARY)
-@MustBeDocumented
-annotation class Trace
+fun interface FunctionInterceptor {
+    fun onInterceptFunctionCall(functionName: String, parameters: Array<out Any?>)
+}
