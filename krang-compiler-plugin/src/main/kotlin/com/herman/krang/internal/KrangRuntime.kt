@@ -22,11 +22,20 @@ import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.ir.util.getSimpleFunction
 import org.jetbrains.kotlin.name.FqName
 
+/**
+ * Reference to the Krang annotation
+ */
 val IrPluginContext.krangTraceAnnotation
     get() = referenceClass(FqName(Intercept::class.qualifiedName!!)) ?: throw ClassNotFoundException()
 
+/**
+ * Reference to the runtime
+ */
 val IrPluginContext.krangRuntime
     get() = referenceClass(FqName(Krang::class.qualifiedName!!)) ?: throw ClassNotFoundException()
 
+/**
+ * Reference to the runtime interceptor function
+ */
 val IrPluginContext.krangInterceptFunctionCall
     get() = krangRuntime.getSimpleFunction("interceptFunctionCall")!!
