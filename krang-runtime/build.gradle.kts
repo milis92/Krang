@@ -15,34 +15,32 @@
  */
 
 plugins {
-    kotlin("jvm")
-    id("org.jetbrains.dokka")
-    id("signing")
-    id("maven-publish")
+    kotlin("multiplatform")
+    id("kotlin-publish")
 }
 
-tasks.register("sourcesJar", Jar::class) {
-    group = "build"
-    description = "Assembles Kotlin sources"
+kotlin {
+    jvm {
+        compilations.all {
+            kotlinOptions {
+                kotlinOptions.jvmTarget = JavaVersion.VERSION_1_8.toString()
+            }
+        }
+    }
+    js(IR) {
+        browser()
+        nodejs()
+    }
 
-    archiveClassifier.set("sources")
-    from(sourceSets.main.get().allSource)
-    dependsOn(tasks.classes)
-}
+    val osName = System.getProperty("os.name")
+    when {
+        "Windows" in osName -> mingwX64("native")
+        "Mac OS" in osName -> macosX64("native")
+        else -> linuxX64("native")
+    }
 
-tasks.register("dokkaJar", Jar::class) {
-    group = "documentation"
-
-    archiveClassifier.set("javadoc")
-    from(tasks.dokkaJavadoc)
-    dependsOn(tasks.dokkaJavadoc)
-}
-
-signing {
-    setRequired(provider { gradle.taskGraph.hasTask("publish") })
-    sign(publishing.publications)
-}
-
-publishing {
-    withDefaults(project, "Krang runtime")
+    sourceSets {
+        val commonMain by getting {
+        }
+    }
 }

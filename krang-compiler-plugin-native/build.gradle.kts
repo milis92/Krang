@@ -17,9 +17,7 @@
 plugins {
     kotlin("jvm")
     kotlin("kapt")
-    id("org.jetbrains.dokka")
-    id("signing")
-    id("maven-publish")
+    id("kotlin-publish")
 }
 
 dependencies {
@@ -43,28 +41,11 @@ tasks.register<Sync>("syncSource") {
     exclude { it.file.name == "BuildConfig.kt" }
 }
 
-tasks.register("sourcesJar", Jar::class) {
-    group = "build"
-    description = "Assembles Kotlin sources"
-
-    archiveClassifier.set("sources")
-    from(sourceSets.main.get().allSource)
-    dependsOn(tasks.classes)
-}
-
-tasks.register("dokkaJar", Jar::class) {
-    group = "documentation"
-
-    archiveClassifier.set("javadoc")
-    from(tasks.dokkaJavadoc)
-    dependsOn(tasks.dokkaJavadoc)
-}
-
-signing {
-    setRequired(provider { gradle.taskGraph.hasTask("publish") })
-    sign(publishing.publications)
-}
-
 publishing {
-    withDefaults(project, "Kotlin Compiler Plugin which intercepts and logs function calls")
+    publications {
+        create<MavenPublication>("default") {
+            from(components["java"])
+            artifact(tasks.kotlinSourcesJar)
+        }
+    }
 }
