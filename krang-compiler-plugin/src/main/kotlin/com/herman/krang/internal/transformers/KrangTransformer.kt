@@ -57,9 +57,19 @@ class KrangTransformer(
         return super.visitFunctionNew(declaration)
     }
 
+    /**
+     * Determines if function should be transformed by Krang
+     *
+     * @return True if function or its parent satisfies precondition for transformations
+     */
     private fun shouldVisit(function: IrFunction): Boolean =
         function.body != null && hasAnnotation(function, pluginContext.krangTraceAnnotation)
 
+    /**
+     * Recursively checks if provided function or its parent has annotation applied to its signature
+     *
+     * @return True if function or its parent has annotation applied
+     */
     private fun hasAnnotation(function: IrFunction, annotationClass: IrClassSymbol): Boolean {
         return if (!function.isFakeOverriddenFromAny()) {
             return when {
@@ -70,11 +80,18 @@ class KrangTransformer(
         } else false
     }
 
+    /**
+     * Transforms the function body
+     *
+     * @return new block body of a function with original statements and [irCall] to the runtime library with arguments
+     * as vararg
+     */
     private fun traceBodyBuilder(
         function: IrFunction
     ): IrBlockBody {
         return DeclarationIrBuilder(pluginContext, function.symbol).irBlockBody {
 
+            //Construct vararg from function parameters
             val argsAsVarArg = varargOf(
                 pluginContext,
                 anyNullableType,
@@ -83,12 +100,14 @@ class KrangTransformer(
                 }
             )
 
+            //Append ir call to the runtime library
             +irCall(pluginContext.krangInterceptFunctionCall).apply {
                 putValueArgument(0, irString("${function.name}"))
                 putValueArgument(1, argsAsVarArg.deepCopyWithVariables())
                 dispatchReceiver = irGetObject(pluginContext.krangRuntime)
             }
 
+            //Apply original statements
             for (statement in function.body!!.statements) +statement
         }
     }
