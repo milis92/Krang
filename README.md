@@ -10,15 +10,15 @@ Using plugins dsl:
 
 ```kotlin
 plugins {
-    kotlin("multiplatform") version "1.4.20"
-    id("com.github.milis92.krang") version "1.0.0-SNAPSHOT"
+    kotlin("multiplatform") version "1.4.21"
+    id("com.github.milis92.krang") version "2.0.0-SNAPSHOT"
 }
 ```
 
 ```groovy
 plugins {
-    id "org.jetbrains.kotlin.multiplatform" version "1.4.20"
-    id "com.github.milis92.krang" version "1.0.0-SNAPSHOT"
+    id "org.jetbrains.kotlin.multiplatform" version "1.4.21"
+    id "com.github.milis92.krang" version "2.0.0-SNAPSHOT"
 }
 ```
 
@@ -32,7 +32,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath("gradle.plugin.com.github.milis92.krang:krang-gradle-plugin:1.0.0-SNAPSHOT")
+        classpath("gradle.plugin.com.github.milis92.krang:krang-gradle-plugin:2.0.0-SNAPSHOT")
     }
 }
 
@@ -47,14 +47,14 @@ buildscript {
         }
     }
     dependencies {
-        classpath "gradle.plugin.com.github.milis92.krang:krang-gradle-plugin:1.0.0-SNAPSHOT"
+        classpath "gradle.plugin.com.github.milis92.krang:krang-gradle-plugin:2.0.0-SNAPSHOT"
     }
 }
 
 apply plugin: "com.github.milis92.krang"
 ```
 
-If you want snapshot builds add Nexus to repositories
+If you want snapshot builds add Nexus Snapshots to repositories
 
 ```groovy
 buildscript {
@@ -105,7 +105,7 @@ fun main() {
 class Foo {
     //Decorate a function with @Intercept annotation
     @Intercept
-    fun bar(baz:Strign){
+    fun bar(baz:String){
         
     }
 }
