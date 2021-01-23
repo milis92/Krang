@@ -1,59 +1,77 @@
 # Kotlin Krang
 
-Kotlin Compiler plugin which intercepts function calls and logs them to logger of your choice
+Kotlin Compiler plugin that injects function call interceptors to annotated functions.
 
 ## :cloud: Setup
 
 Plugin is published on Gradle plugin portal, so you don't have to define additional repositories
 
-Using plugins block:
+Using plugins dsl:
 
 ```kotlin
-//build.gradle.kts
 plugins {
-    kotlin("multiplatform") version "1.4.20"
-    id("com.github.milis92.krang") version "1.0.0-SNAPSHOT"
+    kotlin("multiplatform") version "1.4.21"
+    id("com.github.milis92.krang") version "2.0.0-SNAPSHOT"
 }
 ```
 
 ```groovy
-//build.gradle
 plugins {
-    id 'org.jetbrains.kotlin.multiplatform' version '1.4.20'
-    id 'com.github.milis92.krang' version '1.0.0-SNAPSHOT'
+    id "org.jetbrains.kotlin.multiplatform" version "1.4.21"
+    id "com.github.milis92.krang" version "2.0.0-SNAPSHOT"
 }
 ```
 
 Or legacy apply plugin
 
 ```kotlin
-//root build.gradle
 buildscript {
+    repositories {
+        maven {
+            url = uri("https://plugins.gradle.org/m2/")
+        }
+    }
     dependencies {
-        classpath("com.github.milis92.krang:krang:1.0.0-SNAPSHOT")
+        classpath("gradle.plugin.com.github.milis92.krang:krang-gradle-plugin:2.0.0-SNAPSHOT")
     }
 }
 
-//module build.gradle
-apply(plugin = "com.github.milis92.krang:krang")
+apply(plugin = "com.github.milis92.krang")
 ```
 
 ```groovy
-//root build.gradle
 buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
     dependencies {
-        classpath "com.github.milis92.krang:krang:1.0.0-SNAPSHOT"
+        classpath "gradle.plugin.com.github.milis92.krang:krang-gradle-plugin:2.0.0-SNAPSHOT"
     }
 }
-//module build.gradle
-apply plugin: "com.github.milis92.krang:krang"
+
+apply plugin: "com.github.milis92.krang"
+```
+
+If you want snapshot builds add Nexus Snapshots to repositories
+
+```groovy
+buildscript {
+    repositories {
+        maven {
+            url "https://oss.sonatype.org/content/repositories/snapshots"
+        }
+    }
+}
 ```
 
 > This plugin works only with kotlin 1.4.20 and with IR compiler backend.\
-> Be warned that IR backend is still in alpha and might lead to unexpected results.\
+> IR backend is still in alpha and in active development so compilation might lead to unexpected results.\
 > If you feel adventurous switch on IR:
 
 ##### Kotlin/JVM
+
 ```kotlin
 tasks.withType<KotlinCompile>().configureEach {
   kotlinOptions {
@@ -76,19 +94,18 @@ IR already enabled by default!
 ## :memo: Usage
 
 ```kotlin
-//First install a Tracer to krang
+//First install Interceptor to Krang
 fun main() {
-    Krang.addTracer(Tracer { name, parameters ->
-        println("Function with $name called with $parameters")
-    })
-    
-    Foo().bar()
+    Krang.addInterceptor { functionName, parameters ->
+        println("Function with name:$functionName and ${parameters.joinToString()} invoked")
+    }
+    Foo().bar("bzz")
 }
 
 class Foo {
-    //Decorate a function with @Trace annotation
-    @Trace
-    fun bar(){
+    //Decorate a function with @Intercept annotation
+    @Intercept
+    fun bar(baz:String){
         
     }
 }

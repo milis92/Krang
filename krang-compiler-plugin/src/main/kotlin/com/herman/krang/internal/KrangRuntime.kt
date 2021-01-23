@@ -17,19 +17,25 @@
 package com.herman.krang.internal
 
 import com.herman.krang.runtime.Krang
-import com.herman.krang.runtime.annotations.Trace
+import com.herman.krang.runtime.annotations.Intercept
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.ir.util.getSimpleFunction
 import org.jetbrains.kotlin.name.FqName
 
+/**
+ * Reference to the Krang annotation
+ */
 val IrPluginContext.krangTraceAnnotation
-    get() = referenceClass(FqName(Trace::class.qualifiedName!!)) ?: throw ClassNotFoundException()
+    get() = referenceClass(FqName(Intercept::class.qualifiedName!!)) ?: throw ClassNotFoundException()
 
+/**
+ * Reference to the runtime
+ */
 val IrPluginContext.krangRuntime
     get() = referenceClass(FqName(Krang::class.qualifiedName!!)) ?: throw ClassNotFoundException()
 
-val IrPluginContext.krangTraceFunctionEnter
-    get() = krangRuntime.getSimpleFunction("traceFunctionEnter")!!
-
-val IrPluginContext.krangTraceFunctionExit
-    get() = krangRuntime.getSimpleFunction("traceFunctionExit")!!
+/**
+ * Reference to the runtime interceptor function
+ */
+val IrPluginContext.krangInterceptFunctionCall
+    get() = krangRuntime.getSimpleFunction("interceptFunctionCall")!!
