@@ -90,10 +90,22 @@ afterEvaluate {
 
     publishing {
         publications.withType(MavenPublication::class.java).configureEach {
-
             artifact(dokkaJar)
-
             configure(this.pom)
+        }
+        repositories {
+            maven {
+                setUrl(
+                    when {
+                        isReleaseBuild -> releaseRepositoryUrl
+                        else -> snapshotRepositoryUrl
+                    }
+                )
+                credentials {
+                    username = repositoryUsername
+                    password = repositoryPassword
+                }
+            }
         }
     }
 
