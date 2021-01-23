@@ -21,7 +21,6 @@ import org.gradle.api.Project
 import org.gradle.api.provider.Provider
 import org.jetbrains.kotlin.gradle.plugin.KotlinCompilation
 import org.jetbrains.kotlin.gradle.plugin.KotlinCompilerPluginSupportPlugin
-import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
 import org.jetbrains.kotlin.gradle.plugin.SubpluginArtifact
 import org.jetbrains.kotlin.gradle.plugin.SubpluginOption
 
@@ -32,12 +31,8 @@ class KrangGradlePlugin : KotlinCompilerPluginSupportPlugin {
         extensions.create("krang", KrangGradleExtension::class.java)
     }
 
-    override fun isApplicable(kotlinCompilation: KotlinCompilation<*>): Boolean {
-        return when (kotlinCompilation.platformType) {
-            KotlinPlatformType.jvm, KotlinPlatformType.androidJvm -> true
-            else -> false
-        }
-    }
+    override fun isApplicable(kotlinCompilation: KotlinCompilation<*>): Boolean =
+        kotlinCompilation.target.project.plugins.hasPlugin(KrangGradlePlugin::class.java)
 
     override fun getCompilerPluginId(): String = "${BuildConfig.PLUGIN_GROUP_ID}.${BuildConfig.PLUGIN_ARTIFACT_ID}"
 
@@ -56,11 +51,9 @@ class KrangGradlePlugin : KotlinCompilerPluginSupportPlugin {
     override fun applyToCompilation(
         kotlinCompilation: KotlinCompilation<*>
     ): Provider<List<SubpluginOption>> {
-
         kotlinCompilation.dependencies {
             implementation("${BuildConfig.PLUGIN_GROUP_ID}:krang-runtime:${BuildConfig.PLUGIN_VERSION}")
         }
-
         val project = kotlinCompilation.target.project
         val extension = project.extensions.getByType(KrangGradleExtension::class.java)
         return project.provider {

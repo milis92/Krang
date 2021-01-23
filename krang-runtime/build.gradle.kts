@@ -1,3 +1,4 @@
+
 /*
  * Copyright (C) 2020 Ivan Milisavljevic
  *
@@ -15,34 +16,34 @@
  */
 
 plugins {
-    kotlin("jvm")
-    id("org.jetbrains.dokka")
-    id("signing")
-    id("maven-publish")
+    kotlin("multiplatform")
+    `kotlin-publish`
 }
 
-tasks.register("sourcesJar", Jar::class) {
-    group = "build"
-    description = "Assembles Kotlin sources"
+kotlin {
 
-    archiveClassifier.set("sources")
-    from(sourceSets.main.get().allSource)
-    dependsOn(tasks.classes)
-}
+    jvm {
+        compilations.all {
+            kotlinOptions {
+                kotlinOptions.jvmTarget = JavaVersion.VERSION_1_8.toString()
+            }
+        }
+    }
 
-tasks.register("dokkaJar", Jar::class) {
-    group = "documentation"
+    js(IR) {
+        browser()
+        nodejs()
+    }
 
-    archiveClassifier.set("javadoc")
-    from(tasks.dokkaJavadoc)
-    dependsOn(tasks.dokkaJavadoc)
-}
-
-signing {
-    setRequired(provider { gradle.taskGraph.hasTask("publish") })
-    sign(publishing.publications)
-}
-
-publishing {
-    withDefaults(project, "Krang runtime")
+    linuxX64()
+    mingwX64()
+    iosArm32()
+    iosArm64()
+    iosX64()
+    macosX64()
+    tvosArm64()
+    tvosX64()
+    watchosArm32()
+    watchosArm64()
+    watchosX86()
 }
