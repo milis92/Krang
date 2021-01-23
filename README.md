@@ -11,14 +11,14 @@ Using plugins dsl:
 ```kotlin
 plugins {
     kotlin("multiplatform") version "1.4.21"
-    id("com.github.milis92.krang") version "2.0.0-SNAPSHOT"
+    id("com.github.milis92.krang") version "2.0.0"
 }
 ```
 
 ```groovy
 plugins {
     id "org.jetbrains.kotlin.multiplatform" version "1.4.21"
-    id "com.github.milis92.krang" version "2.0.0-SNAPSHOT"
+    id "com.github.milis92.krang" version "2.0.0"
 }
 ```
 
@@ -32,7 +32,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath("gradle.plugin.com.github.milis92.krang:krang-gradle-plugin:2.0.0-SNAPSHOT")
+        classpath("gradle.plugin.com.github.milis92.krang:krang-gradle-plugin:2.0.0")
     }
 }
 
@@ -47,7 +47,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath "gradle.plugin.com.github.milis92.krang:krang-gradle-plugin:2.0.0-SNAPSHOT"
+        classpath "gradle.plugin.com.github.milis92.krang:krang-gradle-plugin:2.0.0"
     }
 }
 
@@ -66,6 +66,7 @@ buildscript {
 }
 ```
 
+---
 > This plugin works only with kotlin 1.4.20 and with IR compiler backend.\
 > IR backend is still in alpha and in active development so compilation might lead to unexpected results.\
 > If you feel adventurous switch on IR:
@@ -110,5 +111,7 @@ class Foo {
     }
 }
 ```
+
+---
 > Big shutout to [Brian Norman](https://github.com/bnorm)
 > and his awesome [blog series](https://blog.bnorm.dev/writing-your-second-compiler-plugin-part-1) on Compiler plugins
