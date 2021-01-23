@@ -19,12 +19,15 @@ allprojects {
             .stringPropertyNames()
             .iterator()
             .forEach {
-                buildConfigField("String", it, "\"${artifactConfig.getProperty(it)}\"")
+                if (it.startsWith("PLUGIN")) {
+                    buildConfigField("String", it, "\"${artifactConfig.getProperty(it)}\"")
+                }
             }
     }
 
     tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
         kotlinOptions.jvmTarget = JavaVersion.VERSION_1_8.toString()
+        kotlinOptions.verbose = true
     }
 }
 
