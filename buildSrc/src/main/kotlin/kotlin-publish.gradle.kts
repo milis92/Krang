@@ -15,6 +15,7 @@
  */
 
 import org.gradle.api.plugins.JavaBasePlugin.DOCUMENTATION_GROUP
+import org.gradle.api.publish.maven.MavenPom
 
 plugins {
     id("org.jetbrains.dokka")
@@ -22,73 +23,87 @@ plugins {
     id("maven-publish")
 }
 
-val github = "https://github.com/milis92/Krang"
-val description = ""
-val projectName = "DebugLog"
-val projectDescription = "DebugLog"
+val isReleaseBuild: Boolean = "SNAPSHOT" !in version.toString()
 
-val dokkaJar by tasks.creating(Jar::class) {
-    group = DOCUMENTATION_GROUP
-    description = "Assembles Kotlin docs with Dokka"
-    archiveClassifier.set("javadoc")
-    from(tasks["dokkaHtml"])
-}
+//Repositories
+val releaseRepositoryUrl: String = getProperty(
+    "sonatypeReleaseUrl",
+    "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+)
+val snapshotRepositoryUrl: String = getProperty(
+    "sonatypeSnapshotUrl",
+    "https://oss.sonatype.org/content/repositories/snapshots/"
+)
 
-signing {
-    setRequired(provider { gradle.taskGraph.hasTask("publish") })
-    sign(publishing.publications)
-}
+//Credentials
+val repositoryUsername: String = getProperty("sonatypeUsername", "")
+val repositoryPassword: String = getProperty("sonatypePassword", "")
 
-publishing {
-    publications.configureEach {
-        if (this !is MavenPublication) return@configureEach
+//POM
+val projectName = getProperty("NAME", project.name)
+val projectDescription = getProperty("DESCRIPTION", "")
+//SCM
+val projectScm = getProperty("SCM", "")
+val projectScmConnection = getProperty("SCM_CONNECTION", "")
+//Licence
+val projectLicenceName: String = getProperty("LICENCE_NAME", "")
+val projectLicenceUrl: String = getProperty("LICENCE_URL", "")
+//Developer
+val projectDeveloperName: String = getProperty("DEVELOPER", "")
+val projectDeveloperUrl: String = getProperty("DEVELOPER_URL", "")
 
-        artifact(dokkaJar)
+fun configure(pom: MavenPom) = with(pom) {
 
-        pom {
-            name.set(project.name)
-            description.set(description)
-            url.set(github)
+    name.set(projectName)
+    description.set(projectDescription)
+    url.set(projectScm)
 
-            licenses {
-                license {
-                    name.set("Apache License 2.0")
-                    url.set("$github/blob/main/LICENSE.txt")
-                }
-            }
-            scm {
-                url.set(github)
-                connection.set("$github.git")
-            }
-            developers {
-                developer {
-                    name.set("Ivan Milisavljevic")
-                    url.set("https://github.com/milis92")
-                }
-            }
+    scm {
+        url.set(projectScm)
+        connection.set(projectScmConnection)
+        developerConnection.set(projectDeveloperUrl)
+    }
+
+    licenses {
+        license {
+            name.set(projectLicenceName)
+            url.set(projectLicenceUrl)
         }
     }
 
-    repositories {
-        if (
-            hasProperty("sonatypeUsername") &&
-            hasProperty("sonatypePassword") &&
-            hasProperty("sonatypeSnapshotUrl") &&
-            hasProperty("sonatypeReleaseUrl")
-        ) {
-            maven {
-
-                val url = when {
-                    "SNAPSHOT" in version.toString() -> property("sonatypeSnapshotUrl")
-                    else -> property("sonatypeReleaseUrl")
-                } as String
-
-                setUrl(url)
-                credentials {
-                    username = property("sonatypeUsername") as String
-                    password = property("sonatypePassword") as String
-                }
-            }
+    developers {
+        developer {
+            name.set(projectDeveloperName)
+            url.set(projectDeveloperUrl)
         }
     }
 }
+
+afterEvaluate {
+
+    val dokkaJar by tasks.creating(Jar::class) {
+        group = DOCUMENTATION_GROUP
+        description = "Assembles Kotlin docs with Dokka"
+        archiveClassifier.set("javadoc")
+        from(tasks["dokkaHtml"])
+    }
+
+    publishing {
+        publications.withType(MavenPublication::class.java).configureEach {
+
+            artifact(dokkaJar)
+
+            configure(this.pom)
+        }
+    }
+
+    signing {
+        setRequired(provider { gradle.taskGraph.hasTask("publish") })
+        sign(publishing.publications)
+    }
+}
+
+@Suppress("UNCHECKED_CAST")
+fun <T> getProperty(key: String, defaultValue: T): T =
+    if (hasProperty(key)) property(key) as T
+    else defaultValue

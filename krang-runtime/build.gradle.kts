@@ -1,3 +1,4 @@
+
 /*
  * Copyright (C) 2020 Ivan Milisavljevic
  *
@@ -16,10 +17,11 @@
 
 plugins {
     kotlin("multiplatform")
-    id("kotlin-publish")
+    `kotlin-publish`
 }
 
 kotlin {
+
     jvm {
         compilations.all {
             kotlinOptions {
@@ -27,20 +29,21 @@ kotlin {
             }
         }
     }
+
     js(IR) {
         browser()
         nodejs()
     }
 
-    val osName = System.getProperty("os.name")
-    when {
-        "Windows" in osName -> mingwX64("native")
-        "Mac OS" in osName -> macosX64("native")
-        else -> linuxX64("native")
-    }
-
-    sourceSets {
-        val commonMain by getting {
-        }
-    }
+    linuxX64()
+    mingwX64()
+    iosArm32()
+    iosArm64()
+    iosX64()
+    macosX64()
+    tvosArm64()
+    tvosX64()
+    watchosArm32()
+    watchosArm64()
+    watchosX86()
 }

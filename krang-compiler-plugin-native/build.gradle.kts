@@ -17,7 +17,7 @@
 plugins {
     kotlin("jvm")
     kotlin("kapt")
-    id("kotlin-publish")
+    `kotlin-publish`
 }
 
 dependencies {
