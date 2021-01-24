@@ -14,25 +14,8 @@
  *  limitations under the License.
  */
 
-package com.herman.krang.runtime
+package com.herman.krang.runtime.annotations
 
-object Krang {
-
-    var enabled = true
-    private val interceptors = mutableListOf<FunctionInterceptor>()
-
-    fun addInterceptor(interceptor: FunctionInterceptor) {
-        interceptors.add(interceptor)
-    }
-
-    fun removeInterceptor(interceptor: FunctionInterceptor) {
-        interceptors.remove(interceptor)
-    }
-
-    @Suppress("unused")
-    fun interceptFunctionCall(functionName: String, vararg arguments: Any?) {
-        if (enabled) {
-            interceptors.forEach { it.onInterceptFunctionCall(functionName, arguments) }
-        }
-    }
-}
+@Target(AnnotationTarget.VALUE_PARAMETER)
+@Retention(AnnotationRetention.SOURCE)
+annotation class Redact

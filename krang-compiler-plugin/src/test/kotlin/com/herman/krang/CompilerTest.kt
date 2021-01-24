@@ -64,7 +64,7 @@ class CompilerTest {
         val func = clazz.methods.single { it.name == "foo" }
 
         assertAfterInvoke("foo", arguments) {
-            func.invoke(clazz.newInstance())
+            func.invoke(clazz.getDeclaredConstructor().newInstance())
         }
     }
 
@@ -108,7 +108,7 @@ class CompilerTest {
         val func = clazz.methods.single { it.name == "foo" }
 
         assertAfterInvoke("foo", arguments) {
-            func.invoke(clazz.newInstance(), *arguments.toTypedArray())
+            func.invoke(clazz.getDeclaredConstructor().newInstance(), *arguments.toTypedArray())
         }
     }
 
@@ -131,7 +131,7 @@ class CompilerTest {
         val func = clazz.methods.single { it.name == "foo" }
 
         assertAfterInvoke("foo", arguments) {
-            func.invoke(clazz.newInstance(), *arguments.toTypedArray())
+            func.invoke(clazz.getDeclaredConstructor().newInstance(), *arguments.toTypedArray())
         }
     }
 
@@ -154,7 +154,7 @@ class CompilerTest {
         val func = clazz.methods.single { it.name == "foo" }
 
         assertAfterInvoke("foo", arguments) {
-            func.invoke(clazz.newInstance(), *arguments.toTypedArray())
+            func.invoke(clazz.getDeclaredConstructor().newInstance(), *arguments.toTypedArray())
         }
     }
 
@@ -181,7 +181,7 @@ class CompilerTest {
         val func = clazz.methods.single { it.name == "foo" }
 
         assertAfterInvoke("innerFunction", arguments) {
-            func.invoke(clazz.newInstance())
+            func.invoke(clazz.getDeclaredConstructor().newInstance())
         }
     }
 
@@ -232,7 +232,7 @@ class CompilerTest {
         val func = clazz.methods.single { it.name == "test" }
 
         assertAfterInvoke("test", arguments) {
-            func.invoke(clazz.newInstance(), *arguments.toTypedArray())
+            func.invoke(clazz.getDeclaredConstructor().newInstance(), *arguments.toTypedArray())
         }
     }
 
@@ -259,16 +259,42 @@ class CompilerTest {
         val func = clazz.methods.single { it.name == "test" }
 
         assertAfterInvoke("test", arguments) {
-            func.invoke(clazz.newInstance(), *arguments.toTypedArray())
+            func.invoke(clazz.getDeclaredConstructor().newInstance(), *arguments.toTypedArray())
         }
     }
 
-    private fun List<Any?>.toFunctionArguments(): String {
+    @ParameterizedTest
+    @ArgumentsSource(FunctionArgumentsProvider::class)
+    fun `when function with redacted parameter is called interceptor is called without redacted parameters`(arguments: List<Any?>) {
+
+        @Language("kotlin") val source =
+            """
+                import com.herman.krang.runtime.annotations.Intercept
+                import com.herman.krang.runtime.annotations.Redact
+
+                class Main {
+                    @Intercept
+                    fun foo(${arguments.toFunctionArguments(0)}){}
+                }
+                """
+
+        val clazz = source.compile("Main.kt")
+            .classLoader.loadClass("Main")
+        val func = clazz.methods.single { it.name == "foo" }
+
+        assertAfterInvoke("foo", arguments.drop(1)) {
+            func.invoke(clazz.getDeclaredConstructor().newInstance(), *arguments.toTypedArray())
+        }
+    }
+
+    private fun List<Any?>.toFunctionArguments(redactAtIndex: Int? = null): String {
         return if (isNullOrEmpty()) {
             ""
         } else {
             joinToString {
-                "arg${indexOf(it)} : ${it!!::class.qualifiedName ?: Any::class::qualifiedName}"
+                """${if (redactAtIndex == indexOf(it)) "@Redact" else ""} 
+                    |arg${indexOf(it)} : ${it!!::class.qualifiedName ?: Any::class::qualifiedName}
+                """.trimMargin()
             }
         }
     }

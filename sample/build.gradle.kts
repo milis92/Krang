@@ -8,6 +8,10 @@ repositories {
     mavenCentral()
 }
 
+krang {
+    enabled = true
+}
+
 kotlin {
     jvm {
         compilations.all {
