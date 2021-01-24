@@ -18,24 +18,30 @@ package com.herman.krang.internal
 
 import com.herman.krang.runtime.Krang
 import com.herman.krang.runtime.annotations.Intercept
+import com.herman.krang.runtime.annotations.Redact
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
+import org.jetbrains.kotlin.ir.symbols.IrClassSymbol
+import org.jetbrains.kotlin.ir.symbols.IrFunctionSymbol
 import org.jetbrains.kotlin.ir.util.getSimpleFunction
 import org.jetbrains.kotlin.name.FqName
 
 /**
  * Reference to the Krang annotation
  */
-val IrPluginContext.krangTraceAnnotation
+val IrPluginContext.krangTraceAnnotation: IrClassSymbol
     get() = referenceClass(FqName(Intercept::class.qualifiedName!!)) ?: throw ClassNotFoundException()
+
+val IrPluginContext.krangRedactAnnotation: IrClassSymbol
+    get() = referenceClass(FqName(Redact::class.qualifiedName!!)) ?: throw ClassNotFoundException()
 
 /**
  * Reference to the runtime
  */
-val IrPluginContext.krangRuntime
+val IrPluginContext.krangRuntime: IrClassSymbol
     get() = referenceClass(FqName(Krang::class.qualifiedName!!)) ?: throw ClassNotFoundException()
 
 /**
  * Reference to the runtime interceptor function
  */
-val IrPluginContext.krangInterceptFunctionCall
+val IrPluginContext.krangInterceptFunctionCall: IrFunctionSymbol
     get() = krangRuntime.getSimpleFunction("interceptFunctionCall")!!

@@ -17,6 +17,7 @@
 package com.herman.krang.internal.transformers
 
 import com.herman.krang.internal.krangInterceptFunctionCall
+import com.herman.krang.internal.krangRedactAnnotation
 import com.herman.krang.internal.krangRuntime
 import com.herman.krang.internal.krangTraceAnnotation
 import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
@@ -90,14 +91,15 @@ class KrangTransformer(
         function: IrFunction
     ): IrBlockBody {
         return DeclarationIrBuilder(pluginContext, function.symbol).irBlockBody {
-
             //Construct vararg from function parameters
             val argsAsVarArg = varargOf(
                 pluginContext,
                 anyNullableType,
-                function.valueParameters.map { valueParameter ->
-                    irGet(valueParameter)
-                }
+                function.valueParameters
+                    .filter { !it.hasAnnotation(pluginContext.krangRedactAnnotation) }
+                    .map { valueParameter ->
+                        irGet(valueParameter)
+                    }
             )
 
             //Append ir call to the runtime library
