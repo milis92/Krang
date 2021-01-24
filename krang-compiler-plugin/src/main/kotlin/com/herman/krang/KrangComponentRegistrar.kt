@@ -17,6 +17,7 @@
 package com.herman.krang
 
 import com.google.auto.service.AutoService
+import com.herman.krang.KrangCommandLineProcessor.Companion.ARG_ENABLED
 import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
 import org.jetbrains.kotlin.cli.common.CLIConfigurationKeys
 import org.jetbrains.kotlin.cli.common.messages.MessageCollector
@@ -25,7 +26,12 @@ import org.jetbrains.kotlin.compiler.plugin.ComponentRegistrar
 import org.jetbrains.kotlin.config.CompilerConfiguration
 
 @AutoService(ComponentRegistrar::class)
-class KrangComponentRegistrar : ComponentRegistrar {
+class KrangComponentRegistrar(private val enabledByDefault: Boolean) : ComponentRegistrar {
+
+    @Suppress("unused")
+    constructor() : this(
+        enabledByDefault = true,
+    )
 
     override fun registerProjectComponents(
         project: MockProject,
@@ -33,7 +39,10 @@ class KrangComponentRegistrar : ComponentRegistrar {
     ) {
         val messageCollector = configuration.get(CLIConfigurationKeys.MESSAGE_COLLECTOR_KEY, MessageCollector.NONE)
 
-        IrGenerationExtension.registerExtension(project, KrangIrGenerationExtension(messageCollector))
+        val enabled = configuration.get(ARG_ENABLED, enabledByDefault)
+        if (enabled) {
+            IrGenerationExtension.registerExtension(project, KrangIrGenerationExtension(messageCollector))
+        }
     }
 }
 

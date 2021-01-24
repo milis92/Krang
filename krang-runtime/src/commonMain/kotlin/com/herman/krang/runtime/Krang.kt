@@ -18,6 +18,7 @@ package com.herman.krang.runtime
 
 object Krang {
 
+    var enabled = true
     private val interceptors = mutableListOf<FunctionInterceptor>()
 
     fun addInterceptor(interceptor: FunctionInterceptor) {
@@ -28,7 +29,10 @@ object Krang {
         interceptors.remove(interceptor)
     }
 
+    @Suppress("unused")
     fun interceptFunctionCall(functionName: String, vararg arguments: Any?) {
-        interceptors.forEach { it.onInterceptFunctionCall(functionName, arguments) }
+        if (enabled) {
+            interceptors.forEach { it.onInterceptFunctionCall(functionName, arguments) }
+        }
     }
 }
