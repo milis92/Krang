@@ -21,12 +21,14 @@ plugins {
 repositories {
     gradlePluginPortal()
     mavenCentral()
+    google()
 }
 
 dependencies {
-    api("org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.21")
-    api("org.jetbrains.dokka:dokka-gradle-plugin:1.4.10.2")
-    api("com.gradle.publish:plugin-publish-plugin:0.12.0")
+    api("org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.30")
+    api("org.jetbrains.dokka:dokka-gradle-plugin:1.4.30")
+    api("com.gradle.publish:plugin-publish-plugin:0.13.0")
 
-    api("com.github.gmazzo:gradle-buildconfig-plugin:2.0.2")
+    api("com.github.gmazzo:gradle-buildconfig-plugin:3.0.0")
+    implementation("com.android.tools.build:gradle:4.1.2")
 }

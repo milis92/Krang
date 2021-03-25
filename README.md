@@ -1,6 +1,7 @@
 # Kotlin Krang
 
-Kotlin Compiler plugin that injects function call interceptors to annotated functions.
+Kotlin Compiler plugin that injects function call interceptors to annotated functions.\
+In other words, Krang provides you with a callback, fired every time annotated function is called.
 
 ---
 ## :memo: Usage
@@ -8,12 +9,16 @@ Kotlin Compiler plugin that injects function call interceptors to annotated func
 ### General
 
 ```kotlin
-//First install Interceptor to Krang
 fun main() {
+    //Register krang interceptor
     Krang.addInterceptor { functionName, parameters ->
         println("Function with name:$functionName and ${parameters.joinToString()} invoked")
     }
+    
+    //Call annotated function
+    //Should print Function with name:bar and bzz invoked
     Foo().bar("bzz")
+    
 }
 
 class Foo {
@@ -26,12 +31,16 @@ class Foo {
 ```
 
 ### Redaction
+
 ```kotlin
-//First install Interceptor to Krang
 fun main() {
+    //Register krang interceptor
     Krang.addInterceptor { functionName, parameters ->
         println("Function with name:$functionName and ${parameters.joinToString()} invoked")
     }
+    
+    //Call annotated function
+    //Should print Function with name:bar invoked
     Foo().bar("bzz")
 }
 
@@ -47,7 +56,6 @@ class Foo {
 ### Disabling Krang
 ##### During runtime
 ```kotlin
-//First install Interceptor to Krang
 fun main() {
     Krang.enabled = false
 }
@@ -85,6 +93,7 @@ plugins {
 ##### Or legacy apply plugin
 
 ```kotlin
+//Kotlin
 buildscript {
     repositories {
         maven {
@@ -100,6 +109,7 @@ apply(plugin = "com.github.milis92.krang")
 ```
 
 ```groovy
+//Groovy
 buildscript {
     repositories {
         maven {
@@ -127,9 +137,10 @@ buildscript {
 ```
 
 ---
-> This plugin works only with kotlin 1.4.20 and with IR compiler backend.\
-> IR backend is still in alpha and in active development so compilation might lead to unexpected results.\
-> If you feel adventurous switch on IR:
+
+## :cloud: Enabling Kotlin IR backend
+
+> This plugin works only with kotlin IR compiler backend.
 
 ##### Kotlin/JVM
 

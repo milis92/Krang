@@ -1,4 +1,3 @@
-
 /*
  * Copyright (C) 2020 Ivan Milisavljevic
  *
@@ -14,10 +13,14 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-
 plugins {
     kotlin("multiplatform")
     `kotlin-publish`
+    `android-project`
+}
+
+repositories {
+    google()
 }
 
 kotlin {
@@ -37,13 +40,22 @@ kotlin {
 
     linuxX64()
     mingwX64()
-    iosArm32()
-    iosArm64()
-    iosX64()
-    macosX64()
-    tvosArm64()
-    tvosX64()
-    watchosArm32()
-    watchosArm64()
-    watchosX86()
+
+    android {
+        publishLibraryVariants("release", "debug")
+    }
+
+    val publicationsFromMainHost =
+        listOf(jvm(), js()).map { it.name } + "kotlinMultiplatform"
+    publishing {
+        publications {
+            matching { it.name in publicationsFromMainHost }.all {
+                val targetPublication = this@all
+                tasks.withType<AbstractPublishToMaven>()
+                    .matching { it.publication == targetPublication }
+                    .configureEach { onlyIf { findProperty("isMainHost") == "true" } }
+            }
+        }
+    }
 }
+
