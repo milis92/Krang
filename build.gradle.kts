@@ -36,6 +36,7 @@ subprojects {
         mavenLocal()
         mavenCentral()
         jcenter()
+        google()
     }
 }
 
