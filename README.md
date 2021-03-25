@@ -1,5 +1,7 @@
 # Kotlin Krang
 
+[![Maven metadata URL](https://img.shields.io/maven-metadata/v?label=Plugin&metadataUrl=https://plugins.gradle.org/m2/com.github.milis92/krang/com.github.milis92.krang.gradle.plugin/maven-metadata.xml)](https://plugins.gradle.org/plugin/com.github.milis92.krang)
+
 Kotlin Compiler plugin that injects function call interceptors to annotated functions.\
 In other words, Krang provides you with a callback, fired every time annotated function is called.
 
@@ -79,14 +81,14 @@ Runtime dependency is automatically applied.
 ```kotlin
 plugins {
     kotlin("multiplatform") version "1.4.21"
-    id("com.github.milis92.krang") version "2.0.1"
+    id("com.github.milis92.krang") version "latest_version_here"
 }
 ```
 
 ```groovy
 plugins {
     id "org.jetbrains.kotlin.multiplatform" version "1.4.21"
-    id "com.github.milis92.krang" version "2.0.1"
+    id "com.github.milis92.krang" version "latest_version_here"
 }
 ```
 
@@ -101,7 +103,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath("gradle.plugin.com.github.milis92.krang:krang-gradle-plugin:2.0.1")
+        classpath("gradle.plugin.com.github.milis92.krang:krang-gradle-plugin:latest_version_here")
     }
 }
 
@@ -117,7 +119,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath "gradle.plugin.com.github.milis92.krang:krang-gradle-plugin:2.0.1"
+        classpath "gradle.plugin.com.github.milis92.krang:krang-gradle-plugin:latest_version_here"
     }
 }
 
@@ -133,7 +135,13 @@ buildscript {
             url "https://oss.sonatype.org/content/repositories/snapshots"
         }
     }
+    dependencies {
+        classpath "gradle.plugin.com.github.milis92.krang:krang-gradle-plugin:latest_snapshot_version_here"
+    }
 }
+
+apply plugin: "com.github.milis92.krang"
+
 ```
 
 ---
