@@ -1,24 +1,25 @@
-plugins {
-    kotlin("multiplatform") version "1.4.20"
-    id("com.github.milis92.krang") version "2.0.0"
+buildscript {
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+        maven("https://oss.sonatype.org/content/repositories/snapshots")
+        jcenter()
+    }
+    dependencies {
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.30")
+        classpath("com.android.tools.build:gradle:4.1.2")
+    }
 }
 
-repositories {
-    maven("https://oss.sonatype.org/content/repositories/snapshots")
-    mavenCentral()
-}
+group = "com.herman.sample"
+version = "1.0"
 
-krang {
-    enabled = true
-}
-
-kotlin {
-    jvm {
-        compilations.all {
-            kotlinOptions {
-                kotlinOptions.jvmTarget = JavaVersion.VERSION_1_8.toString()
-                kotlinOptions.useIR = true
-            }
-        }
+allprojects {
+    repositories {
+        mavenCentral()
+        maven("https://oss.sonatype.org/content/repositories/snapshots")
+        jcenter()
+        google()
     }
 }

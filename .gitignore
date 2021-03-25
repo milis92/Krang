@@ -8,3 +8,4 @@ out/
 *.iml
 /secring.gpg
 /local.properties
+/sample/local.properties
