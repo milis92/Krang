@@ -1,0 +1,47 @@
+name: Deploy
+
+on:
+  release:
+    types: [published]
+
+env:
+  GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx4g -Dorg.gradle.daemon=false -Dkotlin.incremental=false"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: gradle/wrapper-validation-action@v1
+      - uses: actions/setup-java@v1
+        name: Build
+        with:
+          java-version: 1.8
+      - run: ./gradlew build
+
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run ktlint
+        uses: ScaCap/action-ktlint@master
+        with:
+          github_token: ${{ secrets.github_token }}
+          reporter: github-pr-check
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs:
+      - build
+      - lint
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: gradle/wrapper-validation-action@v1
+      - uses: actions/setup-java@v1
+        name: Build
+        with:
+          java-version: 1.8
+      - run: ./gradlew publish
