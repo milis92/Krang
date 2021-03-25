@@ -10,7 +10,7 @@ class App : Application() {
         super.onCreate()
 
         Krang.addInterceptor { functionName, parameters ->
-            Log.d("App","Function with name:$functionName and ${parameters.joinToString()} called")
+            Log.d("App", "Function with name:$functionName and ${parameters.joinToString()} called")
         }
     }
 }

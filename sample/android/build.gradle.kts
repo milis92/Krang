@@ -19,10 +19,10 @@ android {
         }
     }
     lintOptions {
-        isQuiet=true
-        isAbortOnError=false
-        isIgnoreWarnings=true
-        isCheckReleaseBuilds=false
+        isQuiet = true
+        isAbortOnError = false
+        isIgnoreWarnings = true
+        isCheckReleaseBuilds = false
     }
 }
 
