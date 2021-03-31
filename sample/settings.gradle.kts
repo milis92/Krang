@@ -1,6 +1,6 @@
 rootProject.name = "sample"
 
 include(":android")
-include(":common")
+//include(":common")
 
-includeBuild("..")
+/*includeBuild("..")*/

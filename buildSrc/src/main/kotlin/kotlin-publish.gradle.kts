@@ -89,10 +89,12 @@ afterEvaluate {
     }
 
     publishing {
-        publications.withType(MavenPublication::class.java).configureEach {
+
+        publications.withType<MavenPublication> {
             artifact(dokkaJar)
             configure(this.pom)
         }
+
         repositories {
             maven {
                 setUrl(

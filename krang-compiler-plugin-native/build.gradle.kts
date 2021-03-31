@@ -29,6 +29,7 @@ dependencies {
 
 tasks.named("compileKotlin") { dependsOn("syncSource") }
 
+//Copies source to native
 tasks.register<Sync>("syncSource") {
     from(project(":krang-compiler-plugin").sourceSets.main.get().allSource)
     into("src/main/kotlin")
