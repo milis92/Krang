@@ -1,6 +1,13 @@
 Change Log
 ==========
 
+## Version 2.0.3
+
+### Removed
+- Removed all targets except jvm, this also resolved issues with mpp projects having both android and jvm targets
+rest of the targets will come in future updates
+
+
 ## Version 2.0.2
 
 ### New
