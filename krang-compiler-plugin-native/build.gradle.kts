@@ -16,20 +16,20 @@
 
 plugins {
     kotlin("jvm")
-    kotlin("kapt")
+    `kotlin-kapt`
     `kotlin-publish`
 }
 
 dependencies {
-    compileOnly(project(":krang-runtime"))
-    compileOnly("org.jetbrains.kotlin:kotlin-compiler")
-    kapt("com.google.auto.service:auto-service:1.0-rc6")
-    compileOnly("com.google.auto.service:auto-service-annotations:1.0-rc6")
+    compileOnly(projects.krangRuntime)
+    compileOnly(deps.kotlin.compiler)
+    kapt(deps.google.autoService.core)
+    compileOnly(deps.google.autoService.annotations)
 }
 
 tasks.named("compileKotlin") { dependsOn("syncSource") }
 
-//Copies source to native
+//Copies entire source from krang-compiler-plugin to native
 tasks.register<Sync>("syncSource") {
     from(project(":krang-compiler-plugin").sourceSets.main.get().allSource)
     into("src/main/kotlin")

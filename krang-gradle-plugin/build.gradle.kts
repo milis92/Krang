@@ -1,11 +1,11 @@
 plugins {
-    id("java-gradle-plugin")
+    `java-gradle-plugin`
     kotlin("jvm")
-    id("com.gradle.plugin-publish")
+    com.gradle.`plugin-publish`
 }
 
 dependencies {
-    implementation(kotlin("gradle-plugin-api"))
+    implementation(deps.kotlin.gradle.api)
 }
 
 pluginBundle {
