@@ -16,33 +16,9 @@
 plugins {
     kotlin("multiplatform")
     `kotlin-publish`
-    `android-project`
-}
-
-repositories {
-    google()
 }
 
 kotlin {
-
-    jvm {
-        compilations.all {
-            kotlinOptions {
-                kotlinOptions.jvmTarget = JavaVersion.VERSION_1_8.toString()
-            }
-        }
-    }
-
-    js(IR) {
-        browser()
-        nodejs()
-    }
-
-    linuxX64()
-    mingwX64()
-
-    android {
-        publishLibraryVariants("release", "debug")
-    }
+    jvm()
 }
 
