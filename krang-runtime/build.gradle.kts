@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 plugins {
-    kotlin("multiplatform")
+    `kotlin-multiplatform`
     `kotlin-publish`
 }
 

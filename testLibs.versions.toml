@@ -1,0 +1,16 @@
+[versions]
+junit = "5.7.0"
+compile-testing = "1.2.6"
+
+[libraries]
+kotlin-compiler = { module = "org.jetbrains.kotlin:kotlin-compiler" }
+kotlin-compilerEmbedable = { module = "org.jetbrains.kotlin:kotlin-compiler-embeddable" }
+kotlin-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit" }
+
+junit-bom = { module = "org.junit:junit-bom", version.ref = "junit" }
+junit-jupiter = { module = "org.junit.jupiter:junit-jupiter" }
+
+compileTesting = { module = "com.github.tschuchortdev:kotlin-compile-testing", version.ref = "compile-testing" }
+
+[bundles]
+

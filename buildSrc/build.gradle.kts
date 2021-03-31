@@ -25,9 +25,8 @@ repositories {
 }
 
 dependencies {
-    api("org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.32")
-    api("org.jetbrains.dokka:dokka-gradle-plugin:1.4.30")
-    api("com.gradle.publish:plugin-publish-plugin:0.13.0")
-
-    api("com.github.gmazzo:gradle-buildconfig-plugin:3.0.0")
+    api(deps.kotlin.gradle.plugin)
+    api(deps.kotlin.dokka)
+    api(deps.gradle.publish)
+    api(deps.gradle.buildConfig)
 }
