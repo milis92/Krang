@@ -1,6 +1,6 @@
 plugins {
     kotlin("multiplatform")
-    id("com.github.milis92.krang") version "2.0.2"
+    id("com.github.milis92.krang") version "2.0.3-SNAPSHOT"
 }
 
 repositories {
