@@ -22,6 +22,22 @@ plugins {
     id("maven-publish")
 }
 
+val dokkaJar = tasks.create<Jar>("dokkaJar") {
+    group = DOCUMENTATION_GROUP
+    description = "Assembles Javadoc jar from Dokka API docs"
+    archiveClassifier.set("javadoc")
+    from(tasks.dokkaJavadoc)
+}
+
+tasks.dokkaJavadoc.configure {
+    outputDirectory.set(buildDir.resolve("javadoc"))
+    dokkaSourceSets {
+        configureEach {
+            sourceRoot(file("src"))
+        }
+    }
+}
+
 fun configure(pom: MavenPom) = with(pom) {
 
     name.set("NAME".byProperty)
@@ -55,16 +71,7 @@ fun configure(pom: MavenPom) = with(pom) {
 }
 
 afterEvaluate {
-
-    val dokkaJar by tasks.creating(Jar::class) {
-        group = DOCUMENTATION_GROUP
-        description = "Assembles Kotlin docs with Dokka"
-        archiveClassifier.set("javadoc")
-        from(tasks["dokkaHtml"])
-    }
-
     publishing {
-
         publications.withType<MavenPublication> {
             artifact(dokkaJar)
             configure(this.pom)
@@ -84,15 +91,16 @@ afterEvaluate {
                 }
             }
         }
-    }
 
-    val signingKey = "SIGNING_KEY".byProperty
-    val signingPwd = "SIGNING_PASSWORD".byProperty
+        signing {
+            val signingKeyId = "SIGNING_KEY_ID".byProperty
+            val signingKey = "SIGNING_KEY".byProperty
+            val signingPwd = "SIGNING_PASSWORD".byProperty
 
-    signing {
-        setRequired(provider { gradle.taskGraph.hasTask("publish") })
-        useInMemoryPgpKeys(signingKey, signingPwd)
-        sign(publishing.publications)
+            setRequired(provider { gradle.taskGraph.hasTask("publish") })
+            useInMemoryPgpKeys(signingKeyId, signingKey, signingPwd)
+            sign(publishing.publications)
+        }
     }
 }
 
@@ -111,6 +119,7 @@ val snapshotRepositoryUrl: String = getProperty(
 val String.byProperty: String get() = getProperty(this, "")
 
 @Suppress("UNCHECKED_CAST")
-fun <T> getProperty(key: String, defaultValue: T): T =
-    if (hasProperty(key)) property(key) as T
-    else defaultValue
+fun getProperty(key: String, defaultValue: String): String {
+    val property = providers.gradleProperty(key).forUseAtConfigurationTime()
+    return property.getOrElse(defaultValue)
+}
