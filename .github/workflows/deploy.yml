@@ -71,3 +71,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
       - run: ./gradlew publish
+        env:
+          ORG_GRADLE_PROJECT_SIGNING_KEY: ${{ secrets.ORG_GRADLE_PROJECT_SIGNING_KEY }}
+          ORG_GRADLE_PROJECT_SIGNING_PASSWORD: ${{ secrets.ORG_GRADLE_PROJECT_SIGNING_PASSWORD }}
+          ORG_GRADLE_PROJECT_REPOSITORY_USERNAME: ${{ secrets.ORG_GRADLE_PROJECT_REPOSITORY_USERNAME }}
+          ORG_GRADLE_PROJECT_REPOSITORY_PASSWORD: ${{ secrets.ORG_GRADLE_PROJECT_REPOSITORY_PASSWORD }}
