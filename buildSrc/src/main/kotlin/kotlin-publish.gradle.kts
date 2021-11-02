@@ -93,12 +93,11 @@ afterEvaluate {
         }
 
         signing {
-            val signingKeyId = "SIGNING_KEY_ID".byProperty
             val signingKey = "SIGNING_KEY".byProperty
             val signingPwd = "SIGNING_PASSWORD".byProperty
 
             setRequired(provider { gradle.taskGraph.hasTask("publish") })
-            useInMemoryPgpKeys(signingKeyId, signingKey, signingPwd)
+            useInMemoryPgpKeys(signingKey, signingPwd)
             sign(publishing.publications)
         }
     }
