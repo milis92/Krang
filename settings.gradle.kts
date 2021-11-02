@@ -3,21 +3,25 @@ rootProject.name = "krang"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 enableFeaturePreview("VERSION_CATALOGS")
 
+@Suppress("UnstableApiUsage")
 dependencyResolutionManagement {
-    //We dont need this if libs file is located in gradle folder
-    @Suppress("UnstableApiUsage")
     versionCatalogs {
         create("deps") {
-            from(files("libs.versions.toml"))
+            from(files("dependencies/libs.versions.toml"))
         }
         create("testDeps") {
-            from(files("testLibs.versions.toml"))
+            from(files("dependencies/testLibs.versions.toml"))
         }
+    }
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        google()
     }
 }
 
 plugins {
-    id("com.gradle.enterprise") version "3.5"
+    id("com.gradle.enterprise") version "3.7.1"
 }
 
 gradleEnterprise {
@@ -27,7 +31,9 @@ gradleEnterprise {
     }
 }
 
-include(":krang-gradle-plugin")
-include(":krang-compiler-plugin")
-include(":krang-compiler-plugin-native")
-include(":krang-runtime")
+include(
+    "krang-gradle-plugin",
+    "krang-compiler-plugin",
+    "krang-compiler-plugin-native",
+    "krang-runtime"
+)

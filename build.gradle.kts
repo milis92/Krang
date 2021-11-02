@@ -35,15 +35,6 @@ allprojects {
     }
 }
 
-subprojects {
-    repositories {
-        mavenLocal()
-        mavenCentral()
-        jcenter()
-        google()
-    }
-}
-
 tasks.wrapper {
     distributionType = Wrapper.DistributionType.ALL
 }
