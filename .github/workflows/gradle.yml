@@ -1,8 +1,10 @@
 name: Deploy
 
 on:
-  release:
-    types: [published]
+  push:
+    branches:
+      - dev
+  workflow_dispatch:
 
 env:
   GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx4g -Dorg.gradle.daemon=false"
