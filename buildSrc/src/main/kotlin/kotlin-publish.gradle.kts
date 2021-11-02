@@ -15,7 +15,6 @@
  */
 
 import org.gradle.api.plugins.JavaBasePlugin.DOCUMENTATION_GROUP
-import org.gradle.api.publish.maven.MavenPom
 
 plugins {
     id("org.jetbrains.dokka")
@@ -23,58 +22,34 @@ plugins {
     id("maven-publish")
 }
 
-val isReleaseBuild: Boolean = "SNAPSHOT" !in version.toString()
-
-//Repositories
-val releaseRepositoryUrl: String = getProperty(
-    "sonatypeReleaseUrl",
-    "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
-)
-val snapshotRepositoryUrl: String = getProperty(
-    "sonatypeSnapshotUrl",
-    "https://oss.sonatype.org/content/repositories/snapshots/"
-)
-
-//Credentials
-val repositoryUsername: String = getProperty("sonatypeUsername", "")
-val repositoryPassword: String = getProperty("sonatypePassword", "")
-
-//POM
-val projectName = getProperty("NAME", project.name)
-val projectDescription = getProperty("DESCRIPTION", "")
-//SCM
-val projectScm = getProperty("SCM", "")
-val projectScmConnection = getProperty("SCM_CONNECTION", "")
-//Licence
-val projectLicenceName: String = getProperty("LICENCE_NAME", "")
-val projectLicenceUrl: String = getProperty("LICENCE_URL", "")
-//Developer
-val projectDeveloperName: String = getProperty("DEVELOPER", "")
-val projectDeveloperUrl: String = getProperty("DEVELOPER_URL", "")
-
 fun configure(pom: MavenPom) = with(pom) {
 
-    name.set(projectName)
-    description.set(projectDescription)
-    url.set(projectScm)
+    name.set("NAME".byProperty)
+    description.set("DESCRIPTION".byProperty)
+    url.set("SCM".byProperty)
 
     scm {
-        url.set(projectScm)
-        connection.set(projectScmConnection)
-        developerConnection.set(projectDeveloperUrl)
+        url.set("SCM".byProperty)
+        connection.set("SCM_CONNECTION".byProperty)
+        developerConnection.set("DEVELOPER_URL".byProperty)
+    }
+
+    issueManagement {
+        system.set("ISSUE_MANAGEMENT_SYSTEM".byProperty)
+        url.set("ISSUE_MANAGEMENT_URL".byProperty)
     }
 
     licenses {
         license {
-            name.set(projectLicenceName)
-            url.set(projectLicenceUrl)
+            name.set("LICENCE_NAME".byProperty)
+            url.set("LICENCE_URL".byProperty)
         }
     }
 
     developers {
         developer {
-            name.set(projectDeveloperName)
-            url.set(projectDeveloperUrl)
+            name.set("DEVELOPER".byProperty)
+            url.set("DEVELOPER_URL".byProperty)
         }
     }
 }
@@ -104,18 +79,36 @@ afterEvaluate {
                     }
                 )
                 credentials {
-                    username = repositoryUsername
-                    password = repositoryPassword
+                    username = "REPOSITORY_USERNAME".byProperty
+                    password = "REPOSITORY_PASSWORD".byProperty
                 }
             }
         }
     }
 
+    val signingKey = "SIGNING_KEY".byProperty
+    val signingPwd = "SIGNING_PASSWORD".byProperty
+
     signing {
         setRequired(provider { gradle.taskGraph.hasTask("publish") })
+        useInMemoryPgpKeys(signingKey, signingPwd)
         sign(publishing.publications)
     }
 }
+
+val isReleaseBuild: Boolean = "SNAPSHOT" !in version.toString()
+
+//Repositories
+val releaseRepositoryUrl: String = getProperty(
+    "sonatypeReleaseUrl",
+    "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+)
+val snapshotRepositoryUrl: String = getProperty(
+    "sonatypeSnapshotUrl",
+    "https://oss.sonatype.org/content/repositories/snapshots/"
+)
+
+val String.byProperty: String get() = getProperty(this, "")
 
 @Suppress("UNCHECKED_CAST")
 fun <T> getProperty(key: String, defaultValue: T): T =

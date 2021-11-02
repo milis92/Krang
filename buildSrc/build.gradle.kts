@@ -18,6 +18,13 @@ plugins {
     `kotlin-dsl-precompiled-script-plugins`
 }
 
+kotlin {
+    jvmToolchain {
+        val javaVersion = JavaLanguageVersion.of(deps.versions.java.get().toInt())
+        (this as JavaToolchainSpec).languageVersion.set(javaVersion)
+    }
+}
+
 repositories {
     gradlePluginPortal()
     mavenCentral()
@@ -25,8 +32,8 @@ repositories {
 }
 
 dependencies {
-    api(deps.kotlin.gradle.plugin)
-    api(deps.kotlin.dokka)
-    api(deps.gradle.publish)
-    api(deps.gradle.buildConfig)
+    implementation(deps.kotlin.gradle.plugin)
+    implementation(deps.kotlin.dokka)
+    implementation(deps.gradle.publish)
+    implementation(deps.gradle.buildConfig)
 }
