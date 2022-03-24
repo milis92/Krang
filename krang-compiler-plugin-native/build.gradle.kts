@@ -22,9 +22,9 @@ plugins {
 
 dependencies {
     compileOnly(projects.krangRuntime)
-    compileOnly(deps.kotlin.compiler)
-    kapt(deps.google.autoService.core)
-    compileOnly(deps.google.autoService.annotations)
+    compileOnly(prodLibs.kotlin.compiler)
+    kapt(prodLibs.google.autoService.core)
+    compileOnly(prodLibs.google.autoService.annotations)
 }
 
 tasks.named("compileKotlin") { dependsOn("syncSource") }

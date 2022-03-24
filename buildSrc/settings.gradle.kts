@@ -1,9 +1,7 @@
-enableFeaturePreview("VERSION_CATALOGS")
-
 dependencyResolutionManagement {
     @Suppress("UnstableApiUsage")
     versionCatalogs {
-        create("deps") {
+        create("prodLibs") {
             from(files("../dependencies/libs.versions.toml"))
         }
     }

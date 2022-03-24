@@ -1,15 +1,14 @@
 rootProject.name = "krang"
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
-enableFeaturePreview("VERSION_CATALOGS")
 
 @Suppress("UnstableApiUsage")
 dependencyResolutionManagement {
     versionCatalogs {
-        create("deps") {
+        create("prodLibs") {
             from(files("dependencies/libs.versions.toml"))
         }
-        create("testDeps") {
+        create("testLibs") {
             from(files("dependencies/testLibs.versions.toml"))
         }
     }
@@ -21,13 +20,14 @@ dependencyResolutionManagement {
 }
 
 plugins {
-    id("com.gradle.enterprise") version "3.7.1"
+    id("com.gradle.enterprise") version "3.9"
 }
 
 gradleEnterprise {
     buildScan {
         termsOfServiceUrl = "https://gradle.com/terms-of-service"
         termsOfServiceAgree = "yes"
+        publishAlways()
     }
 }
 
