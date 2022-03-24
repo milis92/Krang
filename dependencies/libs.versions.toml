@@ -1,11 +1,11 @@
 [versions]
 #build
-kotlin = "1.5.31"
+kotlin = "1.6.10"
 java = "15"
-dokka = "1.5.0"
-gradle-publish = "0.13.0"
-build-config = "3.0.0"
-google-autoService = "1.0-rc6"
+dokka = "1.6.10"
+gradle-publish = "0.20.0"
+build-config = "3.0.3"
+google-autoService = "1.0.1"
 
 [libraries]
 gradle-publish = { module = "com.gradle.publish:plugin-publish-plugin", version.ref = "gradle-publish" }
