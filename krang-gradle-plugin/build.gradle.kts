@@ -5,7 +5,7 @@ plugins {
 }
 
 dependencies {
-    implementation(deps.kotlin.gradle.api)
+    implementation(prodLibs.kotlin.gradle.api)
 }
 
 pluginBundle {

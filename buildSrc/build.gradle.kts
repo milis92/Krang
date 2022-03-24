@@ -20,7 +20,7 @@ plugins {
 
 kotlin {
     jvmToolchain {
-        val javaVersion = JavaLanguageVersion.of(deps.versions.java.get().toInt())
+        val javaVersion = JavaLanguageVersion.of(prodLibs.versions.java.get().toInt())
         (this as JavaToolchainSpec).languageVersion.set(javaVersion)
     }
 }
@@ -32,8 +32,8 @@ repositories {
 }
 
 dependencies {
-    implementation(deps.kotlin.gradle.plugin)
-    implementation(deps.kotlin.dokka)
-    implementation(deps.gradle.publish)
-    implementation(deps.gradle.buildConfig)
+    implementation(prodLibs.kotlin.gradle.plugin)
+    implementation(prodLibs.kotlin.dokka)
+    implementation(prodLibs.gradle.publish)
+    implementation(prodLibs.gradle.buildConfig)
 }

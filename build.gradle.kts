@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.konan.file.File
 import org.jetbrains.kotlin.konan.properties.loadProperties
 
@@ -25,7 +26,7 @@ allprojects {
             }
     }
 
-    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    tasks.withType<KotlinCompile> {
         kotlinOptions.jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
 
