@@ -49,7 +49,7 @@ class CompilerTest {
 
         @Language("kotlin") val source =
             """
-                import Intercept
+                import com.herman.krang.runtime.annotations.Intercept
 
                 class Main {
                     @Intercept
@@ -73,7 +73,7 @@ class CompilerTest {
 
         @Language("kotlin") val source =
             """
-                import Intercept
+                import com.herman.krang.runtime.annotations.Intercept
 
                 @Intercept
                 fun main(){}
@@ -94,7 +94,7 @@ class CompilerTest {
 
         @Language("kotlin") val source =
             """
-                import Intercept
+                import com.herman.krang.runtime.annotations.Intercept
 
                 class Main {
                     @Intercept
@@ -118,7 +118,7 @@ class CompilerTest {
 
         @Language("kotlin") val source =
             """
-                import Intercept
+                import com.herman.krang.runtime.annotations.Intercept
 
                 class Main {
                     @Intercept
@@ -141,7 +141,7 @@ class CompilerTest {
 
         @Language("kotlin") val source =
             """
-                import Intercept
+                import com.herman.krang.runtime.annotations.Intercept
 
                 class Main {
                     @Intercept
@@ -165,7 +165,7 @@ class CompilerTest {
         //TODO Add support for passing arguments to inner function
         @Language("kotlin") val source =
             """
-                import Intercept
+                import com.herman.krang.runtime.annotations.Intercept
 
                 class Main {
                     fun foo() { 
@@ -191,7 +191,7 @@ class CompilerTest {
 
         @Language("kotlin") val source =
             """
-                import Intercept
+                import com.herman.krang.runtime.annotations.Intercept
 
                 @Intercept
                 fun String.foo(${arguments.toFunctionArguments()}) {}
@@ -215,7 +215,7 @@ class CompilerTest {
 
         @Language("kotlin") val source =
             """
-                import Intercept
+                import com.herman.krang.runtime.annotations.Intercept
 
                 interface Testable {
                     fun test(${arguments.toFunctionArguments()})
@@ -242,7 +242,7 @@ class CompilerTest {
 
         @Language("kotlin") val source =
             """
-                import Intercept
+                import com.herman.krang.runtime.annotations.Intercept
 
                 interface Testable {
                     @Intercept
@@ -269,8 +269,8 @@ class CompilerTest {
 
         @Language("kotlin") val source =
             """
-                import Intercept
-                import Redact
+                import com.herman.krang.runtime.annotations.Intercept
+                import com.herman.krang.runtime.annotations.Redact
 
                 class Main {
                     @Intercept
