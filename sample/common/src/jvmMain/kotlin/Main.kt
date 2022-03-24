@@ -9,8 +9,7 @@ fun main() {
 
 class Foo {
     @Intercept
-    fun bar(param1: String) {
+    fun bar(@Suppress("UNUSED_PARAMETER") param1: String) {
         /* no-op */
     }
 }
-
