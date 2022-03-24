@@ -27,15 +27,15 @@ import org.jetbrains.kotlin.gradle.plugin.SubpluginOption
 @Suppress("unused")
 class KrangGradlePlugin : KotlinCompilerPluginSupportPlugin {
 
+    private val runtimeDependency = "${BuildConfig.PLUGIN_GROUP_ID}:krang-runtime:${BuildConfig.PLUGIN_VERSION}"
+
     override fun apply(target: Project): Unit = with(target) {
         extensions.create("krang", KrangGradleExtension::class.java)
     }
 
-    override fun isApplicable(kotlinCompilation: KotlinCompilation<*>): Boolean =
-        kotlinCompilation.target.project.plugins.hasPlugin(KrangGradlePlugin::class.java)
+    override fun isApplicable(kotlinCompilation: KotlinCompilation<*>): Boolean = true
 
-    override fun getCompilerPluginId(): String =
-        "${BuildConfig.PLUGIN_GROUP_ID}.${BuildConfig.PLUGIN_ARTIFACT_ID}"
+    override fun getCompilerPluginId(): String = "${BuildConfig.PLUGIN_GROUP_ID}.${BuildConfig.PLUGIN_ARTIFACT_ID}"
 
     override fun getPluginArtifact(): SubpluginArtifact = SubpluginArtifact(
         groupId = BuildConfig.PLUGIN_GROUP_ID,
@@ -46,8 +46,10 @@ class KrangGradlePlugin : KotlinCompilerPluginSupportPlugin {
     override fun applyToCompilation(
         kotlinCompilation: KotlinCompilation<*>
     ): Provider<List<SubpluginOption>> {
-        kotlinCompilation.dependencies {
-            implementation("${BuildConfig.PLUGIN_GROUP_ID}:krang-runtime:${BuildConfig.PLUGIN_VERSION}")
+        kotlinCompilation.kotlinSourceSets.forEach {
+            it.dependencies {
+                implementation(runtimeDependency)
+            }
         }
         val project = kotlinCompilation.target.project
         val extension = project.extensions.getByType(KrangGradleExtension::class.java)

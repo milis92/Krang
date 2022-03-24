@@ -1,8 +1,13 @@
+@Suppress("UnstableApiUsage")
 dependencyResolutionManagement {
-    @Suppress("UnstableApiUsage")
     versionCatalogs {
         create("prodLibs") {
             from(files("../dependencies/libs.versions.toml"))
         }
+    }
+    repositories {
+        gradlePluginPortal()
+        mavenCentral()
+        google()
     }
 }

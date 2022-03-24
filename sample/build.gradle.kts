@@ -1,25 +1,8 @@
-buildscript {
-    repositories {
-        gradlePluginPortal()
-        google()
-        mavenCentral()
-        maven("https://oss.sonatype.org/content/repositories/snapshots")
-        jcenter()
-    }
-    dependencies {
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.30")
-        classpath("com.android.tools.build:gradle:4.1.2")
-    }
+plugins {
+    id("com.android.application") version "7.1.0-beta02" apply false
+    id("com.android.library") version "7.1.0-beta02" apply false
+    id("org.jetbrains.kotlin.android") version "1.6.10" apply false
 }
 
 group = "com.herman.sample"
 version = "1.0"
-
-allprojects {
-    repositories {
-        mavenCentral()
-        maven("https://oss.sonatype.org/content/repositories/snapshots")
-        jcenter()
-        google()
-    }
-}

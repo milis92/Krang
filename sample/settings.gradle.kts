@@ -1,6 +1,25 @@
 rootProject.name = "sample"
 
-include(":android")
-include(":common")
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
-/*includeBuild("..")*/
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenLocal()
+        maven("https://oss.sonatype.org/content/repositories/snapshots")
+        mavenCentral()
+    }
+}
+
+@Suppress("UnstableApiUsage")
+dependencyResolutionManagement {
+    repositories {
+        google()
+        mavenLocal()
+        mavenCentral()
+    }
+}
+
+//include(":android")
+include(":common")

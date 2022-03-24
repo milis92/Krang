@@ -25,12 +25,6 @@ kotlin {
     }
 }
 
-repositories {
-    gradlePluginPortal()
-    mavenCentral()
-    google()
-}
-
 dependencies {
     implementation(prodLibs.kotlin.gradle.plugin)
     implementation(prodLibs.kotlin.dokka)
