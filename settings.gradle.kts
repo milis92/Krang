@@ -34,6 +34,5 @@ gradleEnterprise {
 include(
     "krang-gradle-plugin",
     "krang-compiler-plugin",
-    "krang-compiler-plugin-native",
     "krang-runtime"
 )
