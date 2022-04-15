@@ -1,7 +1,7 @@
 plugins {
     id("com.android.application")
     kotlin("android")
-    id("com.github.milis92.krang") version "2.0.3-SNAPSHOT"
+    id("com.github.milis92.krang") version "2.0.4"
 }
 
 android {
@@ -32,11 +32,4 @@ krang {
 
 dependencies {
     implementation("androidx.appcompat:appcompat:1.2.0")
-}
-
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-    kotlinOptions {
-        kotlinOptions.jvmTarget = JavaVersion.VERSION_1_8.toString()
-        useIR = true
-    }
 }

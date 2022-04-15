@@ -2,6 +2,7 @@ plugins {
     `java-gradle-plugin`
     kotlin("jvm")
     com.gradle.`plugin-publish`
+    `maven-publish`
 }
 
 dependencies {
@@ -25,6 +26,6 @@ gradlePlugin {
     }
 }
 
-tasks.register("publish") {
+tasks.named("publish") {
     dependsOn("publishPlugins")
 }
