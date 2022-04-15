@@ -24,15 +24,15 @@ plugins {
 
 dependencies {
     implementation(projects.krangRuntime)
-    compileOnly(deps.kotlin.compilerEmbedable)
-    kapt(deps.google.autoService.core)
-    compileOnly(deps.google.autoService.annotations)
+    compileOnly(prodLibs.kotlin.compilerEmbedable)
+    kapt(prodLibs.google.autoService.core)
+    compileOnly(prodLibs.google.autoService.annotations)
 
-    testImplementation(platform(testDeps.junit.bom))
-    testImplementation(testDeps.junit.jupiter)
-    testImplementation(testDeps.kotlin.junit)
-    testImplementation(testDeps.kotlin.compilerEmbedable)
-    testImplementation(testDeps.compileTesting)
+    testImplementation(platform(testLibs.junit.bom))
+    testImplementation(testLibs.junit.jupiter)
+    testImplementation(testLibs.kotlin.junit)
+    testImplementation(testLibs.kotlin.compilerEmbedable)
+    testImplementation(testLibs.compileTesting)
     testImplementation(projects.krangRuntime)
 }
 
