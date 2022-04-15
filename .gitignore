@@ -9,3 +9,4 @@ out/
 /secring.gpg
 /local.properties
 /sample/local.properties
+/sample/android/local.properties

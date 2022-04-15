@@ -2,7 +2,7 @@
 
 [![Maven metadata URL](https://img.shields.io/maven-metadata/v?label=Plugin&metadataUrl=https://plugins.gradle.org/m2/com.github.milis92/krang/com.github.milis92.krang.gradle.plugin/maven-metadata.xml)](https://plugins.gradle.org/plugin/com.github.milis92.krang)
 
-Kotlin Compiler plugin that triggers a callback every time annotated function is called.\
+Kotlin Compiler plugin that gives you the ability to be notified every time annotated function is called.\
 General purpose is for effortless logging or analytics,
 but it can (but probably shouldn't) be used for more advanced use-cases
 
@@ -10,7 +10,7 @@ but it can (but probably shouldn't) be used for more advanced use-cases
 
 ## How does it work
 
-During compilation, this compiler plugin injects a small piece of code that's
+During compilation, Krang injects a small piece of code that's
 firing a callback with a name of the function and parameters passed at runtime
 
 This effectively means Krang is transforming your code in a following way:
