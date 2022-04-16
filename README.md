@@ -41,7 +41,7 @@ class Foo {
 ```kotlin
 class Foo {
     fun bar(baz: String) {
-        Krang.interceptFunctionCall("bar", baz)
+        Krang.notifyListeners("bar", baz)
         //Rest of your code
     }
 }
@@ -59,8 +59,8 @@ class Foo {
 
 ```kotlin
 fun main() {
-    //Register krang interceptor
-    Krang.addInterceptor { functionName, parameters ->
+    //Register krang listener
+    Krang.addListener { functionName, parameters ->
         println("Function with name:$functionName and ${parameters.joinToString()} invoked")
     }
 
@@ -80,8 +80,8 @@ class Foo {
 
 ```kotlin
 fun main() {
-    //Register krang interceptor
-    Krang.addInterceptor { functionName, parameters ->
+    //Register krang listener
+    Krang.addListener { functionName, parameters ->
         println("Function with name:$functionName and ${parameters.joinToString()} invoked")
     }
 
