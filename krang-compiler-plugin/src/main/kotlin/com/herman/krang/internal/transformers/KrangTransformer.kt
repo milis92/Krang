@@ -91,7 +91,7 @@ class KrangTransformer(
         function: IrFunction
     ): IrBlockBody {
         return DeclarationIrBuilder(pluginContext, function.symbol).irBlockBody {
-            //Construct vararg from function parameters
+            // Construct vararg from function parameters
             val argsAsVarArg = varargOf(
                 pluginContext,
                 anyNullableType,
@@ -102,14 +102,14 @@ class KrangTransformer(
                     }
             )
 
-            //Insert the krang probe
+            // Insert krang probe
             +irCall(pluginContext.krangInterceptFunctionCall).apply {
                 putValueArgument(0, irString("${function.name}"))
                 putValueArgument(1, argsAsVarArg.deepCopyWithVariables())
                 dispatchReceiver = irGetObject(pluginContext.krangRuntime)
             }
 
-            //Apply original statements
+            // Apply original statements
             for (statement in function.body!!.statements) +statement
         }
     }

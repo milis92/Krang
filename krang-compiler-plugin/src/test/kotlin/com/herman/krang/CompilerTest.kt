@@ -264,7 +264,9 @@ class CompilerTest {
 
     @ParameterizedTest
     @ArgumentsSource(FunctionArgumentsProvider::class)
-    fun `when function with redacted parameter is called listener is notified without redacted parameters`(arguments: List<Any?>) {
+    fun `when function with redacted parameter is called listener is notified without redacted parameters`(
+        arguments: List<Any?>
+    ) {
 
         @Language("kotlin") val source =
             """
