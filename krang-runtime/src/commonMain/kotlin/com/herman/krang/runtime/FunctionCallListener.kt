@@ -16,6 +16,6 @@
 
 package com.herman.krang.runtime
 
-fun interface FunctionInterceptor {
-    fun onInterceptFunctionCall(functionName: String, parameters: Array<out Any?>)
+fun interface FunctionCallListener {
+    fun onFunctionCalled(functionName: String, parameters: Array<out Any?>)
 }
