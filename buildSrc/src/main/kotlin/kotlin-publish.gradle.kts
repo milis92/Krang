@@ -22,22 +22,6 @@ plugins {
     id("maven-publish")
 }
 
-val dokkaJar = tasks.create<Jar>("dokkaJar") {
-    group = DOCUMENTATION_GROUP
-    description = "Assembles Javadoc jar from Dokka API docs"
-    archiveClassifier.set("javadoc")
-    from(tasks.dokkaJavadoc)
-}
-
-tasks.dokkaJavadoc.configure {
-    outputDirectory.set(buildDir.resolve("javadoc"))
-    dokkaSourceSets {
-        configureEach {
-            sourceRoot(file("src"))
-        }
-    }
-}
-
 fun configure(pom: MavenPom) = with(pom) {
 
     name.set("NAME".byProperty)
@@ -71,6 +55,14 @@ fun configure(pom: MavenPom) = with(pom) {
 }
 
 afterEvaluate {
+
+    val dokkaJar by tasks.creating(Jar::class) {
+        group = DOCUMENTATION_GROUP
+        description = "Assembles Kotlin docs with Dokka"
+        archiveClassifier.set("javadoc")
+        from(tasks["dokkaHtml"])
+    }
+
     publishing {
         publications.withType<MavenPublication> {
             artifact(dokkaJar)
