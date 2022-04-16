@@ -13,10 +13,9 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-
 package com.herman.krang
 
-import com.herman.krang.runtime.FunctionInterceptor
+import com.herman.krang.runtime.FunctionCallListener
 import com.herman.krang.runtime.Krang
 import com.tschuchort.compiletesting.KotlinCompilation
 import com.tschuchort.compiletesting.SourceFile
@@ -69,7 +68,7 @@ class CompilerTest {
     }
 
     @Test
-    fun `when main is called then interceptor is called`() {
+    fun `when main is called then listener is notified`() {
 
         @Language("kotlin") val source =
             """
@@ -90,7 +89,7 @@ class CompilerTest {
 
     @ParameterizedTest
     @ArgumentsSource(FunctionArgumentsProvider::class)
-    fun `when class function is called then interceptor is called`(arguments: List<Any?>) {
+    fun `when class function is called then listener is notified`(arguments: List<Any?>) {
 
         @Language("kotlin") val source =
             """
@@ -114,7 +113,7 @@ class CompilerTest {
 
     @ParameterizedTest
     @ArgumentsSource(FunctionArgumentsProvider::class)
-    fun `when function without a body is called then interceptor is called`(arguments: List<Any?>) {
+    fun `when function without a body is called then listener is notified`(arguments: List<Any?>) {
 
         @Language("kotlin") val source =
             """
@@ -137,7 +136,7 @@ class CompilerTest {
 
     @ParameterizedTest
     @ArgumentsSource(FunctionArgumentsProvider::class)
-    fun `when scope function is called then interceptor is called`(arguments: List<Any?>) {
+    fun `when scope function is called then listener is notified`(arguments: List<Any?>) {
 
         @Language("kotlin") val source =
             """
@@ -160,7 +159,7 @@ class CompilerTest {
 
     @ParameterizedTest
     @ArgumentsSource(FunctionArgumentsProvider::class)
-    fun `when inner function is called then interceptor is called`(arguments: List<Any?>) {
+    fun `when inner function is called then listener is notified`(arguments: List<Any?>) {
 
         //TODO Add support for passing arguments to inner function
         @Language("kotlin") val source =
@@ -187,7 +186,7 @@ class CompilerTest {
 
     @ParameterizedTest
     @ArgumentsSource(FunctionArgumentsProvider::class)
-    fun `when extension function is called then interceptor is called`(arguments: List<Any?>) {
+    fun `when extension function is called then listener is notified`(arguments: List<Any?>) {
 
         @Language("kotlin") val source =
             """
@@ -211,7 +210,7 @@ class CompilerTest {
 
     @ParameterizedTest
     @ArgumentsSource(FunctionArgumentsProvider::class)
-    fun `when overridden function is called than interceptor is called`(arguments: List<Any?>) {
+    fun `when overridden function is called than listener is notified`(arguments: List<Any?>) {
 
         @Language("kotlin") val source =
             """
@@ -238,7 +237,7 @@ class CompilerTest {
 
     @ParameterizedTest
     @ArgumentsSource(FunctionArgumentsProvider::class)
-    fun `when function with annotated parent is called than interceptor is called`(arguments: List<Any?>) {
+    fun `when function with annotated parent is called than listener is notified`(arguments: List<Any?>) {
 
         @Language("kotlin") val source =
             """
@@ -265,7 +264,7 @@ class CompilerTest {
 
     @ParameterizedTest
     @ArgumentsSource(FunctionArgumentsProvider::class)
-    fun `when function with redacted parameter is called interceptor is called without redacted parameters`(arguments: List<Any?>) {
+    fun `when function with redacted parameter is called listener is notified without redacted parameters`(arguments: List<Any?>) {
 
         @Language("kotlin") val source =
             """
@@ -311,36 +310,36 @@ class CompilerTest {
         expectedParameters: List<Any?>,
         invoke: () -> Unit
     ) {
-        val interceptor = AssertedInterceptor()
-        Krang.addInterceptor(interceptor)
+        val listener = AssertedListener()
+        Krang.addListener(listener)
         invoke()
-        Krang.removeInterceptor(interceptor)
+        Krang.removeListener(listener)
 
         assertAll(
             Executable {
                 assertEquals(
                     expectedFunctionName,
-                    interceptor.capturedFunctionName,
+                    listener.capturedFunctionName,
                     "Function name doest not match expected $expectedFunctionName received " +
-                        "${interceptor.capturedFunctionName}"
+                        "${listener.capturedFunctionName}"
                 )
                 if (!expectedParameters.isNullOrEmpty()) {
                     assertTrue(
-                        expectedParameters.containsAll(interceptor.capturedParameters),
+                        expectedParameters.containsAll(listener.capturedParameters),
                         "Function arguments not matching expected: ${expectedParameters.joinToString()} " +
-                            "received: ${interceptor.capturedParameters.joinToString()}"
+                            "received: ${listener.capturedParameters.joinToString()}"
                     )
                 }
             }
         )
     }
 
-    private class AssertedInterceptor : FunctionInterceptor {
+    private class AssertedListener : FunctionCallListener {
 
         var capturedFunctionName: String? = null
         var capturedParameters: MutableList<Any?> = mutableListOf()
 
-        override fun onInterceptFunctionCall(functionName: String, vararg parameters: Any?) {
+        override fun onFunctionCalled(functionName: String, vararg parameters: Any?) {
             capturedFunctionName = functionName
             capturedParameters.addAll(parameters)
         }

@@ -53,7 +53,7 @@ class KrangTransformer(
 
     override fun visitFunctionNew(declaration: IrFunction): IrStatement {
         if (shouldVisit(declaration)) {
-            declaration.body = traceBodyBuilder(declaration)
+            declaration.body = probedBodyBuilder(declaration)
         }
         return super.visitFunctionNew(declaration)
     }
@@ -87,7 +87,7 @@ class KrangTransformer(
      * @return new block body of a function with original statements and [irCall] to the runtime library with arguments
      * as vararg
      */
-    private fun traceBodyBuilder(
+    private fun probedBodyBuilder(
         function: IrFunction
     ): IrBlockBody {
         return DeclarationIrBuilder(pluginContext, function.symbol).irBlockBody {
@@ -102,7 +102,7 @@ class KrangTransformer(
                     }
             )
 
-            //Append ir call to the runtime library
+            //Insert the krang probe
             +irCall(pluginContext.krangInterceptFunctionCall).apply {
                 putValueArgument(0, irString("${function.name}"))
                 putValueArgument(1, argsAsVarArg.deepCopyWithVariables())
