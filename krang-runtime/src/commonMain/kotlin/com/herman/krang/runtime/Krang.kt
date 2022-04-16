@@ -19,20 +19,24 @@ package com.herman.krang.runtime
 object Krang {
 
     var enabled = true
-    private val interceptors = mutableListOf<FunctionInterceptor>()
+    private val functionCallListeners = mutableListOf<FunctionCallListener>()
 
-    fun addInterceptor(interceptor: FunctionInterceptor) {
-        interceptors.add(interceptor)
+    /**
+     * Add new Krang listner
+     */
+    fun addListener(listener: FunctionCallListener) {
+        functionCallListeners.add(listener)
     }
 
-    fun removeInterceptor(interceptor: FunctionInterceptor) {
-        interceptors.remove(interceptor)
+    /**
+     * Remove previously attached Krang listeners
+     */
+    fun removeListener(listener: FunctionCallListener) {
+        functionCallListeners.remove(listener)
     }
 
     @Suppress("unused")
-    fun interceptFunctionCall(functionName: String, vararg arguments: Any?) {
-        if (enabled) {
-            interceptors.forEach { it.onInterceptFunctionCall(functionName, arguments) }
-        }
+    fun notifyListeners(functionName: String, vararg arguments: Any?) {
+        if (enabled) functionCallListeners.forEach { it.onFunctionCalled(functionName, arguments) }
     }
 }
