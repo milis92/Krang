@@ -1,9 +1,11 @@
+package com.herman.krang.sample.jvm
+
 import com.herman.krang.runtime.Krang
 import com.herman.krang.runtime.annotations.Intercept
 
 fun main() {
     Krang.addListener { name, arguments ->
-        System.out.println("Function with $name and $arguments called")
+        println("Function with $name and $arguments called")
     }
     Foo().bar("baz")
 }
