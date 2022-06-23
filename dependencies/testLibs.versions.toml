@@ -1,6 +1,6 @@
 [versions]
 junit = "5.7.0"
-compile-testing = "1.4.7"
+compile-testing = "1.4.9"
 
 [libraries]
 kotlin-compiler = { module = "org.jetbrains.kotlin:kotlin-compiler" }

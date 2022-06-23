@@ -18,13 +18,6 @@ plugins {
     `kotlin-dsl-precompiled-script-plugins`
 }
 
-kotlin {
-    jvmToolchain {
-        val javaVersion = JavaLanguageVersion.of(prodLibs.versions.java.get().toInt())
-        (this as JavaToolchainSpec).languageVersion.set(javaVersion)
-    }
-}
-
 dependencies {
     implementation(prodLibs.kotlin.gradle.plugin)
     implementation(prodLibs.kotlin.dokka)
