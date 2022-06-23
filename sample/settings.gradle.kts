@@ -7,8 +7,8 @@ pluginManagement {
         gradlePluginPortal()
         google()
         mavenLocal()
-        maven("https://oss.sonatype.org/content/repositories/snapshots")
         mavenCentral()
+        maven("https://oss.sonatype.org/content/repositories/snapshots")
     }
 }
 
@@ -21,5 +21,5 @@ dependencyResolutionManagement {
     }
 }
 
-include(":android")
-include(":common")
+//include(":android")
+include(":jvm")
