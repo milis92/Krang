@@ -15,6 +15,7 @@
  */
 plugins {
     `kotlin-multiplatform`
+    `kotlin-common-conventions`
     `kotlin-publish`
 }
 
