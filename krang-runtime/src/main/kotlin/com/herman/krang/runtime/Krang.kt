@@ -22,7 +22,7 @@ object Krang {
     private val functionCallListeners = mutableListOf<FunctionCallListener>()
 
     /**
-     * Add new Krang listner
+     * Add new Krang listener
      */
     fun addListener(listener: FunctionCallListener) {
         functionCallListeners.add(listener)
