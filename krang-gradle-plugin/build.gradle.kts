@@ -1,8 +1,10 @@
 plugins {
     `java-gradle-plugin`
     kotlin("jvm")
+    `kotlin-common-conventions`
     com.gradle.`plugin-publish`
     `maven-publish`
+    `krang-build-config`
 }
 
 dependencies {

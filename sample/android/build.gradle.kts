@@ -1,7 +1,7 @@
 plugins {
     id("com.android.application")
     kotlin("android")
-    id("com.github.milis92.krang") version "2.0.4"
+    id("com.github.milis92.krang")
 }
 
 android {

@@ -14,11 +14,16 @@
  *  limitations under the License.
  */
 plugins {
-    `kotlin-multiplatform`
+    kotlin("jvm")
+    `kotlin-common-conventions`
     `kotlin-publish`
 }
 
-kotlin {
-    jvm()
+publishing {
+    publications {
+        create<MavenPublication>("default") {
+            from(components["java"])
+            artifact(tasks.kotlinSourcesJar)
+        }
+    }
 }
-
