@@ -16,6 +16,6 @@
 
 package com.herman.krang.runtime.annotations
 
-@Target(AnnotationTarget.FUNCTION)
+@Target(AnnotationTarget.VALUE_PARAMETER)
 @Retention(AnnotationRetention.SOURCE)
-annotation class Intercept
+annotation class Redact
