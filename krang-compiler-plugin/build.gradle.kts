@@ -18,8 +18,10 @@
 
 plugins {
     kotlin("jvm")
+    `kotlin-common-conventions`
     `kotlin-kapt`
     `kotlin-publish`
+    `krang-build-config`
 }
 
 dependencies {
