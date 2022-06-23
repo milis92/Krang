@@ -9,7 +9,7 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        Krang.addInterceptor { functionName, parameters ->
+        Krang.addListener { functionName, parameters ->
             Log.d("App", "Function with name:$functionName and ${parameters.joinToString()} called")
         }
     }
