@@ -2,6 +2,10 @@ Change Log
 ==========
 ## Version 2.1.0
 ### General
+- Runtime is JVM Only from now on
+- Update kotlin to 1.7.0
+## Version 2.1.0
+### General
 - Improve naming in runtime library to better capture the intetntion
 
 ## Version 2.0.4
