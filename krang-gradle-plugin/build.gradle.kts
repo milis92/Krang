@@ -28,6 +28,3 @@ gradlePlugin {
     }
 }
 
-tasks.named("publish") {
-    dependsOn("publishPlugins")
-}

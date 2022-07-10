@@ -16,14 +16,5 @@
 plugins {
     kotlin("jvm")
     `kotlin-common-conventions`
-    `kotlin-publish`
-}
-
-publishing {
-    publications {
-        create<MavenPublication>("default") {
-            from(components["java"])
-            artifact(tasks.kotlinSourcesJar)
-        }
-    }
+    id("com.vanniktech.maven.publish")
 }

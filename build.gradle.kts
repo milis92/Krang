@@ -1,3 +1,7 @@
+plugins {
+    id("com.vanniktech.maven.publish")
+}
+
 allprojects {
     val artifactConfig: java.util.Properties by lazy {
         org.jetbrains.kotlin.konan.properties.loadProperties(rootDir.resolve("artifact.properties").path)

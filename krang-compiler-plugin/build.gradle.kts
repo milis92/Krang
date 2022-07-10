@@ -20,8 +20,8 @@ plugins {
     kotlin("jvm")
     `kotlin-common-conventions`
     `kotlin-kapt`
-    `kotlin-publish`
     `krang-build-config`
+    id("com.vanniktech.maven.publish")
 }
 
 dependencies {
@@ -40,13 +40,4 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
-}
-
-publishing {
-    publications {
-        create<MavenPublication>("default") {
-            from(components["java"])
-            artifact(tasks.kotlinSourcesJar)
-        }
-    }
 }
