@@ -23,4 +23,5 @@ dependencies {
     implementation(prodLibs.kotlin.dokka)
     implementation(prodLibs.gradle.publish)
     implementation(prodLibs.gradle.buildConfig)
+    implementation(prodLibs.maven.publish.plugin)
 }
