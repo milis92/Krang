@@ -24,6 +24,8 @@ jobs:
   tag-release:
     name: Tag Release
     runs-on: "ubuntu-latest"
+    needs:
+      - deploy
     steps:
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
