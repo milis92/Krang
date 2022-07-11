@@ -9,7 +9,7 @@ allprojects {
     }
 
     group = artifactConfig.getProperty("PLUGIN_GROUP_ID")
-    version = artifactConfig.getProperty("PLUGIN_VERSION")
+    version = "${artifactConfig.getProperty("PLUGIN_VERSION")}${System.getProperty("VERSION_SUFFIX", "")}"
 }
 
 tasks.withType(org.gradle.plugins.signing.Sign::class.java).configureEach sign@{
