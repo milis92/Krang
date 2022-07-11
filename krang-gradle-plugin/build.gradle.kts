@@ -3,6 +3,7 @@
 import com.vanniktech.maven.publish.GradlePlugin
 import com.vanniktech.maven.publish.JavadocJar
 
+@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     `java-gradle-plugin`
     kotlin("jvm")

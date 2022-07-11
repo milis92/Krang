@@ -1,3 +1,4 @@
+@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     alias(prodLibs.plugins.kotlin.dokka.plugin) apply false
     alias(prodLibs.plugins.maven.publish.plugin) apply false

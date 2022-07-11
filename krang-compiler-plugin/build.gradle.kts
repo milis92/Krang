@@ -3,6 +3,7 @@
 import com.vanniktech.maven.publish.JavadocJar
 import com.vanniktech.maven.publish.KotlinJvm
 
+@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     kotlin("jvm")
     `kotlin-common-conventions`
