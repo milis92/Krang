@@ -1,13 +1,25 @@
 Change Log
 ==========
-## Version 2.3.0
+
+## Version 2.4.0
+
 ### General
+
+- Gradle plugin is now published to maven instead of Gradle plugin portal
+- Update readme to reflect new publishing changes
+
+## Version 2.3.0
+
+### General
+
 - Sort out artefact publishing
 - Make runtime multiplatform again
 - Publish gradle plugin to maven instead of gradle plugin portal
 
 ## Version 2.2.0
+
 ### General
+
 - Runtime is JVM Only from now on
 - Update kotlin to 1.7.0
 
