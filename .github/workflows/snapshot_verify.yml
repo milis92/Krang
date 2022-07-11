@@ -1,0 +1,14 @@
+name: Snapshot verify
+
+on:
+  pull_request:
+    branches:
+      - dev
+      - feature/**
+      - bugfix/**
+  workflow_dispatch:
+
+jobs:
+  verify:
+    name: Verify
+    uses: ./.github/workflows/template_verify.yml
