@@ -1,12 +1,14 @@
 Change Log
 ==========
+## Version 2.2.0
+- Enable multiplatform setup for runtime library
+- Sort out artefact publishing
+
 ## Version 2.1.0
 ### General
 - Runtime is JVM Only from now on
 - Update kotlin to 1.7.0
-## Version 2.1.0
-### General
-- Improve naming in runtime library to better capture the intetntion
+- Improve naming in runtime library to better capture the intention
 
 ## Version 2.0.4
 ### General

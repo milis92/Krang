@@ -14,7 +14,6 @@ kotlin {
     jvm()
 }
 
-
 mavenPublishing {
     configure(KotlinMultiplatform(JavadocJar.Dokka("dokkaHtml")))
 }
