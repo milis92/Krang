@@ -12,6 +12,17 @@ plugins {
     alias(prodLibs.plugins.maven.publish.plugin)
 }
 
+gradlePlugin {
+    plugins {
+        create("krang") {
+            id = "com.github.milis92.krang"
+            displayName = "Kotlin function logging interceptor"
+            description = "Kotlin Compiler Plugin which adds logging interceptors to the functions"
+            implementationClass = "com.herman.krang.KrangGradlePlugin"
+        }
+    }
+}
+
 dependencies {
     implementation(prodLibs.kotlin.gradle.api)
 }

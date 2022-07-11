@@ -1,10 +1,15 @@
-# Kotlin Krang
+<h1 align="center">
+  <img src="krang.png" width="150px" />
+<p>Kotlin Krang</p>
+</h1>
 
-[![Maven metadata URL](https://img.shields.io/maven-metadata/v?label=Plugin&metadataUrl=https://plugins.gradle.org/m2/com.github.milis92/krang/com.github.milis92.krang.gradle.plugin/maven-metadata.xml)](https://plugins.gradle.org/plugin/com.github.milis92.krang)
+
+[![Maven metadata URL](https://img.shields.io/maven-metadata/v?label=Release&metadataUrl=https://repo1.maven.org/maven2/com/github/milis92/krang/krang-gradle-plugin/maven-metadata.xml)](https://oss.sonatype.org/content/repositories/snapshots/com/github/milis92/krang/krang-gradle-plugin/)
+[![Maven metadata URL](https://img.shields.io/maven-metadata/v?label=Snapshot&metadataUrl=https://oss.sonatype.org/content/repositories/snapshots/com/github/milis92/krang/krang-gradle-plugin/maven-metadata.xml)](https://oss.sonatype.org/content/repositories/snapshots/com/github/milis92/krang/krang-gradle-plugin/)
 
 Kotlin Compiler plugin that gives you the ability to be notified every time annotated function is called.\
 General purpose is for effortless logging or analytics,
-but it can (but probably shouldn't) be used for more advanced use-cases
+but it can (but probably shouldn't) be used for more advanced use-cases.
 
 ---
 
@@ -121,52 +126,26 @@ krang {
 
 ## :cloud: Setup
 
-Plugin is published on Maven central\
-Runtime dependency is automatically applied.
-
-##### Using plugins dsl:
-<details>
-<summary>Kotlin</summary>
-
-```kotlin
-//Kotlin
-plugins {
-    kotlin("multiplatform") version "1.4.21"
-    id("com.github.milis92.krang") version "latest_version_here"
-}
-
-```
-</details>
+> Plugin is published on Maven central.\
+> Note that runtime dependency is automatically applied, and you don't have to add anything explicitly.
 
 <details>
-<summary>Groovy</summary>
-
-```groovy
-//Groovy
-plugins {
-    id "org.jetbrains.kotlin.multiplatform" version "1.4.21"
-    id "com.github.milis92.krang" version "latest_version_here"
-}
-```
-</details>
-
-##### Or legacy apply plugin
-<details >
-<summary>Kotlin</summary>
+<summary aria-expanded="true">Kotlin</summary>
 
 ```kotlin
 //Kotlin
 buildscript {
     repositories {
-        maven()
+        mavenCentral()
     }
     dependencies {
-        classpath("gradle.plugin.com.github.milis92.krang:krang-gradle-plugin:latest_version_here")
+        classpath("com.github.milis92.krang:krang-gradle-plugin:$latest_version_here")
     }
 }
 
 apply(plugin = "com.github.milis92.krang")
 ```
+
 </details>
 
 <details>
@@ -176,45 +155,44 @@ apply(plugin = "com.github.milis92.krang")
 //Groovy
 buildscript {
     repositories {
-        maven()
+        mavenCentral()
     }
     dependencies {
-        classpath "gradle.plugin.com.github.milis92.krang:krang-gradle-plugin:latest_version_here"
+        classpath "com.github.milis92.krang:krang-gradle-plugin:$latest_version_here"
     }
 }
 
 apply plugin: "com.github.milis92.krang"
 ```
+
 </details>
 
-##### Snapshot releases
+<details>
+<summary>Snapshots</summary> 
 
-```groovy
+```kotlin
 buildscript {
     repositories {
-        maven {
-            url "https://oss.sonatype.org/content/repositories/snapshots"
-        }
+        maven("https://oss.sonatype.org/content/repositories/snapshots")
     }
     dependencies {
-        classpath "gradle.plugin.com.github.milis92.krang:krang-gradle-plugin:latest_snapshot_version_here"
+        classpath("com.github.milis92.krang:krang-gradle-plugin:$latest_version_here")
     }
 }
 
-apply plugin: "com.github.milis92.krang"
-
+apply(plugin = "com.github.milis92.krang")
 ```
 
----
+</details>
 
 ## :cloud: Enabling Kotlin IR backend
 
-> This plugin works only with kotlin IR compiler backend.
+> This plugin works only with kotlin IR compiler backend witch is enabled by default from Kotlin > 1.5!
 
 ##### Kotlin/JVM
 
 ```kotlin
-//For kotlin < 1.5 for others IR is enabled by default
+//For kotlin < 1.5
 tasks.withType<KotlinCompile>().configureEach {
     kotlinOptions {
         useIR = true
