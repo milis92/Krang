@@ -3,7 +3,7 @@ buildscript {
         maven("https://oss.sonatype.org/content/repositories/snapshots")
     }
     dependencies {
-        classpath("com.github.milis92.krang:com.github.milis92.krang-gradle-plugin:2.4.0-SNAPSHOT")
+        classpath("com.github.milis92.krang:krang-gradle-plugin:2.4.0-SNAPSHOT")
     }
 }
 
