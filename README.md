@@ -121,10 +121,12 @@ krang {
 
 ## :cloud: Setup
 
-Plugin is published on Gradle plugin portal, so you don't have to define additional repositories.\
+Plugin is published on Maven central\
 Runtime dependency is automatically applied.
 
 ##### Using plugins dsl:
+<details>
+<summary>Kotlin</summary>
 
 ```kotlin
 //Kotlin
@@ -132,7 +134,12 @@ plugins {
     kotlin("multiplatform") version "1.4.21"
     id("com.github.milis92.krang") version "latest_version_here"
 }
+
 ```
+</details>
+
+<details>
+<summary>Groovy</summary>
 
 ```groovy
 //Groovy
@@ -141,16 +148,17 @@ plugins {
     id "com.github.milis92.krang" version "latest_version_here"
 }
 ```
+</details>
 
 ##### Or legacy apply plugin
+<details >
+<summary>Kotlin</summary>
 
 ```kotlin
 //Kotlin
 buildscript {
     repositories {
-        maven {
-            url = uri("https://plugins.gradle.org/m2/")
-        }
+        maven()
     }
     dependencies {
         classpath("gradle.plugin.com.github.milis92.krang:krang-gradle-plugin:latest_version_here")
@@ -159,14 +167,16 @@ buildscript {
 
 apply(plugin = "com.github.milis92.krang")
 ```
+</details>
+
+<details>
+<summary>Groovy</summary>
 
 ```groovy
 //Groovy
 buildscript {
     repositories {
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
+        maven()
     }
     dependencies {
         classpath "gradle.plugin.com.github.milis92.krang:krang-gradle-plugin:latest_version_here"
@@ -175,6 +185,7 @@ buildscript {
 
 apply plugin: "com.github.milis92.krang"
 ```
+</details>
 
 ##### Snapshot releases
 
@@ -203,7 +214,7 @@ apply plugin: "com.github.milis92.krang"
 ##### Kotlin/JVM
 
 ```kotlin
-//For kotlin < 1.5
+//For kotlin < 1.5 for others IR is enabled by default
 tasks.withType<KotlinCompile>().configureEach {
     kotlinOptions {
         useIR = true

@@ -1,13 +1,18 @@
 Change Log
 ==========
-## Version 2.2.0
-- Enable multiplatform setup for runtime library
+## Version 2.3.0
+### General
 - Sort out artefact publishing
+- Make runtime multiplatform again
+- Publish gradle plugin to maven instead of gradle plugin portal
 
-## Version 2.1.0
+## Version 2.2.0
 ### General
 - Runtime is JVM Only from now on
 - Update kotlin to 1.7.0
+
+## Version 2.1.0
+### General
 - Improve naming in runtime library to better capture the intention
 
 ## Version 2.0.4
