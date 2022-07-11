@@ -1,0 +1,33 @@
+name: Deploy Snapshot
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  verify:
+    name: Verify
+    uses: ./.github/workflows/template_verify.yml
+
+  deploy:
+    name: Deploy
+    needs:
+      - verify
+    uses: ./.github/workflows/template_deploy.yml
+    secrets:
+      REPOSITORY_USERNAME: ${{ secrets.REPOSITORY_USERNAME }}
+      REPOSITORY_PASSWORD: ${{ secrets.REPOSITORY_PASSWORD }}
+      SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+      SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
+
+  tag-release:
+    name: Tag Release
+    runs-on: "ubuntu-latest"
+    steps:
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          automatic_release_tag: "snapshot"
+          prerelease: true
+          title: "Snapshot"
