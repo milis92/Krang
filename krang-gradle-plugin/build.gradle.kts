@@ -1,30 +1,21 @@
+@file:Suppress("UnstableApiUsage")
+
+import com.vanniktech.maven.publish.GradlePlugin
+import com.vanniktech.maven.publish.JavadocJar
+
 plugins {
     `java-gradle-plugin`
     kotlin("jvm")
     `kotlin-common-conventions`
-    com.gradle.`plugin-publish`
-    `maven-publish`
     `krang-build-config`
+    alias(prodLibs.plugins.kotlin.dokka.plugin)
+    alias(prodLibs.plugins.maven.publish.plugin)
 }
 
 dependencies {
     implementation(prodLibs.kotlin.gradle.api)
 }
 
-pluginBundle {
-    website = "https://github.com/milis92/Krang"
-    vcsUrl = "https://github.com/milis92/Krang.git"
-    tags = listOf("kotlin", "krang", "function-interceptor", "debugLog")
+mavenPublishing {
+    configure(GradlePlugin(JavadocJar.Dokka("dokkaHtml")))
 }
-
-gradlePlugin {
-    plugins {
-        create("krang") {
-            id = "com.github.milis92.krang"
-            displayName = "Kotlin function logging interceptor"
-            description = "Kotlin Compiler Plugin which adds logging interceptors to the functions"
-            implementationClass = "com.herman.krang.KrangGradlePlugin"
-        }
-    }
-}
-

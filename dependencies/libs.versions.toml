@@ -1,26 +1,26 @@
 [versions]
 #build
 kotlin = "1.7.0"
-dokka = "1.6.10"
+dokka = "1.7.0"
 gradle-publish = "0.20.0"
 maven-publish = "0.20.0"
 build-config = "3.1.0"
 google-autoService = "1.0.1"
 
 [libraries]
-gradle-publish = { module = "com.gradle.publish:plugin-publish-plugin", version.ref = "gradle-publish" }
-gradle-buildConfig = { module = "com.github.gmazzo:gradle-buildconfig-plugin", version.ref = "build-config" }
-maven-publish-plugin = { module = "com.vanniktech:gradle-maven-publish-plugin", version.ref = "maven-publish" }
-
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 kotlin-gradle-api = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin-api" }
-kotlin-dokka = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version.ref = "dokka" }
 kotlin-compiler = { module = "org.jetbrains.kotlin:kotlin-compiler" }
 kotlin-compilerEmbedable = { module = "org.jetbrains.kotlin:kotlin-compiler-embeddable" }
+
+gradle-buildConfig = { module = "com.github.gmazzo:gradle-buildconfig-plugin", version.ref = "build-config" }
 
 google-autoService-core = { module = "com.google.auto.service:auto-service", version.ref = "google-autoService" }
 google-autoService-annotations = { module = "com.google.auto.service:auto-service-annotations", version.ref = "google-autoService" }
 
+[plugins]
+kotlin-dokka-plugin = { id = "org.jetbrains.dokka", version.ref = "dokka" }
+maven-publish-plugin = { id = "com.vanniktech.maven.publish", version.ref = "maven-publish" }
 
 [bundles]
 
