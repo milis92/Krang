@@ -1,6 +1,7 @@
 # Kotlin Krang
 
-[![Maven metadata URL](https://img.shields.io/maven-metadata/v?label=Plugin&metadataUrl=https://plugins.gradle.org/m2/com.github.milis92/krang/com.github.milis92.krang.gradle.plugin/maven-metadata.xml)](https://plugins.gradle.org/plugin/com.github.milis92.krang)
+[![Maven metadata URL](https://img.shields.io/maven-metadata/v?label=Snapshot&metadataUrl=https://oss.sonatype.org/content/repositories/snapshots/com/github/milis92/krang/krang-gradle-plugin/maven-metadata.xml)](https://oss.sonatype.org/content/repositories/snapshots/com/github/milis92/krang/krang-gradle-plugin/)
+[![Maven metadata URL](https://img.shields.io/maven-metadata/v?label=Release&metadataUrl=https://repo1.maven.org/maven2/com/github/milis92/krang/krang-gradle-plugin/maven-metadata.xml)](https://oss.sonatype.org/content/repositories/snapshots/com/github/milis92/krang/krang-gradle-plugin/)
 
 Kotlin Compiler plugin that gives you the ability to be notified every time annotated function is called.\
 General purpose is for effortless logging or analytics,
