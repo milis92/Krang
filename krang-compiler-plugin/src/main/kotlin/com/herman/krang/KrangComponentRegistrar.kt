@@ -45,5 +45,3 @@ class KrangComponentRegistrar(private val enabledByDefault: Boolean) : Component
         }
     }
 }
-
-
