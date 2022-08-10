@@ -27,35 +27,36 @@ import org.jetbrains.kotlin.ir.declarations.IrValueParameter
 import org.jetbrains.kotlin.ir.interpreter.getLastOverridden
 import org.jetbrains.kotlin.ir.symbols.IrClassSymbol
 import org.jetbrains.kotlin.ir.types.IrType
-import org.jetbrains.kotlin.ir.util.functions
 import org.jetbrains.kotlin.ir.util.hasAnnotation
 import org.jetbrains.kotlin.ir.util.isFakeOverriddenFromAny
-import org.jetbrains.kotlin.ir.util.isFakeOverride
+import org.jetbrains.kotlin.ir.util.parentClassOrNull
 import org.jetbrains.kotlin.ir.util.superTypes
 
 class KrangTransformer(
-    private val pluginContext: IrPluginContext, private val messageCollector: MessageCollector
+    private val pluginContext: IrPluginContext,
+    private val godMode: Boolean,
+    private val messageCollector: MessageCollector
 ) : IrElementTransformerVoidWithContext() {
 
-    override fun visitClassNew(declaration: IrClass): IrStatement {
-        if (declaration.annotatedOrExtendsAnnotated(pluginContext.krangInterceptAnnotation)) {
-            declaration.functions.forEach {
-                visitFunctionNew(it)
-            }
-            declaration.isFakeOverride
-        }
-        return super.visitClassNew(declaration)
-    }
-
     override fun visitFunctionNew(declaration: IrFunction): IrStatement {
-        if (declaration.body != null
-            && declaration.annotatedOrExtendsAnnotated(pluginContext.krangInterceptAnnotation)
-        ) {
+        if (declaration.shouldVisit()) {
             declaration.body = declaration.toKrangFunction(pluginContext) {
-                it.annotatedOrExtendsAnnotated(pluginContext.krangRedactAnnotation)
+                !it.annotatedOrExtendsAnnotated(pluginContext.krangRedactAnnotation)
             }
         }
         return super.visitFunctionNew(declaration)
+    }
+
+    private fun IrFunction.shouldVisit(): Boolean {
+        return if (body != null) {
+            godMode || hasAnnotation(pluginContext.krangInterceptAnnotation)
+        } else false
+    }
+
+    private fun IrFunction.hasAnnotation(annotationClass: IrClassSymbol): Boolean {
+        val parent = parentClassOrNull
+        return parent?.annotatedOrExtendsAnnotated(annotationClass) == true ||
+            annotatedOrExtendsAnnotated(annotationClass)
     }
 }
 

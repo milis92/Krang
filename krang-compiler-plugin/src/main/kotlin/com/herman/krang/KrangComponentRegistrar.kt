@@ -27,7 +27,7 @@ import org.jetbrains.kotlin.compiler.plugin.ComponentRegistrar
 import org.jetbrains.kotlin.config.CompilerConfiguration
 
 @AutoService(ComponentRegistrar::class)
-class KrangComponentRegistrar(
+class KrangComponentRegistrar constructor(
     private val enabledByDefault: Boolean,
     private val godModeByDefault: Boolean
 ) : ComponentRegistrar {

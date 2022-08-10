@@ -29,6 +29,6 @@ class KrangIrGenerationExtension(
 ) : IrGenerationExtension {
 
     override fun generate(moduleFragment: IrModuleFragment, pluginContext: IrPluginContext) {
-        moduleFragment.transformChildrenVoid(KrangTransformer(pluginContext, messageCollector))
+        moduleFragment.transformChildrenVoid(KrangTransformer(pluginContext, godMode, messageCollector))
     }
 }

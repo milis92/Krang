@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package com.herman.krang
+package com.herman.krang.providers
 
 import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.params.provider.Arguments
