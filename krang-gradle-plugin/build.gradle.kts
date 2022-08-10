@@ -17,7 +17,7 @@ gradlePlugin {
     plugins {
         create("krang") {
             id = "com.github.milis92.krang"
-            displayName = "Kotlin function logging interceptor"
+            displayName = "Kotlin function interceptor"
             description = "Kotlin Compiler Plugin which adds logging interceptors to the functions"
             implementationClass = "com.herman.krang.KrangGradlePlugin"
         }

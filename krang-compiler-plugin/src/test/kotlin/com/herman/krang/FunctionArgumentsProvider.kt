@@ -28,7 +28,6 @@ class FunctionArgumentsProvider : ArgumentsProvider {
             Arguments.of(emptyList<Any>()),             //no-args
             Arguments.of(listOf<Any>(1)),               //single primitive arg
             Arguments.of(listOf<Any>(1, "test", true)), //mix of primitive and complex types
-            //   Arguments.of(listOf<Any>({ _: String -> })),            //single lambda arg
         )
     }
 }

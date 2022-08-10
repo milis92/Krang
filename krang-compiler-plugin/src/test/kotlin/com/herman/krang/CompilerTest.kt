@@ -67,6 +67,28 @@ class CompilerTest {
         }
     }
 
+    @ParameterizedTest
+    @ArgumentsSource(FunctionArgumentsProvider::class)
+    fun `when class is annotated then call to any function notifies the listener`(arguments: List<Any?>) {
+        @Language("kotlin") val source =
+            """
+                import com.herman.krang.runtime.annotations.Intercept
+                
+                @Intercept
+                class Main {
+                    fun foo(${arguments.toFunctionArguments()}){}
+                }
+                """
+
+        val clazz = source.compile("Main.kt")
+            .classLoader.loadClass("Main")
+        val func = clazz.methods.single { it.name == "foo" }
+
+        assertAfterInvoke("foo", arguments) {
+            func.invoke(clazz.getDeclaredConstructor().newInstance(), *arguments.toTypedArray())
+        }
+    }
+
     @Test
     fun `when main is called then listener is notified`() {
 
@@ -103,7 +125,6 @@ class CompilerTest {
 
         val clazz = source.compile("Main.kt")
             .classLoader.loadClass("Main")
-
         val func = clazz.methods.single { it.name == "foo" }
 
         assertAfterInvoke("foo", arguments) {
@@ -322,13 +343,13 @@ class CompilerTest {
                 assertEquals(
                     expectedFunctionName,
                     listener.capturedFunctionName,
-                    "Function name doest not match expected $expectedFunctionName received " +
+                    "Function name doest not match - expected: $expectedFunctionName received " +
                         "${listener.capturedFunctionName}"
                 )
-                if (!expectedParameters.isNullOrEmpty()) {
+                if (expectedParameters.isNotEmpty()) {
                     assertTrue(
                         expectedParameters.containsAll(listener.capturedParameters),
-                        "Function arguments not matching expected: ${expectedParameters.joinToString()} " +
+                        "Function arguments not matching - expected: ${expectedParameters.joinToString()} " +
                             "received: ${listener.capturedParameters.joinToString()}"
                     )
                 }

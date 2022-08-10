@@ -28,7 +28,7 @@ class KrangGradlePlugin : KotlinCompilerPluginSupportPlugin {
     private val runtimeDependency = "${BuildConfig.PLUGIN_GROUP_ID}:krang-runtime:${BuildConfig.PLUGIN_VERSION}"
 
     override fun apply(target: Project): Unit = with(target) {
-        extensions.create("krang", KrangGradleExtension::class.java)
+        extensions.create(KrangGradleExtension.extensionName, KrangGradleExtension::class.java)
     }
 
     override fun isApplicable(kotlinCompilation: KotlinCompilation<*>): Boolean = true
@@ -44,6 +44,7 @@ class KrangGradlePlugin : KotlinCompilerPluginSupportPlugin {
     override fun applyToCompilation(
         kotlinCompilation: KotlinCompilation<*>
     ): Provider<List<SubpluginOption>> {
+        //Add runtime dependency to kotlin source
         kotlinCompilation.kotlinSourceSets.forEach {
             it.dependencies {
                 implementation(runtimeDependency)
@@ -54,6 +55,7 @@ class KrangGradlePlugin : KotlinCompilerPluginSupportPlugin {
         return project.provider {
             listOf(
                 SubpluginOption(key = "enabled", value = extension.enabled.toString()),
+                SubpluginOption(key = "godMode", value = extension.godMode.toString()),
             )
         }
     }

@@ -16,19 +16,19 @@
 
 package com.herman.krang
 
-import com.herman.krang.internal.transformers.KrangTransformer
+import com.herman.krang.internal.KrangTransformer
 import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.cli.common.messages.MessageCollector
 import org.jetbrains.kotlin.ir.declarations.IrModuleFragment
+import org.jetbrains.kotlin.ir.visitors.transformChildrenVoid
 
 class KrangIrGenerationExtension(
     private val messageCollector: MessageCollector,
+    private val godMode: Boolean
 ) : IrGenerationExtension {
 
     override fun generate(moduleFragment: IrModuleFragment, pluginContext: IrPluginContext) {
-        for (file in moduleFragment.files) {
-           moduleFragment.transform(KrangTransformer(pluginContext, messageCollector), null)
-        }
+        moduleFragment.transformChildrenVoid(KrangTransformer(pluginContext, messageCollector))
     }
 }
