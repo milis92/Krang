@@ -31,9 +31,9 @@ abstract class KrangGradleExtension @Inject constructor(project: Project) : Name
 
     private val objects = project.objects
 
-    //Enable or disable krang at Compile time - true by default
+    // Enable or disable krang at Compile time - true by default
     val enabled: Property<Boolean> = objects.property(Boolean::class.java).convention(true)
 
-    //Enable krang for entier codebase - false by default
+    // Enable krang for entier codebase - false by default
     val godMode: Property<Boolean> = objects.property(Boolean::class.java).convention(false)
 }

@@ -139,7 +139,6 @@ class CompilerTest {
                 }
                 func.invoke(null, *injectReceiverArg.toTypedArray())
             }
-
         }
 
     @ParameterizedTest

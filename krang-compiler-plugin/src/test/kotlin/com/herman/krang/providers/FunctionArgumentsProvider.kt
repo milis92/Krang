@@ -25,9 +25,9 @@ class FunctionArgumentsProvider : ArgumentsProvider {
 
     override fun provideArguments(context: ExtensionContext?): Stream<out Arguments> {
         return Stream.of(
-            Arguments.of(emptyList<Any>()),             //no-args
-            Arguments.of(listOf<Any>(1)),               //single primitive arg
-            Arguments.of(listOf<Any>(1, "test", true)), //mix of primitive and complex types
+            Arguments.of(emptyList<Any>()), // no-args
+            Arguments.of(listOf<Any>(1)), // single primitive arg
+            Arguments.of(listOf<Any>(1, "test", true)), // mix of primitive and complex types
         )
     }
 }

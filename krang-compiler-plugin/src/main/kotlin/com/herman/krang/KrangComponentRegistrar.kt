@@ -20,8 +20,6 @@ import com.google.auto.service.AutoService
 import com.herman.krang.KrangCommandLineProcessor.Companion.ARG_ENABLED
 import com.herman.krang.KrangCommandLineProcessor.Companion.ARG_GOD_MODE
 import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
-import org.jetbrains.kotlin.cli.common.CLIConfigurationKeys
-import org.jetbrains.kotlin.cli.common.messages.MessageCollector
 import org.jetbrains.kotlin.com.intellij.mock.MockProject
 import org.jetbrains.kotlin.compiler.plugin.ComponentRegistrar
 import org.jetbrains.kotlin.config.CompilerConfiguration
@@ -46,8 +44,7 @@ class KrangComponentRegistrar constructor(
         val godMode = configuration.get(ARG_GOD_MODE, godModeByDefault)
 
         if (enabled) {
-            val messageCollector = configuration.get(CLIConfigurationKeys.MESSAGE_COLLECTOR_KEY, MessageCollector.NONE)
-            IrGenerationExtension.registerExtension(project, KrangIrGenerationExtension(messageCollector, godMode))
+            IrGenerationExtension.registerExtension(project, KrangIrGenerationExtension(godMode))
         }
     }
 }

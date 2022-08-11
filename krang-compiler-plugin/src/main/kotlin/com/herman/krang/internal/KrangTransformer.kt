@@ -19,7 +19,6 @@ package com.herman.krang.internal
 import com.herman.krang.internal.transformers.toKrangFunction
 import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
-import org.jetbrains.kotlin.cli.common.messages.MessageCollector
 import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.declarations.IrFunction
@@ -34,8 +33,7 @@ import org.jetbrains.kotlin.ir.util.superTypes
 
 class KrangTransformer(
     private val pluginContext: IrPluginContext,
-    private val godMode: Boolean,
-    private val messageCollector: MessageCollector
+    private val godMode: Boolean
 ) : IrElementTransformerVoidWithContext() {
 
     override fun visitFunctionNew(declaration: IrFunction): IrStatement {

@@ -44,7 +44,7 @@ class KrangGradlePlugin : KotlinCompilerPluginSupportPlugin {
     override fun applyToCompilation(
         kotlinCompilation: KotlinCompilation<*>
     ): Provider<List<SubpluginOption>> {
-        //Add runtime dependency to kotlin source
+        // Add runtime dependency to kotlin source
         kotlinCompilation.kotlinSourceSets.forEach {
             it.dependencies {
                 implementation(runtimeDependency)

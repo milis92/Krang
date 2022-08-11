@@ -78,8 +78,8 @@ class Main {
     return output
 }
 
-//TODO Add support for passing arguments to inner function
-fun innerFunction(arguments: List<Any?>? = null): String {
+// TODO Add support for passing arguments to inner function
+fun innerFunction(@Suppress("UNUSED_PARAMETER") arguments: List<Any?>? = null): String {
     @Language("kotlin")
     val output = """
 import com.herman.krang.runtime.annotations.Intercept
