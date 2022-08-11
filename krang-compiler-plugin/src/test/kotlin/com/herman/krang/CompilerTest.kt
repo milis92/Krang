@@ -194,7 +194,7 @@ class CompilerTest {
 
             val parameter = classLoader.loadClass("Test")
 
-            assertInvoke("foo", listOf(parameter.getDeclaredConstructor().newInstance())) {
+            assertInvoke("foo", emptyList()) {
                 func.invoke(
                     clazz.getDeclaredConstructor().newInstance(),
                     parameter.getDeclaredConstructor().newInstance()

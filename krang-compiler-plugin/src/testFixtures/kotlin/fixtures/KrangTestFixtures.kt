@@ -160,6 +160,7 @@ fun functionWithRedactedParentParameter(): String {
 import com.herman.krang.runtime.annotations.Intercept
 import com.herman.krang.runtime.annotations.Redact
 
+@Redact
 data class Test(val test:Int = 1)
 
 class Main {

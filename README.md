@@ -8,15 +8,15 @@
 [![Maven metadata URL](https://img.shields.io/maven-metadata/v?label=Snapshot&metadataUrl=https://oss.sonatype.org/content/repositories/snapshots/com/github/milis92/krang/krang-gradle-plugin/maven-metadata.xml)](https://oss.sonatype.org/content/repositories/snapshots/com/github/milis92/krang/krang-gradle-plugin/)
 
 Kotlin Compiler plugin that gives you the ability to be notified every time annotated function is called.\
-General purpose is for effortless logging or analytics,
-but it can (but probably shouldn't) be used for more advanced use-cases.
+General purpose is for effortless logging or analytics, but it can (but probably shouldn't) be used for more advanced
+use-cases.
 
 ---
 
 ## How does it work
 
-During compilation, Krang injects a small piece of code that's
-firing a callback with a name of the function and parameters passed at runtime
+During compilation, Krang injects a small piece of code that's \
+simply firing a callback with a name and parameters of the function passed at runtime.
 
 This effectively means Krang is transforming your code in a following way:
 <table>
@@ -56,49 +56,145 @@ class Foo {
 </tr>
 </table>
 
+_Note that this is all done during transformation phase of compilation, your source code won't be polluted by Krang_
+
 ---
 
 ## :memo: Usage
 
-### General
+### Intercepting individual functions
+
+To get notified every time when a function is called simply annotate that function with `@Intercept` annotation. \
+Note that Krang supports any valid function, for example extension, nested, inline functions, etc.
 
 ```kotlin
 fun main() {
-    //Register krang listener
+    // Register krang listener
     Krang.addListener { functionName, parameters ->
         println("Function with name:$functionName and ${parameters.joinToString()} invoked")
     }
 
-    //Call annotated function - Will print Function with name:bar and bzz invoked
+    // Call annotated function - Will print Function with name:bar and bzz invoked
     Foo().bar("bzz")
 }
 
 class Foo {
-    //Decorate a function with @Intercept annotation
+    // Decorate a function with @Intercept annotation
     @Intercept
     fun bar(baz: String) {
     }
 }
 ```
 
-### Redaction
+### Intercepting all functions in a class
+
+In some cases its might be useful to intercept all function calls in a given class.  \
+To do this, simply annotate desired class with `@Intercept` annotation
 
 ```kotlin
 fun main() {
-    //Register krang listener
+    // Register krang listener
     Krang.addListener { functionName, parameters ->
         println("Function with name:$functionName and ${parameters.joinToString()} invoked")
     }
 
-    //Call annotated function - Will print Function with name:bar invoked
+    // Call annotated function - Will print:
+    // Function with name: <Init> invoked for constructor call
+    // Function with name bar invoked
+    Foo().bar("bzz")
+}
+
+// Decorate a class with @Intercept annotation
+@Intercept
+class Foo {
+    fun bar(baz: String) {
+    }
+}
+```
+
+### Redacting sensitive parameters
+
+If you want to omit specific parameters from being reported to krang, annotate desiered value parameter with `@Redact`
+annotation
+
+```kotlin
+fun main() {
+    // Register krang listener
+    Krang.addListener { functionName, parameters ->
+        println("Function with name:$functionName and ${parameters.joinToString()} invoked")
+    }
+
+    // Call annotated function - Will print Function with name:bar invoked
     Foo().bar("bzz")
 }
 
 class Foo {
-    //Decorate a function with @Intercept annotation
-    //Value parameters market with Redact annotation will not be passed to Krang
+    // Decorate a function with @Intercept annotation
+    // Value parameters market with Redact annotation will not be passed to Krang
     @Intercept
     fun bar(@Redact baz: String) {
+    }
+}
+```
+
+### Inheritance
+
+Krang supports inheritance for both class and function transformations. \
+This effectively means that Krang will check if a class or a function overrides a type that has @Intercept or @Redact
+annotations and will apply a transformation based on that.
+
+```kotlin
+fun main() {
+    // Register krang listener
+    Krang.addListener { functionName, parameters ->
+        println("Function with name:$functionName and ${parameters.joinToString()} invoked")
+    }
+
+    // Call annotated function - Will print Function with name:bar invoked
+    Foo().bar(Test())
+}
+
+// Your custom type whose children should be intercepted
+@Intercept
+interface Interceptable
+
+// Your custom type that should always be omitted from Krang
+@Redact
+data class Test(val test: Int = 1)
+
+class Foo : Interceptable {
+    fun bar(test: Test) {
+    }
+}
+```
+
+### Intercepting every function in a codebase
+
+If you want to intercept all functions in a codebase enable godMode
+
+```kotlin
+// In your build.gradle
+krang {
+    enabled.set(true)
+    godMode.set(true) // false by default
+}
+
+// In your source
+fun main() {
+    // Register krang listener
+    Krang.addListener { functionName, parameters ->
+        println("Function with name:$functionName and ${parameters.joinToString()} invoked")
+    }
+
+    // Call annotated function - Will print:
+    // Function with name: <Init> invoked for constructor call
+    // Function with name bar invoked
+    Foo().bar("bzz")
+}
+
+// You don't have to annotate anything, everything will be transformed
+class Foo {
+    fun bar(baz: String) {
     }
 }
 ```
@@ -116,7 +212,7 @@ fun main() {
 ##### During compilation
 
 ```kotlin
-//In your build.gradle
+// In your build.gradle
 krang {
     enabled = false
 }
@@ -129,8 +225,8 @@ krang {
 > Plugin is published on Maven central.\
 > Note that runtime dependency is automatically applied, and you don't have to add anything explicitly.
 
-<details>
-<summary aria-expanded="true">Kotlin</summary>
+<details open>
+<summary>Kotlin</summary>
 
 ```kotlin
 //Kotlin
@@ -144,6 +240,11 @@ buildscript {
 }
 
 apply(plugin = "com.github.milis92.krang")
+
+krang {
+    enabled.set(true) // true by default
+    godMode.set(true) // false by default
+}
 ```
 
 </details>
