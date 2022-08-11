@@ -15,8 +15,6 @@ jobs:
     needs:
       - verify
     uses: ./.github/workflows/template_deploy.yml
-    with:
-      VERSION_SUFFIX: '-SNAPSHOT'
     secrets:
       REPOSITORY_USERNAME: ${{ secrets.REPOSITORY_USERNAME }}
       REPOSITORY_PASSWORD: ${{ secrets.REPOSITORY_PASSWORD }}

@@ -11,7 +11,7 @@ allprojects {
     }
 
     group = artifactConfig.getProperty("PLUGIN_GROUP_ID")
-    version = "${artifactConfig.getProperty("PLUGIN_VERSION")}${System.getenv("VERSION_SUFFIX") ?: ""}"
+    version = artifactConfig.getProperty("PLUGIN_VERSION")
 }
 
 val detektFormatting = prodLibs.detekt.formatting
