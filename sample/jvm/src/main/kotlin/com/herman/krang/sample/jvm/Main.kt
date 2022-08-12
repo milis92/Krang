@@ -11,6 +11,7 @@ fun main() {
 }
 
 class Foo {
+
     @Intercept
     fun bar(@Suppress("UNUSED_PARAMETER") param1: String) {
         /* no-op */

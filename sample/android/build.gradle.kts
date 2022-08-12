@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 plugins {
     id("com.android.application")
     kotlin("android")
@@ -5,11 +7,13 @@ plugins {
 }
 
 android {
-    compileSdkVersion(29)
     defaultConfig {
         applicationId = "com.herman.android"
-        minSdkVersion(15)
-        targetSdkVersion(29)
+
+        minSdk = 15
+        targetSdk = 29
+        compileSdk = 31
+
         versionCode = 1
         versionName = "1.0"
     }
@@ -18,16 +22,10 @@ android {
             isMinifyEnabled = false
         }
     }
-    lintOptions {
-        isQuiet = true
-        isAbortOnError = false
-        isIgnoreWarnings = true
-        isCheckReleaseBuilds = false
-    }
 }
 
 krang {
-    enabled = true
+    enabled.set(true)
 }
 
 dependencies {

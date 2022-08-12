@@ -4,5 +4,5 @@ plugins {
 }
 
 krang {
-    enabled = true
+    enabled.set(true)
 }
