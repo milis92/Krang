@@ -45,11 +45,10 @@ class KrangGradlePlugin : KotlinCompilerPluginSupportPlugin {
         kotlinCompilation: KotlinCompilation<*>
     ): Provider<List<SubpluginOption>> {
         // Add runtime dependency to kotlin source
-        kotlinCompilation.kotlinSourceSets.forEach {
-            it.dependencies {
-                implementation(runtimeDependency)
-            }
+        kotlinCompilation.defaultSourceSet.dependencies {
+            implementation(runtimeDependency)
         }
+
         val project = kotlinCompilation.target.project
         val extension = project.extensions.getByType(KrangGradleExtension::class.java)
         return project.provider {

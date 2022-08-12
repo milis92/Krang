@@ -1,4 +1,4 @@
-package com.herman.android
+package com.herman.sample.android
 
 import android.app.Application
 import android.util.Log

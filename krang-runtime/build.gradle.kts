@@ -13,6 +13,17 @@ plugins {
 
 kotlin {
     jvm()
+    js(IR) {
+        compilations.all {
+            kotlinOptions {
+                moduleKind = "umd"
+                sourceMap = true
+                metaInfo = true
+            }
+        }
+        nodejs()
+        browser()
+    }
 }
 
 mavenPublishing {

@@ -1,7 +1,7 @@
 [versions]
 #build
 kotlin = "1.7.10"
-dokka = "1.7.0"
+dokka = "1.7.10"
 maven-publish = "0.21.0"
 build-config = "3.1.0"
 google-autoService = "1.0.1"

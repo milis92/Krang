@@ -20,6 +20,3 @@ dependencyResolutionManagement {
 }
 
 includeBuild("../")
-
-include(":android")
-include(":jvm")
