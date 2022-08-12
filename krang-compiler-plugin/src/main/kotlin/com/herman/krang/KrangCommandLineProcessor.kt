@@ -30,7 +30,10 @@ class KrangCommandLineProcessor : CommandLineProcessor {
     companion object {
         private const val OPTION_ENABLED = "enabled"
 
+        private const val OPTION_GOD_MODE = "godMode"
+
         val ARG_ENABLED = CompilerConfigurationKey<Boolean>(OPTION_ENABLED)
+        val ARG_GOD_MODE = CompilerConfigurationKey<Boolean>(OPTION_GOD_MODE)
     }
 
     override val pluginId: String = "${BuildConfig.PLUGIN_GROUP_ID}.${BuildConfig.PLUGIN_ARTIFACT_ID}"
@@ -42,6 +45,12 @@ class KrangCommandLineProcessor : CommandLineProcessor {
             description = "If the Krang should be applied",
             required = false,
         ),
+        CliOption(
+            optionName = OPTION_GOD_MODE,
+            valueDescription = "bool <true | false>",
+            description = "If the Krang should be applied to entire codebase",
+            required = false,
+        ),
     )
 
     override fun processOption(
@@ -51,6 +60,7 @@ class KrangCommandLineProcessor : CommandLineProcessor {
     ) {
         return when (option.optionName) {
             OPTION_ENABLED -> configuration.put(ARG_ENABLED, value.toBoolean())
+            OPTION_GOD_MODE -> configuration.put(ARG_GOD_MODE, value.toBoolean())
             else -> throw IllegalArgumentException("Unexpected config option ${option.optionName}")
         }
     }

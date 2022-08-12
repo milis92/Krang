@@ -2,12 +2,6 @@ name: Deploy
 
 on:
   workflow_call:
-    inputs:
-      VERSION_SUFFIX:
-        description: 'Optional version suffix to be attached to the artefact'
-        type: string
-        default: ''
-        required: false
     secrets:
       SIGNING_KEY:
         description: 'Exported ascii armoured key'
@@ -40,13 +34,12 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           distribution: 'adopt'
-          java-version: 8
+          java-version: 11
       - uses: gradle/gradle-build-action@v2
         with:
           cache-read-only: false
       - run: ./gradlew publish --no-daemon --no-parallel
         env:
-          VERSION_SUFFIX: ${{ inputs.VERSION_SUFFIX }}
           ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.SIGNING_KEY }}
           ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.SIGNING_PASSWORD }}
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.REPOSITORY_USERNAME }}

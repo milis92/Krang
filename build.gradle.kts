@@ -2,6 +2,7 @@
 plugins {
     alias(prodLibs.plugins.kotlin.dokka.plugin) apply false
     alias(prodLibs.plugins.maven.publish.plugin) apply false
+    alias(prodLibs.plugins.detekt)
 }
 
 allprojects {
@@ -10,7 +11,25 @@ allprojects {
     }
 
     group = artifactConfig.getProperty("PLUGIN_GROUP_ID")
-    version = "${artifactConfig.getProperty("PLUGIN_VERSION")}${System.getenv("VERSION_SUFFIX") ?: ""}"
+    version = artifactConfig.getProperty("PLUGIN_VERSION")
+}
+
+val detektFormatting = prodLibs.detekt.formatting
+
+subprojects {
+    apply {
+        plugin("io.gitlab.arturbosch.detekt")
+    }
+
+    detekt {
+        source = files("src/main/kotlin", "src/test/kotlin", "src/commonMain/kotlin")
+        autoCorrect = true
+        config = rootProject.files("config/detekt/detekt.yml")
+    }
+
+    dependencies {
+        detektPlugins(detektFormatting)
+    }
 }
 
 tasks.withType(org.gradle.plugins.signing.Sign::class.java).configureEach sign@{

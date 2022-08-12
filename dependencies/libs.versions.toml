@@ -1,11 +1,11 @@
 [versions]
 #build
-kotlin = "1.7.0"
-dokka = "1.7.0"
-gradle-publish = "0.20.0"
-maven-publish = "0.20.0"
+kotlin = "1.7.10"
+dokka = "1.7.10"
+maven-publish = "0.21.0"
 build-config = "3.1.0"
 google-autoService = "1.0.1"
+detekt = "1.21.0"
 
 [libraries]
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
@@ -18,9 +18,12 @@ gradle-buildConfig = { module = "com.github.gmazzo:gradle-buildconfig-plugin", v
 google-autoService-core = { module = "com.google.auto.service:auto-service", version.ref = "google-autoService" }
 google-autoService-annotations = { module = "com.google.auto.service:auto-service-annotations", version.ref = "google-autoService" }
 
+detekt-formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detekt" }
+
 [plugins]
 kotlin-dokka-plugin = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 maven-publish-plugin = { id = "com.vanniktech.maven.publish", version.ref = "maven-publish" }
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 
 [bundles]
 

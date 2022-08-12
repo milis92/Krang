@@ -11,6 +11,7 @@ plugins {
     `krang-build-config`
     alias(prodLibs.plugins.kotlin.dokka.plugin)
     alias(prodLibs.plugins.maven.publish.plugin)
+    `java-test-fixtures`
 }
 
 dependencies {
@@ -24,8 +25,13 @@ dependencies {
     testImplementation(testLibs.kotlin.junit)
     testImplementation(testLibs.kotlin.compilerEmbedable)
     testImplementation(testLibs.compileTesting)
-    testImplementation(projects.krangRuntime)
+    testFixturesApi(testLibs.compileTesting)
+    testFixturesApi(projects.krangRuntime)
 }
+
+val javaComponent = components["java"] as AdhocComponentWithVariants
+javaComponent.withVariantsFromConfiguration(configurations["testFixturesApiElements"]) { skip() }
+javaComponent.withVariantsFromConfiguration(configurations["testFixturesRuntimeElements"]) { skip() }
 
 tasks.test {
     useJUnitPlatform()

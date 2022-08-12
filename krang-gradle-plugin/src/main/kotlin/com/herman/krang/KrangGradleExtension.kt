@@ -16,16 +16,24 @@
 
 package com.herman.krang
 
-import org.gradle.api.model.ObjectFactory
+import org.gradle.api.Named
+import org.gradle.api.Project
 import org.gradle.api.provider.Property
+import javax.inject.Inject
 
-open class KrangGradleExtension(objects: ObjectFactory) {
+abstract class KrangGradleExtension @Inject constructor(project: Project) : Named {
 
-    @Suppress("UnstableApiUsage")
-    private val _enabled: Property<Boolean> = objects.property(Boolean::class.java)
-        .apply { convention(true) }
+    companion object {
+        const val extensionName = "krang"
+    }
 
-    var enabled: Boolean
-        get() = _enabled.get()
-        set(value) = _enabled.set(value)
+    override fun getName(): String = extensionName
+
+    private val objects = project.objects
+
+    // Enable or disable krang at Compile time - true by default
+    val enabled: Property<Boolean> = objects.property(Boolean::class.java).convention(true)
+
+    // Enable krang for entier codebase - false by default
+    val godMode: Property<Boolean> = objects.property(Boolean::class.java).convention(false)
 }

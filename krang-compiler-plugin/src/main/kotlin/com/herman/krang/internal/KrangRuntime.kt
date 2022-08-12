@@ -28,7 +28,7 @@ import org.jetbrains.kotlin.name.FqName
 /**
  * Reference to the Krang Intercept annotation
  */
-val IrPluginContext.krangTraceAnnotation: IrClassSymbol
+val IrPluginContext.krangInterceptAnnotation: IrClassSymbol
     get() = referenceClass(FqName(Intercept::class.qualifiedName!!)) ?: throw ClassNotFoundException()
 
 /**

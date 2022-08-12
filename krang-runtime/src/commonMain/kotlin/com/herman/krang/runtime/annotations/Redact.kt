@@ -16,6 +16,5 @@
 
 package com.herman.krang.runtime.annotations
 
-@Target(AnnotationTarget.VALUE_PARAMETER)
 @Retention(AnnotationRetention.SOURCE)
 annotation class Redact

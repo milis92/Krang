@@ -15,18 +15,16 @@
  */
 package com.herman.krang
 
-import com.herman.krang.runtime.FunctionCallListener
-import com.herman.krang.runtime.Krang
+import com.herman.krang.assertions.assertCompilation
+import com.herman.krang.assertions.assertInvoke
+import com.herman.krang.providers.FunctionArgumentsProvider
 import com.tschuchort.compiletesting.KotlinCompilation
-import com.tschuchort.compiletesting.SourceFile
-import org.intellij.lang.annotations.Language
-import org.junit.jupiter.api.Assertions.assertAll
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
+import fixtures.*
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.function.Executable
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ArgumentsSource
+import java.nio.file.Files
+import java.nio.file.Path
 
 class CompilerTest {
 
@@ -40,310 +38,209 @@ class CompilerTest {
         compilerPlugins = krangComponentRegistrars
         inheritClassPath = true
         verbose = false
+        workingDir = Files.createTempDirectory(Path.of("build"), "Kotlin-Compilation").toFile()
     }
 
     @ParameterizedTest
     @ArgumentsSource(FunctionArgumentsProvider::class)
-    fun `compilation preserves original body`(arguments: List<Any?>) {
+    fun `compilation preserves original body`(arguments: List<Any?>) =
+        simpleClassFunction(arguments).compile(compiler) {
+            assertCompilation()
 
-        @Language("kotlin") val source =
-            """
-                import com.herman.krang.runtime.annotations.Intercept
+            val clazz = classLoader.loadClass("Main")
+            val func = clazz.methods.single { it.name == "foo" }
 
-                class Main {
-                    @Intercept
-                    fun foo(){
-                        
-                    }
-                }
-                """
-
-        val clazz = source.compile("Main.kt")
-            .classLoader.loadClass("Main")
-        val func = clazz.methods.single { it.name == "foo" }
-
-        assertAfterInvoke("foo", arguments) {
-            func.invoke(clazz.getDeclaredConstructor().newInstance())
+            assertInvoke("foo", arguments) {
+                func.invoke(clazz.getDeclaredConstructor().newInstance(), *arguments.toTypedArray())
+            }
         }
-    }
 
     @Test
-    fun `when main is called then listener is notified`() {
+    fun `when topLevel function is called then listener is notified`() =
+        topLevelFunction.compile(compiler) {
+            assertCompilation()
 
-        @Language("kotlin") val source =
-            """
-                import com.herman.krang.runtime.annotations.Intercept
+            val clazz = classLoader.loadClass("MainKt")
+            val func = clazz.methods.single { it.name == "main" && it.parameterCount == 0 }
 
-                @Intercept
-                fun main(){}
-                """
-
-        val clazz = source.compile("Main.kt")
-            .classLoader.loadClass("MainKt")
-        val func = clazz.methods.single { it.name == "main" && it.parameterCount == 0 }
-
-        assertAfterInvoke("main", emptyList()) {
-            func.invoke(null)
-        }
-    }
-
-    @ParameterizedTest
-    @ArgumentsSource(FunctionArgumentsProvider::class)
-    fun `when class function is called then listener is notified`(arguments: List<Any?>) {
-
-        @Language("kotlin") val source =
-            """
-                import com.herman.krang.runtime.annotations.Intercept
-
-                class Main {
-                    @Intercept
-                    fun foo(${arguments.toFunctionArguments()}){}
-                }
-                """
-
-        val clazz = source.compile("Main.kt")
-            .classLoader.loadClass("Main")
-
-        val func = clazz.methods.single { it.name == "foo" }
-
-        assertAfterInvoke("foo", arguments) {
-            func.invoke(clazz.getDeclaredConstructor().newInstance(), *arguments.toTypedArray())
-        }
-    }
-
-    @ParameterizedTest
-    @ArgumentsSource(FunctionArgumentsProvider::class)
-    fun `when function without a body is called then listener is notified`(arguments: List<Any?>) {
-
-        @Language("kotlin") val source =
-            """
-                import com.herman.krang.runtime.annotations.Intercept
-
-                class Main {
-                    @Intercept
-                    fun foo(${arguments.toFunctionArguments()}) = true
-                }
-                """
-
-        val clazz = source.compile("Main.kt")
-            .classLoader.loadClass("Main")
-        val func = clazz.methods.single { it.name == "foo" }
-
-        assertAfterInvoke("foo", arguments) {
-            func.invoke(clazz.getDeclaredConstructor().newInstance(), *arguments.toTypedArray())
-        }
-    }
-
-    @ParameterizedTest
-    @ArgumentsSource(FunctionArgumentsProvider::class)
-    fun `when scope function is called then listener is notified`(arguments: List<Any?>) {
-
-        @Language("kotlin") val source =
-            """
-                import com.herman.krang.runtime.annotations.Intercept
-
-                class Main {
-                    @Intercept
-                    fun foo(${arguments.toFunctionArguments()}) = run {}
-                }
-                """
-
-        val clazz = source.compile("Main.kt")
-            .classLoader.loadClass("Main")
-        val func = clazz.methods.single { it.name == "foo" }
-
-        assertAfterInvoke("foo", arguments) {
-            func.invoke(clazz.getDeclaredConstructor().newInstance(), *arguments.toTypedArray())
-        }
-    }
-
-    @ParameterizedTest
-    @ArgumentsSource(FunctionArgumentsProvider::class)
-    fun `when inner function is called then listener is notified`(arguments: List<Any?>) {
-
-        //TODO Add support for passing arguments to inner function
-        @Language("kotlin") val source =
-            """
-                import com.herman.krang.runtime.annotations.Intercept
-
-                class Main {
-                    fun foo() { 
-                       @Intercept 
-                       fun innerFunction(){}
-                       innerFunction() 
-                    }
-                }
-                """
-
-        val clazz = source.compile("Main.kt")
-            .classLoader.loadClass("Main")
-        val func = clazz.methods.single { it.name == "foo" }
-
-        assertAfterInvoke("innerFunction", arguments) {
-            func.invoke(clazz.getDeclaredConstructor().newInstance())
-        }
-    }
-
-    @ParameterizedTest
-    @ArgumentsSource(FunctionArgumentsProvider::class)
-    fun `when extension function is called then listener is notified`(arguments: List<Any?>) {
-
-        @Language("kotlin") val source =
-            """
-                import com.herman.krang.runtime.annotations.Intercept
-
-                @Intercept
-                fun String.foo(${arguments.toFunctionArguments()}) {}
-                """
-
-        val clazz = source.compile("Main.kt")
-            .classLoader.loadClass("MainKt")
-        val func = clazz.methods.single { it.name == "foo" }
-
-        assertAfterInvoke("foo", arguments) {
-            val injectReceiverArg = arguments.toMutableList().apply {
-                add(0, "Test")
+            assertInvoke("main", emptyList()) {
+                func.invoke(null)
             }
-            func.invoke(null, *injectReceiverArg.toTypedArray())
         }
-    }
 
     @ParameterizedTest
     @ArgumentsSource(FunctionArgumentsProvider::class)
-    fun `when overridden function is called than listener is notified`(arguments: List<Any?>) {
+    fun `when class function is called then listener is notified`(arguments: List<Any?>) =
+        simpleClassFunction(arguments).compile(compiler) {
+            assertCompilation()
 
-        @Language("kotlin") val source =
-            """
-                import com.herman.krang.runtime.annotations.Intercept
+            val clazz = classLoader.loadClass("Main")
+            val func = clazz.methods.single { it.name == "foo" }
 
-                interface Testable {
-                    fun test(${arguments.toFunctionArguments()})
-                }
-
-                class Main : Testable {
-                    @Intercept
-                    override fun test(${arguments.toFunctionArguments()}){}
-                }
-                """
-
-        val clazz = source.compile("Main.kt")
-            .classLoader.loadClass("Main")
-        val func = clazz.methods.single { it.name == "test" }
-
-        assertAfterInvoke("test", arguments) {
-            func.invoke(clazz.getDeclaredConstructor().newInstance(), *arguments.toTypedArray())
+            assertInvoke("foo", arguments) {
+                func.invoke(clazz.getDeclaredConstructor().newInstance(), *arguments.toTypedArray())
+            }
         }
-    }
 
     @ParameterizedTest
     @ArgumentsSource(FunctionArgumentsProvider::class)
-    fun `when function with annotated parent is called than listener is notified`(arguments: List<Any?>) {
+    fun `when function without a body is called then listener is notified`(arguments: List<Any?>) =
+        functionWithoutBody(arguments).compile(compiler) {
+            assertCompilation()
 
-        @Language("kotlin") val source =
-            """
-                import com.herman.krang.runtime.annotations.Intercept
+            val clazz = classLoader.loadClass("Main")
+            val func = clazz.methods.single { it.name == "foo" }
 
-                interface Testable {
-                    @Intercept
-                    fun test(${arguments.toFunctionArguments()})
-                }
-
-                class Main : Testable {
-                    override fun test(${arguments.toFunctionArguments()}){}
-                }
-                """
-
-        val clazz = source.compile("Main.kt")
-            .classLoader.loadClass("Main")
-        val func = clazz.methods.single { it.name == "test" }
-
-        assertAfterInvoke("test", arguments) {
-            func.invoke(clazz.getDeclaredConstructor().newInstance(), *arguments.toTypedArray())
+            assertInvoke("foo", arguments) {
+                func.invoke(clazz.getDeclaredConstructor().newInstance(), *arguments.toTypedArray())
+            }
         }
-    }
+
+    @ParameterizedTest
+    @ArgumentsSource(FunctionArgumentsProvider::class)
+    fun `when scope function is called then listener is notified`(arguments: List<Any?>) =
+        scopeFunction(arguments).compile(compiler) {
+            assertCompilation()
+
+            val clazz = classLoader.loadClass("Main")
+            val func = clazz.methods.single { it.name == "foo" }
+
+            assertInvoke("foo", arguments) {
+                func.invoke(clazz.getDeclaredConstructor().newInstance(), *arguments.toTypedArray())
+            }
+        }
+
+    @ParameterizedTest
+    @ArgumentsSource(FunctionArgumentsProvider::class)
+    fun `when inner function is called then listener is notified`(arguments: List<Any?>) =
+        innerFunction(arguments).compile(compiler) {
+            assertCompilation()
+
+            val clazz = classLoader.loadClass("Main")
+            val func = clazz.methods.single { it.name == "foo" }
+
+            assertInvoke("innerFunction", arguments) {
+                func.invoke(clazz.getDeclaredConstructor().newInstance())
+            }
+        }
+
+    @ParameterizedTest
+    @ArgumentsSource(FunctionArgumentsProvider::class)
+    fun `when extension function is called then listener is notified`(arguments: List<Any?>) =
+        extensionFunction(arguments).compile(compiler) {
+            assertCompilation()
+
+            val clazz = classLoader.loadClass("MainKt")
+            val func = clazz.methods.single { it.name == "foo" }
+
+            assertInvoke("foo", arguments) {
+                val injectReceiverArg = arguments.toMutableList().apply {
+                    add(0, "Test")
+                }
+                func.invoke(null, *injectReceiverArg.toTypedArray())
+            }
+        }
+
+    @ParameterizedTest
+    @ArgumentsSource(FunctionArgumentsProvider::class)
+    fun `when overridden function is called than listener is notified`(arguments: List<Any?>) =
+        overriddenFunction(arguments).compile(compiler) {
+            assertCompilation()
+
+            val clazz = classLoader.loadClass("Main")
+            val func = clazz.methods.single { it.name == "test" }
+
+            assertInvoke("test", arguments) {
+                func.invoke(clazz.getDeclaredConstructor().newInstance(), *arguments.toTypedArray())
+            }
+        }
+
+    @ParameterizedTest
+    @ArgumentsSource(FunctionArgumentsProvider::class)
+    fun `when function with annotated parent is called than listener is notified`(arguments: List<Any?>) =
+        functionWithAnnotatedParent(arguments).compile(compiler) {
+            assertCompilation()
+
+            val clazz = classLoader.loadClass("Main")
+            val func = clazz.methods.single { it.name == "test" }
+
+            assertInvoke("test", arguments) {
+                func.invoke(clazz.getDeclaredConstructor().newInstance(), *arguments.toTypedArray())
+            }
+        }
 
     @ParameterizedTest
     @ArgumentsSource(FunctionArgumentsProvider::class)
     fun `when function with redacted parameter is called listener is notified without redacted parameters`(
         arguments: List<Any?>
-    ) {
+    ) = functionWithRedactedParameter(arguments).compile(compiler) {
+        assertCompilation()
 
-        @Language("kotlin") val source =
-            """
-                import com.herman.krang.runtime.annotations.Intercept
-                import com.herman.krang.runtime.annotations.Redact
-
-                class Main {
-                    @Intercept
-                    fun foo(${arguments.toFunctionArguments(0)}){}
-                }
-                """
-
-        val clazz = source.compile("Main.kt")
-            .classLoader.loadClass("Main")
+        val clazz = classLoader.loadClass("Main")
         val func = clazz.methods.single { it.name == "foo" }
 
-        assertAfterInvoke("foo", arguments.drop(1)) {
+        assertInvoke("foo", arguments.drop(1)) {
             func.invoke(clazz.getDeclaredConstructor().newInstance(), *arguments.toTypedArray())
         }
     }
 
-    private fun List<Any?>.toFunctionArguments(redactAtIndex: Int? = null): String {
-        return if (isNullOrEmpty()) {
-            ""
-        } else {
-            joinToString {
-                """${if (redactAtIndex == indexOf(it)) "@Redact" else ""} 
-                    |arg${indexOf(it)} : ${it!!::class.qualifiedName ?: Any::class::qualifiedName}
-                """.trimMargin()
-            }
-        }
-    }
+    @Test
+    fun `when function with redacted parent parameter is called listener is notified without redacted parameters`() =
+        functionWithRedactedParentParameter().compile(compiler) {
+            assertCompilation()
 
-    private fun String.compile(fileName: String): KotlinCompilation.Result {
-        compiler.sources = listOf(SourceFile.kotlin(fileName, this, true))
-        val result = compiler.compile()
-        assertEquals(KotlinCompilation.ExitCode.OK, result.exitCode)
-        return result
-    }
+            val clazz = classLoader.loadClass("Main")
+            val func = clazz.methods.single { it.name == "foo" }
 
-    private fun assertAfterInvoke(
-        expectedFunctionName: String,
-        expectedParameters: List<Any?>,
-        invoke: () -> Unit
-    ) {
-        val listener = AssertedListener()
-        Krang.addListener(listener)
-        invoke()
-        Krang.removeListener(listener)
+            val parameter = classLoader.loadClass("Test")
 
-        assertAll(
-            Executable {
-                assertEquals(
-                    expectedFunctionName,
-                    listener.capturedFunctionName,
-                    "Function name doest not match expected $expectedFunctionName received " +
-                        "${listener.capturedFunctionName}"
+            assertInvoke("foo", emptyList()) {
+                func.invoke(
+                    clazz.getDeclaredConstructor().newInstance(),
+                    parameter.getDeclaredConstructor().newInstance()
                 )
-                if (!expectedParameters.isNullOrEmpty()) {
-                    assertTrue(
-                        expectedParameters.containsAll(listener.capturedParameters),
-                        "Function arguments not matching expected: ${expectedParameters.joinToString()} " +
-                            "received: ${listener.capturedParameters.joinToString()}"
-                    )
-                }
             }
-        )
-    }
-
-    private class AssertedListener : FunctionCallListener {
-
-        var capturedFunctionName: String? = null
-        var capturedParameters: MutableList<Any?> = mutableListOf()
-
-        override fun onFunctionCalled(functionName: String, vararg parameters: Any?) {
-            capturedFunctionName = functionName
-            capturedParameters.addAll(parameters)
         }
-    }
+
+    @ParameterizedTest
+    @ArgumentsSource(FunctionArgumentsProvider::class)
+    fun `when class is annotated all functions called notify a listener`(arguments: List<Any?>) =
+        simpleClass(arguments).compile(compiler) {
+            assertCompilation()
+
+            val clazz = classLoader.loadClass("Main")
+            val func = clazz.methods.single { it.name == "foo" }
+
+            assertInvoke(listOf("<init>", "foo"), arguments) {
+                func.invoke(clazz.getDeclaredConstructor().newInstance(), *arguments.toTypedArray())
+            }
+        }
+
+    @ParameterizedTest
+    @ArgumentsSource(FunctionArgumentsProvider::class)
+    fun `when class is annotated and if function is annotated listener is notified only once`(arguments: List<Any?>) =
+        annotatedClassWithAnnotatedFunction(arguments).compile(compiler) {
+            assertCompilation()
+
+            val clazz = classLoader.loadClass("Main")
+            val func = clazz.methods.single { it.name == "foo" }
+
+            assertInvoke(listOf("<init>", "foo"), arguments) {
+                func.invoke(clazz.getDeclaredConstructor().newInstance(), *arguments.toTypedArray())
+            }
+        }
+
+    @ParameterizedTest
+    @ArgumentsSource(FunctionArgumentsProvider::class)
+    fun `when class is with annotated parent all functions called notify a listener`(arguments: List<Any?>) =
+        simpleClassWithAnnotatedParent(arguments).compile(compiler) {
+            assertCompilation()
+
+            val clazz = classLoader.loadClass("Main")
+            val func = clazz.methods.single { it.name == "foo" }
+
+            assertInvoke(listOf("<init>", "foo"), arguments) {
+                func.invoke(clazz.getDeclaredConstructor().newInstance(), *arguments.toTypedArray())
+            }
+        }
 }
