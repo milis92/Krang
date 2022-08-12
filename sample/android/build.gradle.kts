@@ -31,3 +31,7 @@ krang {
 dependencies {
     implementation("androidx.appcompat:appcompat:1.2.0")
 }
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    kotlinOptions.jvmTarget = JavaVersion.VERSION_11.toString()
+}

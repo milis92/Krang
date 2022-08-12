@@ -33,7 +33,7 @@ class KrangGradlePlugin : KotlinCompilerPluginSupportPlugin {
 
     override fun isApplicable(kotlinCompilation: KotlinCompilation<*>): Boolean = true
 
-    override fun getCompilerPluginId(): String = "${BuildConfig.PLUGIN_GROUP_ID}.${BuildConfig.PLUGIN_ARTIFACT_ID}"
+    override fun getCompilerPluginId(): String = "$BuildConfig.PLUGIN_ARTIFACT_ID"
 
     override fun getPluginArtifact(): SubpluginArtifact = SubpluginArtifact(
         groupId = BuildConfig.PLUGIN_GROUP_ID,

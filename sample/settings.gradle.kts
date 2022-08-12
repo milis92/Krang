@@ -5,9 +5,7 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 pluginManagement {
     repositories {
         google()
-        mavenLocal()
         mavenCentral()
-        maven("https://oss.sonatype.org/content/repositories/snapshots")
     }
 }
 
@@ -20,6 +18,8 @@ dependencyResolutionManagement {
         maven("https://oss.sonatype.org/content/repositories/snapshots")
     }
 }
+
+includeBuild("../")
 
 include(":android")
 include(":jvm")

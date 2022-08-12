@@ -5,9 +5,9 @@ import com.herman.krang.runtime.annotations.Intercept
 
 fun main() {
     Krang.addListener { name, arguments ->
-        println("Function with $name and $arguments called")
+        println("Function with $name and ${arguments.joinToString()} called")
     }
-    Foo().bar("baz")
+    Foo().bar("bazz")
 }
 
 class Foo {
