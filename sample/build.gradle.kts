@@ -11,6 +11,7 @@ version = "1.0"
 
 krang {
     enabled.set(true)
+    godMode.set(true)
 }
 
 android {
