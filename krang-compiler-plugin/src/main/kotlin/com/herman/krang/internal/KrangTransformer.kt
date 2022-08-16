@@ -21,6 +21,7 @@ import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.declarations.IrClass
+import org.jetbrains.kotlin.ir.declarations.IrDeclarationOrigin
 import org.jetbrains.kotlin.ir.declarations.IrFunction
 import org.jetbrains.kotlin.ir.declarations.IrValueParameter
 import org.jetbrains.kotlin.ir.interpreter.getLastOverridden
@@ -46,9 +47,9 @@ class KrangTransformer(
     }
 
     private fun IrFunction.shouldVisit(): Boolean {
-        return if (body != null) {
-            godMode || hasAnnotation(pluginContext.krangInterceptAnnotation)
-        } else false
+        return if (body == null || this.origin == IrDeclarationOrigin.LOCAL_FUNCTION_FOR_LAMBDA)
+            false
+        else godMode || hasAnnotation(pluginContext.krangInterceptAnnotation)
     }
 
     private fun IrFunction.hasAnnotation(annotationClass: IrClassSymbol): Boolean {
