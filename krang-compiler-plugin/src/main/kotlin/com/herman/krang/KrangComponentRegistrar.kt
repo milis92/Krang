@@ -26,15 +26,9 @@ import org.jetbrains.kotlin.config.CompilerConfiguration
 
 @AutoService(ComponentRegistrar::class)
 class KrangComponentRegistrar constructor(
-    private val enabledByDefault: Boolean,
-    private val godModeByDefault: Boolean
+    private val enabledByDefault: Boolean = true,
+    private val godModeByDefault: Boolean = false
 ) : ComponentRegistrar {
-
-    @Suppress("unused")
-    constructor() : this(
-        enabledByDefault = true,
-        godModeByDefault = false
-    )
 
     override fun registerProjectComponents(
         project: MockProject,
