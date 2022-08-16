@@ -33,7 +33,7 @@ class KrangGradlePlugin : KotlinCompilerPluginSupportPlugin {
 
     override fun isApplicable(kotlinCompilation: KotlinCompilation<*>): Boolean = true
 
-    override fun getCompilerPluginId(): String = "$BuildConfig.PLUGIN_ARTIFACT_ID"
+    override fun getCompilerPluginId(): String = BuildConfig.PLUGIN_ARTIFACT_ID
 
     override fun getPluginArtifact(): SubpluginArtifact = SubpluginArtifact(
         groupId = BuildConfig.PLUGIN_GROUP_ID,
@@ -53,8 +53,8 @@ class KrangGradlePlugin : KotlinCompilerPluginSupportPlugin {
         val extension = project.extensions.getByType(KrangGradleExtension::class.java)
         return project.provider {
             listOf(
-                SubpluginOption(key = "enabled", value = extension.enabled.toString()),
-                SubpluginOption(key = "godMode", value = extension.godMode.toString()),
+                SubpluginOption(key = "enabled", value = extension.enabled.get().toString()),
+                SubpluginOption(key = "godMode", value = extension.godMode.get().toString()),
             )
         }
     }

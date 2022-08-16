@@ -36,7 +36,7 @@ class KrangCommandLineProcessor : CommandLineProcessor {
         val ARG_GOD_MODE = CompilerConfigurationKey<Boolean>(OPTION_GOD_MODE)
     }
 
-    override val pluginId: String = "${BuildConfig.PLUGIN_GROUP_ID}.${BuildConfig.PLUGIN_ARTIFACT_ID}"
+    override val pluginId: String = BuildConfig.PLUGIN_ARTIFACT_ID
 
     override val pluginOptions: Collection<CliOption> = listOf(
         CliOption(
