@@ -47,16 +47,18 @@ jobs:
       - name: Extract Property
         id: extract_prop
         shell: bash
-        run: artefact_version="$(./.github/scripts/read_property.sh -f="${GITHUB_WORKSPACE}/artifact_properties" -k="PLUGIN_VERSION")" && echo "::set-output name=artefact_version::$artefact_version"
+        run: artefact_version="$(./.github/utils/read_property.sh -f="${GITHUB_WORKSPACE}/artifact.properties" -k="PLUGIN_VERSION")" && echo "::set-output name=artefact_version::$artefact_version"
 
   tag-snapshot:
     name: Tag Snapshot
     runs-on: "ubuntu-latest"
+    needs:
+      - deploy
     steps:
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          title: steps.deploy.outputs.artefact_version
-          automatic_release_tag: steps.deploy.outputs.artefact_version
-          prerelease: endsWith(${{ steps.deploy.outputs.artefact_version }}, "SNAPSHOT")
+          title: ${{ steps.deploy.outputs.artefact_version }}
+          automatic_release_tag: ${{ steps.deploy.outputs.artefact_version }}
+          prerelease: ${{ endsWith(steps.deploy.outputs.artefact_version, 'SNAPSHOT') }}
           draft: false
