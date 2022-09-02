@@ -1,0 +1,12 @@
+name: Check
+
+on:
+  pull_request:
+    branches:
+      - feature/**
+      - bugfix/**
+
+jobs:
+  verify:
+    name: Check
+    uses: ./.github/workflows/template_check.yml

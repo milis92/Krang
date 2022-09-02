@@ -1,14 +1,14 @@
-name: Deploy Release
+name: Deploy
 
 on:
   push:
-    branches:
-      - main
+    tags:
+      - "v*"
 
 jobs:
   verify:
     name: Verify
-    uses: ./.github/workflows/template_verify.yml
+    uses: ./.github/workflows/template_check.yml
 
   deploy:
     name: Deploy

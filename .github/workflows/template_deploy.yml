@@ -44,3 +44,19 @@ jobs:
           ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.SIGNING_PASSWORD }}
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.REPOSITORY_USERNAME }}
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.REPOSITORY_PASSWORD }}
+      - name: Extract Property
+        id: extract_prop
+        shell: bash
+        run: artefact_version="$(./.github/scripts/read_property.sh -f="${GITHUB_WORKSPACE}/artifact_properties" -k="PLUGIN_VERSION")" && echo "::set-output name=artefact_version::$artefact_version"
+
+  tag-snapshot:
+    name: Tag Snapshot
+    runs-on: "ubuntu-latest"
+    steps:
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          title: steps.deploy.outputs.artefact_version
+          automatic_release_tag: steps.deploy.outputs.artefact_version
+          prerelease: endsWith(${{ steps.deploy.outputs.artefact_version }}, "SNAPSHOT")
+          draft: false
