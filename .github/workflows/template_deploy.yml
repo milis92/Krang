@@ -60,5 +60,5 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           title: steps.deploy.outputs.artefact_version
           automatic_release_tag: steps.deploy.outputs.artefact_version
-          prerelease: endsWith(${{ steps.deploy.outputs.artefact_version }}, "SNAPSHOT")
+          prerelease: ${{ endsWith(${{ steps.deploy.outputs.artefact_version }}, "SNAPSHOT") }}
           draft: false
