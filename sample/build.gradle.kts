@@ -3,7 +3,7 @@
 plugins {
     kotlin("multiplatform") version "1.7.10"
     id("com.android.application") version "7.2.2"
-    id("com.github.milis92.krang") version "2.5.0-SNAPSHOT"
+    id("com.github.milis92.krang") version "2.5.0"
 }
 
 group = "com.herman.sample"

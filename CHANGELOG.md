@@ -1,6 +1,13 @@
 Change Log
 ==========
 
+## Version 2.5.0
+
+### General
+
+- Provide the ability for entire classes to be intercepted #26
+- Provide the ability for the entire codebase to be intercepted #26
+
 ## Version 2.4.0
 
 ### General
