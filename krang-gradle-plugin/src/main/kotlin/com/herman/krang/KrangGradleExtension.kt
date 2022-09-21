@@ -16,10 +16,12 @@
 
 package com.herman.krang
 
+import org.gradle.api.Action
 import org.gradle.api.Named
 import org.gradle.api.model.ObjectFactory
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Internal
+import org.jetbrains.kotlin.gradle.plugin.KotlinCompilation
 import javax.inject.Inject
 
 abstract class KrangGradleExtension @Inject constructor(
@@ -38,4 +40,12 @@ abstract class KrangGradleExtension @Inject constructor(
 
     // Enable krang for entire codebase - false by default
     val godMode: Property<Boolean> = objects.property(Boolean::class.java).convention(false)
+
+    // Allow krang to support different configurations based on the KotlinCompilation
+    internal var variantFilter: Action<KotlinCompilation<*>>? = null
+
+    @Suppress("unused")
+    fun variantFilter(action: Action<KotlinCompilation<*>>) {
+        variantFilter = action
+    }
 }

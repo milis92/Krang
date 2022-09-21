@@ -25,7 +25,10 @@ import org.jetbrains.kotlin.gradle.plugin.SubpluginOption
 @Suppress("unused")
 class KrangGradlePlugin : KotlinCompilerPluginSupportPlugin {
 
-    private val runtimeDependency = "${BuildConfig.PLUGIN_GROUP_ID}:krang-runtime:${BuildConfig.PLUGIN_VERSION}"
+    companion object {
+        private const val runtimeDependency =
+            "${BuildConfig.PLUGIN_GROUP_ID}:krang-runtime:${BuildConfig.PLUGIN_VERSION}"
+    }
 
     override fun apply(
         target: Project
@@ -57,6 +60,9 @@ class KrangGradlePlugin : KotlinCompilerPluginSupportPlugin {
         val project = kotlinCompilation.target.project
         val extension = project.extensions.getByType(KrangGradleExtension::class.java)
 
+        // Run the optional variant filter to potentially change the config based on the compilation
+        extension.variantFilter?.execute(kotlinCompilation)
+
         return project.provider {
             listOf(
                 SubpluginOption(key = "enabled", value = extension.enabled.get().toString()),
@@ -65,3 +71,4 @@ class KrangGradlePlugin : KotlinCompilerPluginSupportPlugin {
         }
     }
 }
+
