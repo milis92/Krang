@@ -37,21 +37,34 @@ class KrangTransformer(
     private val godMode: Boolean
 ) : IrElementTransformerVoidWithContext() {
 
-    override fun visitFunctionNew(declaration: IrFunction): IrStatement {
+    override fun visitFunctionNew(
+        declaration: IrFunction
+    ): IrStatement {
         if (declaration.shouldVisit()) {
-            declaration.body = declaration.toKrangFunction(pluginContext) {
-                !it.annotatedOrExtendsAnnotated(pluginContext.krangRedactAnnotation)
+            // Construct a new block body and filter out all value parameters that should not be passed to Krang
+            declaration.body = declaration.toKrangFunction(pluginContext) { valueParameter ->
+                // Filter all value parameters that are annotated with Redact Annotation
+                valueParameter.annotatedOrExtendsAnnotated(pluginContext.krangRedactAnnotation)
             }
         }
         return super.visitFunctionNew(declaration)
     }
 
+    /**
+     * Determines if the function should be transformed by krang
+     * Order of checks:
+     * - If the function body is null - escape
+     * - If the function is synthetic function for lambda - escape
+     * - If godMode is enabled - run the transformation (if previous conditions apply)
+     * - If a function has the Intercept annotation - run the transformation (if previous conditions apply)
+     */
     private fun IrFunction.shouldVisit(): Boolean {
         return if (body == null || this.origin == IrDeclarationOrigin.LOCAL_FUNCTION_FOR_LAMBDA)
             false
         else godMode || hasAnnotation(pluginContext.krangInterceptAnnotation)
     }
 
+    // Check if the function or a containing class has the supplied annotation
     private fun IrFunction.hasAnnotation(annotationClass: IrClassSymbol): Boolean {
         val parent = parentClassOrNull
         return parent?.annotatedOrExtendsAnnotated(annotationClass) == true ||
@@ -59,7 +72,10 @@ class KrangTransformer(
     }
 }
 
-fun IrClass.annotatedOrExtendsAnnotated(annotationClass: IrClassSymbol): Boolean {
+// Returns true if the class or its parent has the supplied annotation
+fun IrClass.annotatedOrExtendsAnnotated(
+    annotationClass: IrClassSymbol
+): Boolean {
     val parentHasAnnotation = superTypes.map {
         it.hasAnnotation(annotationClass)
     }.contains(true)
@@ -67,11 +83,17 @@ fun IrClass.annotatedOrExtendsAnnotated(annotationClass: IrClassSymbol): Boolean
     return hasAnnotation(annotationClass) || parentHasAnnotation
 }
 
-fun IrValueParameter.annotatedOrExtendsAnnotated(annotationClass: IrClassSymbol): Boolean {
+// Returns true if the value parameter or its TypeArgument has supplied annotation
+fun IrValueParameter.annotatedOrExtendsAnnotated(
+    annotationClass: IrClassSymbol
+): Boolean {
     return hasAnnotation(annotationClass) || type.annotatedOrExtendsAnnotated(annotationClass)
 }
 
-fun IrFunction.annotatedOrExtendsAnnotated(annotationClass: IrClassSymbol): Boolean {
+// Returns true if a function or its super counterpart is annotated with supplied annotation
+fun IrFunction.annotatedOrExtendsAnnotated(
+    annotationClass: IrClassSymbol
+): Boolean {
     return if (!isFakeOverriddenFromAny()) {
         return when {
             hasAnnotation(annotationClass) -> true
@@ -81,7 +103,9 @@ fun IrFunction.annotatedOrExtendsAnnotated(annotationClass: IrClassSymbol): Bool
     } else false
 }
 
-fun IrType.annotatedOrExtendsAnnotated(annotationClass: IrClassSymbol): Boolean {
+fun IrType.annotatedOrExtendsAnnotated(
+    annotationClass: IrClassSymbol
+): Boolean {
     val superTypes = superTypes()
     superTypes.forEach {
         it.hasAnnotation(annotationClass)

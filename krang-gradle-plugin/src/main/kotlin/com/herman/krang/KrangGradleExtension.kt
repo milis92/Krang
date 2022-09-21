@@ -17,23 +17,25 @@
 package com.herman.krang
 
 import org.gradle.api.Named
-import org.gradle.api.Project
+import org.gradle.api.model.ObjectFactory
 import org.gradle.api.provider.Property
+import org.gradle.api.tasks.Internal
 import javax.inject.Inject
 
-abstract class KrangGradleExtension @Inject constructor(project: Project) : Named {
+abstract class KrangGradleExtension @Inject constructor(
+    objects: ObjectFactory
+) : Named {
 
     companion object {
         const val extensionName = "krang"
     }
 
+    @Internal
     override fun getName(): String = extensionName
-
-    private val objects = project.objects
 
     // Enable or disable krang at Compile time - true by default
     val enabled: Property<Boolean> = objects.property(Boolean::class.java).convention(true)
 
-    // Enable krang for entier codebase - false by default
+    // Enable krang for entire codebase - false by default
     val godMode: Property<Boolean> = objects.property(Boolean::class.java).convention(false)
 }
