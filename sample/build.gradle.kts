@@ -1,5 +1,8 @@
 @file:Suppress("UnstableApiUsage")
 
+import org.jetbrains.kotlin.gradle.plugin.KotlinCompilation
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinJvmAndroidCompilation
+
 plugins {
     kotlin("multiplatform") version "1.7.10"
     id("com.android.application") version "7.2.2"
@@ -12,6 +15,17 @@ version = "1.0"
 krang {
     enabled.set(true)
     godMode.set(true)
+
+    variantFilter {
+        val kotlinCompilation: KotlinCompilation<*> = this
+        when (kotlinCompilation) {
+            is KotlinJvmAndroidCompilation -> {
+                if (kotlinCompilation.androidVariant.buildType.name == "release") {
+                    enabled.set(false)
+                }
+            }
+        }
+    }
 }
 
 android {

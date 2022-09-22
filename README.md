@@ -7,7 +7,7 @@
 [![Maven metadata URL](https://img.shields.io/maven-metadata/v?label=Release&metadataUrl=https://repo1.maven.org/maven2/com/github/milis92/krang/krang-gradle-plugin/maven-metadata.xml)](https://oss.sonatype.org/content/repositories/snapshots/com/github/milis92/krang/krang-gradle-plugin/)
 [![Maven metadata URL](https://img.shields.io/maven-metadata/v?label=Snapshot&metadataUrl=https://oss.sonatype.org/content/repositories/snapshots/com/github/milis92/krang/krang-gradle-plugin/maven-metadata.xml)](https://oss.sonatype.org/content/repositories/snapshots/com/github/milis92/krang/krang-gradle-plugin/)
 
-Kotlin Compiler plugin that gives you the ability to be notified every time annotated function is called.\
+Kotlin Compiler plugin that gives you the ability to be notified every time annotated function is called.  
 General purpose is for effortless logging or analytics, but it can (but probably shouldn't) be used for more advanced
 use-cases.
 
@@ -15,8 +15,8 @@ use-cases.
 
 ## How does it work
 
-During compilation, Krang injects a small piece of code that's \
-simply firing a callback with a name and parameters of the function passed at runtime.
+During compilation, Krang Compiler Plugin injects a small piece of code at the beginning of a function body,  
+that's simply notifying Krang Runtime that a function with a given name and parameters has been called.
 
 This effectively means Krang is transforming your code in a following way:
 <table>
@@ -56,7 +56,7 @@ class Foo {
 </tr>
 </table>
 
-_Note that this is all done during transformation phase of compilation, your source code won't be polluted by Krang_
+_Note that this is all done during transformation phase of the compilation, your source code won't be polluted by Krang_
 
 ---
 
@@ -64,7 +64,7 @@ _Note that this is all done during transformation phase of compilation, your sou
 
 ### Intercepting individual functions
 
-To get notified every time when a function is called simply annotate that function with `@Intercept` annotation. \
+To get notified every time when a function is called simply annotate that function with `@Intercept` annotation.  
 Note that Krang supports any valid function, for example extension, nested, inline functions, etc.
 
 ```kotlin
@@ -88,7 +88,7 @@ class Foo {
 
 ### Intercepting all functions in a class
 
-In some cases its might be useful to intercept all function calls in a given class.  \
+In some cases its might be useful to intercept all function calls in a given class.  
 To do this, simply annotate desired class with `@Intercept` annotation
 
 ```kotlin
@@ -139,7 +139,7 @@ class Foo {
 
 ### Inheritance
 
-Krang supports inheritance for both class and function transformations. \
+Krang supports inheritance for both class and function transformations.  
 This effectively means that Krang will check if a class or a function overrides a type that has @Intercept or @Redact
 annotations and will apply a transformation based on that.
 
@@ -222,7 +222,7 @@ krang {
 
 ## :cloud: Setup
 
-> Plugin is published on Maven central.\
+> Plugin is published on Maven central.  
 > Note that runtime dependency is automatically applied, and you don't have to add anything explicitly.
 
 <details open>
@@ -285,6 +285,29 @@ apply(plugin = "com.github.milis92.krang")
 ```
 
 </details>
+
+### Variant Filtering
+
+Krang Gradle plugin supports different configurations per variant.  
+This is particularly interesting for Android project, if you for example want to disable Krang for release builds.
+
+```kotlin
+krang {
+    enabled.set(true)
+    godMode.set(true)
+
+    variantFilter {
+        val kotlinCompilation: KotlinCompilation<*> = this
+        when (kotlinCompilation) {
+            is KotlinJvmAndroidCompilation -> {
+                if (kotlinCompilation.androidVariant.buildType.name == "release") {
+                    enabled.set(false)
+                }
+            }
+        }
+    }
+}
+```
 
 ## :cloud: Enabling Kotlin IR backend
 

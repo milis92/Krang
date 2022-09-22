@@ -24,20 +24,26 @@ private val IrPluginContext.anyNullableType
     get() = this.irBuiltIns.anyNType
 
 /**
- * Transforms the function body
+ * Transforms the function body with addition of a Krang probe
  *
- * @return new block body of a function with original statements and [irCall] to the runtime library with arguments
- * as vararg
+ * @param context Compiler Context
+ * @param parametersFilter Value parameters matching the filter condition will not be passed to krang
+ *
+ * @return new block body of a function with original statements and [irCall] to the Krang runtime library with
+ * arguments as vararg
  */
 fun IrFunction.toKrangFunction(
     context: IrPluginContext,
     parametersFilter: (IrValueParameter) -> Boolean
 ): IrBlockBody = DeclarationIrBuilder(context, symbol).irBlockBody {
+    // Escape if original body is null
+    val body = body ?: return@irBlockBody
+
     // Construct vararg from function parameters
     val argsAsVarArg = context.varargOf(
         context.anyNullableType,
         valueParameters
-            .filter(parametersFilter)
+            .filterNot(parametersFilter) // Filter redacted parameters
             .map { valueParameter ->
                 irGet(valueParameter)
             }
@@ -49,9 +55,10 @@ fun IrFunction.toKrangFunction(
         dispatchReceiver = irGetObject(context.krangRuntime)
     }
     // Apply original statements
-    for (statement in body!!.statements) +statement
+    for (statement in body.statements) +statement
 }
 
+// Constructs a new vararg of value parameters
 private fun IrPluginContext.varargOf(
     elementType: IrType,
     elements: Iterable<IrExpression>

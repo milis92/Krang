@@ -29,7 +29,6 @@ class KrangCommandLineProcessor : CommandLineProcessor {
 
     companion object {
         private const val OPTION_ENABLED = "enabled"
-
         private const val OPTION_GOD_MODE = "godMode"
 
         val ARG_ENABLED = CompilerConfigurationKey<Boolean>(OPTION_ENABLED)
