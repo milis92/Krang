@@ -5,6 +5,7 @@ dokka = "1.7.10"
 maven-publish = "0.21.0"
 google-autoService = "1.0.1"
 detekt = "1.21.0"
+nebula-release = "16.1.0"
 
 [libraries]
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
@@ -20,6 +21,7 @@ detekt-formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", 
 kotlin-dokka-plugin = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 maven-publish-plugin = { id = "com.vanniktech.maven.publish", version.ref = "maven-publish" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+nebula-release = { id = "nebula.release", version.ref = "nebula-release" }
 
 [bundles]
 
