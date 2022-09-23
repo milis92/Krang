@@ -3,15 +3,7 @@ plugins {
     alias(prodLibs.plugins.kotlin.dokka.plugin) apply false
     alias(prodLibs.plugins.maven.publish.plugin) apply false
     alias(prodLibs.plugins.detekt)
-}
-
-allprojects {
-    val artifactConfig: java.util.Properties by lazy {
-        org.jetbrains.kotlin.konan.properties.loadProperties(rootDir.resolve("artifact.properties").path)
-    }
-
-    group = artifactConfig.getProperty("PLUGIN_GROUP_ID")
-    version = artifactConfig.getProperty("PLUGIN_VERSION")
+    alias(prodLibs.plugins.nebula.release)
 }
 
 val detektFormatting = prodLibs.detekt.formatting

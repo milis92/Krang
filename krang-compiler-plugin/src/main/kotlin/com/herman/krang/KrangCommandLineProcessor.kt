@@ -28,6 +28,8 @@ import org.jetbrains.kotlin.config.CompilerConfigurationKey
 class KrangCommandLineProcessor : CommandLineProcessor {
 
     companion object {
+        private const val COMPILER_PLUGIN_ARTIFACT_ID = "krang-compiler-plugin"
+
         private const val OPTION_ENABLED = "enabled"
         private const val OPTION_GOD_MODE = "godMode"
 
@@ -35,7 +37,7 @@ class KrangCommandLineProcessor : CommandLineProcessor {
         val ARG_GOD_MODE = CompilerConfigurationKey<Boolean>(OPTION_GOD_MODE)
     }
 
-    override val pluginId: String = BuildConfig.PLUGIN_ARTIFACT_ID
+    override val pluginId: String = COMPILER_PLUGIN_ARTIFACT_ID
 
     override val pluginOptions: Collection<CliOption> = listOf(
         CliOption(

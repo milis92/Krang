@@ -5,7 +5,6 @@ plugins {
 
 dependencies {
     implementation(prodLibs.kotlin.gradle.plugin)
-    implementation(prodLibs.gradle.buildConfig)
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {

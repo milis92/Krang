@@ -8,7 +8,6 @@ plugins {
     kotlin("jvm")
     `kotlin-common-conventions`
     `kotlin-kapt`
-    `krang-build-config`
     alias(prodLibs.plugins.kotlin.dokka.plugin)
     alias(prodLibs.plugins.maven.publish.plugin)
     `java-test-fixtures`
