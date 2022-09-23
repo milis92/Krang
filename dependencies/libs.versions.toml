@@ -10,7 +10,6 @@ detekt = "1.21.0"
 [libraries]
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 kotlin-gradle-api = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin-api" }
-kotlin-compiler = { module = "org.jetbrains.kotlin:kotlin-compiler" }
 kotlin-compilerEmbedable = { module = "org.jetbrains.kotlin:kotlin-compiler-embeddable" }
 
 gradle-buildConfig = { module = "com.github.gmazzo:gradle-buildconfig-plugin", version.ref = "build-config" }

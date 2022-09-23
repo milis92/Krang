@@ -2,10 +2,10 @@ package com.herman.krang
 
 import com.herman.krang.assertions.assertCompilation
 import com.herman.krang.assertions.assertInvoke
+import com.herman.krang.assertions.compile
 import com.herman.krang.providers.FunctionArgumentsProvider
 import com.tschuchort.compiletesting.KotlinCompilation
 import fixtures.classWithFunctionWithoutInterceptAnnotation
-import fixtures.compile
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ArgumentsSource
 import java.nio.file.Files
@@ -36,7 +36,7 @@ class GodModeTest {
             val clazz = classLoader.loadClass("Main")
             val func = clazz.methods.single { it.name == "foo" }
 
-            assertInvoke(listOf("<init>", "foo"), arguments) {
+            assertInvoke(listOf("Main.<init>", "Main.foo"), arguments) {
                 func.invoke(clazz.getDeclaredConstructor().newInstance(), *arguments.toTypedArray())
             }
         }

@@ -25,26 +25,18 @@ import org.jetbrains.kotlin.ir.symbols.IrFunctionSymbol
 import org.jetbrains.kotlin.ir.util.getSimpleFunction
 import org.jetbrains.kotlin.name.FqName
 
-/**
- * Reference to the Krang Intercept annotation
- */
+// Reference to the Krang Intercept annotation
 val IrPluginContext.krangInterceptAnnotation: IrClassSymbol
     get() = referenceClass(FqName(Intercept::class.qualifiedName!!)) ?: throw ClassNotFoundException()
 
-/**
- * Reference to the Krang Redact annotation
- */
+// Reference to the Krang Redact annotation
 val IrPluginContext.krangRedactAnnotation: IrClassSymbol
     get() = referenceClass(FqName(Redact::class.qualifiedName!!)) ?: throw ClassNotFoundException()
 
-/**
- * Reference to the runtime
- */
+// Reference to the Krang Runtime
 val IrPluginContext.krangRuntime: IrClassSymbol
     get() = referenceClass(FqName(Krang::class.qualifiedName!!)) ?: throw ClassNotFoundException()
 
-/**
- * Reference to the runtime interceptor function
- */
+// Reference to the runtime interceptor function
 val IrPluginContext.krangInterceptFunctionCall: IrFunctionSymbol
     get() = krangRuntime.getSimpleFunction("notifyListeners")!!

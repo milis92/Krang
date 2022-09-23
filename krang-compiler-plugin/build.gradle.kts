@@ -25,7 +25,6 @@ dependencies {
     testImplementation(testLibs.kotlin.junit)
     testImplementation(testLibs.kotlin.compilerEmbedable)
     testImplementation(testLibs.compileTesting)
-    testFixturesApi(testLibs.compileTesting)
     testFixturesApi(projects.krangRuntime)
 }
 

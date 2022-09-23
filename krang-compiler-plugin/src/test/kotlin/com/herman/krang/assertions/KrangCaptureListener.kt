@@ -1,8 +1,8 @@
-package fixtures
+package com.herman.krang.assertions
 
 import com.herman.krang.runtime.FunctionCallListener
 
-class AssertedListener : FunctionCallListener {
+class KrangCaptureListener : FunctionCallListener {
 
     var capturedFunctionName: MutableList<String?> = mutableListOf()
     var capturedParameters: MutableList<Any?> = mutableListOf()

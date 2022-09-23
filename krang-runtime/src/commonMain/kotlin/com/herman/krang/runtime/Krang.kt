@@ -36,7 +36,10 @@ object Krang {
     }
 
     @Suppress("unused")
-    fun notifyListeners(functionName: String, vararg arguments: Any?) {
+    fun notifyListeners(
+        functionName: String,
+        vararg arguments: Any?
+    ) {
         if (enabled) functionCallListeners.forEach { it.onFunctionCalled(functionName, arguments) }
     }
 }
