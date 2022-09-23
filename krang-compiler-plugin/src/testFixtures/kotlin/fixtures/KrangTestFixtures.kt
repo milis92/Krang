@@ -2,19 +2,7 @@
 
 package fixtures
 
-import com.tschuchort.compiletesting.KotlinCompilation
-import com.tschuchort.compiletesting.SourceFile
 import org.intellij.lang.annotations.Language
-
-fun String.compile(
-    compiler: KotlinCompilation,
-    fileName: String = "Main.kt",
-    compilationResult: KotlinCompilation.Result.() -> Unit
-) {
-    compiler.sources = listOf(SourceFile.kotlin(fileName, this, true))
-    val result = compiler.compile()
-    compilationResult(result)
-}
 
 private fun List<Any?>?.toFunctionArguments(redactAtIndex: Int? = null): String {
     return if (isNullOrEmpty()) {

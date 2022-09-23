@@ -18,6 +18,7 @@ import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.impl.IrVarargImpl
 import org.jetbrains.kotlin.ir.types.IrType
 import org.jetbrains.kotlin.ir.types.typeWith
+import org.jetbrains.kotlin.ir.util.kotlinFqName
 import org.jetbrains.kotlin.ir.util.statements
 
 private val IrPluginContext.anyNullableType
@@ -50,7 +51,7 @@ fun IrFunction.toKrangFunction(
     )
     // Insert krang probe
     +irCall(context.krangInterceptFunctionCall).apply {
-        putValueArgument(0, irString("$name"))
+        putValueArgument(0, irString(kotlinFqName.asString()))
         putValueArgument(1, argsAsVarArg.deepCopyWithVariables())
         dispatchReceiver = irGetObject(context.krangRuntime)
     }
