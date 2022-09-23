@@ -8,7 +8,6 @@ plugins {
     `java-gradle-plugin`
     kotlin("jvm")
     `kotlin-common-conventions`
-    `krang-build-config`
     alias(prodLibs.plugins.kotlin.dokka.plugin)
     alias(prodLibs.plugins.maven.publish.plugin)
 }

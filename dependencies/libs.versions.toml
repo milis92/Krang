@@ -3,7 +3,6 @@
 kotlin = "1.7.10"
 dokka = "1.7.10"
 maven-publish = "0.21.0"
-build-config = "3.1.0"
 google-autoService = "1.0.1"
 detekt = "1.21.0"
 
@@ -11,8 +10,6 @@ detekt = "1.21.0"
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 kotlin-gradle-api = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin-api" }
 kotlin-compilerEmbedable = { module = "org.jetbrains.kotlin:kotlin-compiler-embeddable" }
-
-gradle-buildConfig = { module = "com.github.gmazzo:gradle-buildconfig-plugin", version.ref = "build-config" }
 
 google-autoService-core = { module = "com.google.auto.service:auto-service", version.ref = "google-autoService" }
 google-autoService-annotations = { module = "com.google.auto.service:auto-service-annotations", version.ref = "google-autoService" }
