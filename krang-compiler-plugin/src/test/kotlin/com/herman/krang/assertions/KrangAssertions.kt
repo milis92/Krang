@@ -2,9 +2,19 @@ package com.herman.krang.assertions
 
 import com.herman.krang.runtime.Krang
 import com.tschuchort.compiletesting.KotlinCompilation
-import fixtures.AssertedListener
+import com.tschuchort.compiletesting.SourceFile
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.function.Executable
+
+fun String.compile(
+    compiler: KotlinCompilation,
+    fileName: String = "Main.kt",
+    compilationResult: KotlinCompilation.Result.() -> Unit
+) {
+    compiler.sources = listOf(SourceFile.kotlin(fileName, this, true))
+    val result = compiler.compile()
+    compilationResult(result)
+}
 
 fun KotlinCompilation.Result.assertCompilation() {
     Assertions.assertEquals(KotlinCompilation.ExitCode.OK, exitCode)
@@ -25,7 +35,7 @@ fun assertInvoke(
     expectedNumberOfInvocations: Int = expectedFunctions.size,
     assert: () -> Unit
 ) {
-    val listener = AssertedListener()
+    val listener = KrangCaptureListener()
     Krang.addListener(listener)
     assert()
     Krang.removeListener(listener)
