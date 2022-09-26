@@ -1,3 +1,5 @@
+import org.ajoberstar.reckon.gradle.ReckonExtension
+
 rootProject.name = "krang"
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
@@ -21,6 +23,17 @@ dependencyResolutionManagement {
 
 plugins {
     id("com.gradle.enterprise") version "3.9"
+    id("org.ajoberstar.reckon.settings") version "0.17.0-beta.4"
+}
+
+extensions.configure<ReckonExtension>("reckon") {
+    snapshots()
+    setScopeCalc(calcScopeFromProp().or(calcScopeFromCommitMessages()))
+    setStageCalc(calcStageFromProp())
+
+    setTagWriter { version ->
+        "v$version"
+    }
 }
 
 gradleEnterprise {

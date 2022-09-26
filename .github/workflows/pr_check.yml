@@ -1,10 +1,10 @@
-name: Check
+name: Check Dev
 
 on:
   pull_request:
     branches:
-      - feature/**
-      - bugfix/**
+      - main
+      - dev
 
 jobs:
   verify:

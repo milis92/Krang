@@ -1,9 +1,9 @@
-name: Deploy
+name: Snapshot
 
 on:
   push:
-    tags:
-      - "v*"
+    branches:
+      - main
 
 jobs:
   verify:

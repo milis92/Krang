@@ -3,7 +3,6 @@ plugins {
     alias(prodLibs.plugins.kotlin.dokka.plugin) apply false
     alias(prodLibs.plugins.maven.publish.plugin) apply false
     alias(prodLibs.plugins.detekt)
-    alias(prodLibs.plugins.nebula.release)
 }
 
 val detektFormatting = prodLibs.detekt.formatting
@@ -21,6 +20,12 @@ subprojects {
 
     dependencies {
         detektPlugins(detektFormatting)
+    }
+}
+
+tasks.register("versionToFile") {
+    doLast {
+        file("version.txt").writeText(version.toString())
     }
 }
 
