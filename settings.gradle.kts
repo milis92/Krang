@@ -28,7 +28,7 @@ plugins {
 
 extensions.configure<ReckonExtension>("reckon") {
     snapshots()
-    setScopeCalc(calcScopeFromProp().or(calcScopeFromCommitMessages()))
+    setScopeCalc(calcScopeFromProp())
     setStageCalc(calcStageFromProp())
 
     setTagWriter { version ->

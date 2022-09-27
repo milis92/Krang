@@ -2,6 +2,11 @@ name: Deploy
 
 on:
   workflow_call:
+    inputs:
+      STAGE:
+        required: true
+        description: 'Execute gradle tasks before publish'
+        type: string
     secrets:
       SIGNING_KEY:
         description: 'Exported ascii armoured key'
@@ -42,7 +47,7 @@ jobs:
       - uses: gradle/gradle-build-action@v2
         with:
           cache-read-only: false
-      - run: ./gradlew versionToFile publish --no-daemon --no-parallel
+      - run: ./gradlew -Preckon.stage=${{ inputs.STAGE }} versionToFile publish --no-daemon --no-parallel
         env:
           ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.SIGNING_KEY }}
           ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.SIGNING_PASSWORD }}
@@ -63,5 +68,5 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           title: ${{ needs.deploy.outputs.version }}
           automatic_release_tag: ${{ needs.deploy.outputs.version }}
-          prerelease: ${{ endsWith(needs.deploy.outputs.version, 'SNAPSHOT') }}
-          draft: false
+          prerelease: false
+          draft: ${{ endsWith(needs.deploy.outputs.version, 'SNAPSHOT') }}
