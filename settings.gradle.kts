@@ -34,6 +34,15 @@ extensions.configure<ReckonExtension>("reckon") {
     setTagWriter { version ->
         "v$version"
     }
+
+    //Don't consider published snapshots as valid versions
+    setTagParser { tagName ->
+        if (tagName.endsWith("SNAPSHOT")) {
+            java.util.Optional.empty()
+        } else {
+            org.ajoberstar.reckon.core.Version.parse(tagName.removePrefix("v"))
+        }
+    }
 }
 
 gradleEnterprise {
