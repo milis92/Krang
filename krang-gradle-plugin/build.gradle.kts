@@ -10,6 +10,7 @@ plugins {
     `kotlin-common-conventions`
     alias(prodLibs.plugins.kotlin.dokka.plugin)
     alias(prodLibs.plugins.maven.publish.plugin)
+    alias(prodLibs.plugins.gradle.buildConfig)
 }
 
 gradlePlugin {
@@ -21,6 +22,18 @@ gradlePlugin {
             implementationClass = "com.herman.krang.KrangGradlePlugin"
         }
     }
+}
+
+buildConfig {
+    packageName("com.herman.krang")
+
+    useKotlinOutput {
+        topLevelConstants = true
+        internalVisibility = true
+    }
+
+    buildConfigField("String", "PROJECT_GROUP", "\"${project.group}\"")
+    buildConfigField("String", "PROJECT_VERSION", "\"${project.version}\"")
 }
 
 dependencies {

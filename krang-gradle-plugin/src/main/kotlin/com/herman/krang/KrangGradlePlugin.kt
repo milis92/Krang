@@ -26,28 +26,23 @@ import org.jetbrains.kotlin.gradle.plugin.SubpluginOption
 class KrangGradlePlugin : KotlinCompilerPluginSupportPlugin {
 
     companion object {
-        // Construct Krang runtime dependency based on the plugin group id and version
-        private fun runtimeArtifact(
-            group: String,
-            version: String
-        ) = "$group:krang-runtime:$version"
+        // Runtime artefact dependency
+        private const val runtimeArtifact = "$PROJECT_GROUP:krang-runtime:$PROJECT_VERSION"
 
         private const val COMPILER_PLUGIN_ARTIFACT_ID = "krang-compiler-plugin"
 
-        // Construct Krang Compiler plugin based on the plugin group id and version
-        private fun compilerPluginArtifact(
-            group: String,
-            version: String
-        ) = SubpluginArtifact(group, COMPILER_PLUGIN_ARTIFACT_ID, version)
+        // Compiler plugin artefact
+        private val compilerPluginArtifact = SubpluginArtifact(
+            PROJECT_GROUP,
+            COMPILER_PLUGIN_ARTIFACT_ID,
+            PROJECT_VERSION
+        )
     }
-
-    private lateinit var compilerPluginArtifact: SubpluginArtifact
 
     override fun apply(
         target: Project
     ): Unit = with(target) {
         extensions.create(KrangGradleExtension.extensionName, KrangGradleExtension::class.java)
-        compilerPluginArtifact = compilerPluginArtifact(group.toString(), version.toString())
     }
 
     // Is applicable has to return true because we always have to attach the runtime dependency.
@@ -67,7 +62,7 @@ class KrangGradlePlugin : KotlinCompilerPluginSupportPlugin {
 
         // Add runtime dependency to kotlin source
         kotlinCompilation.defaultSourceSet.dependencies {
-            implementation(runtimeArtifact(project.group.toString(), project.version.toString()))
+            implementation(runtimeArtifact)
         }
 
         // Run the optional variant filter to potentially change the config based on the compilation
