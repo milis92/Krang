@@ -111,6 +111,83 @@ class Main : Testable {
     return output
 }
 
+fun enumFunction(): String {
+    @Language("kotlin")
+    val output = """
+import com.herman.krang.runtime.annotations.Intercept
+
+enum class Testable {
+
+    TEST1 {
+        @Intercept
+        override fun provider() { /* no-op */ }
+    },
+    TEST2 {
+        override fun provider() { /* no-op */ }
+    };
+
+    abstract fun provider()
+}
+
+class Main  {
+
+    fun foo(){
+        Testable.TEST1.provider()
+    }
+}
+"""
+    return output
+}
+
+fun enumFunctionWithAnnotatedParrent(): String {
+    @Language("kotlin")
+    val output = """
+import com.herman.krang.runtime.annotations.Intercept
+
+enum class Testable {
+
+    TEST1 {
+        override fun provider() { /* no-op */ }
+    },
+    TEST2 {
+        override fun provider() { /* no-op */ }
+    };
+
+    @Intercept
+    abstract fun provider()
+}
+
+class Main  {
+
+    fun foo(){
+        Testable.TEST1.provider()
+    }
+}
+"""
+    return output
+}
+
+fun enumWithoutFunction(): String {
+    @Language("kotlin")
+    val output = """
+import com.herman.krang.runtime.annotations.Intercept
+
+@Intercept
+enum class Testable {
+    TEST1,
+    TEST2
+}
+
+class Main  {
+
+    fun foo(){
+        Testable.TEST1
+    }
+}
+"""
+    return output
+}
+
 fun functionWithAnnotatedParent(arguments: List<Any?>? = null): String {
     @Language("kotlin")
     val output = """
