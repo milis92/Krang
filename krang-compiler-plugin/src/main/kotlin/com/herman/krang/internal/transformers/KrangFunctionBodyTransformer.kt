@@ -56,7 +56,10 @@ fun IrFunction.toKrangFunction(
         dispatchReceiver = irGetObject(context.krangRuntime)
     }
     // Apply original statements
-    for (statement in body.statements) +statement
+    runCatching {
+        //swallow Synthetic body contains no statements error
+        for (statement in body.statements) +statement
+    }
 }
 
 // Constructs a new vararg of value parameters

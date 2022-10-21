@@ -156,6 +156,45 @@ class CompilerTest {
             }
         }
 
+    @Test
+    fun `when enum function is called then listener is notified`() =
+        enumFunctionWithAnnotatedParrent().compile(compiler) {
+            assertCompilation()
+
+            val clazz = classLoader.loadClass("Main")
+            val func = clazz.methods.single { it.name == "foo" && it.parameterCount == 0 }
+
+            assertInvoke("Testable.TEST1.provider", emptyList()) {
+                func.invoke(clazz.getDeclaredConstructor().newInstance())
+            }
+        }
+
+    @Test
+    fun `when enum function with annotated parent is called then listener is notified`() =
+        enumFunctionWithAnnotatedParrent().compile(compiler) {
+            assertCompilation()
+
+            val clazz = classLoader.loadClass("Main")
+            val func = clazz.methods.single { it.name == "foo" && it.parameterCount == 0 }
+
+            assertInvoke("Testable.TEST1.provider", emptyList()) {
+                func.invoke(clazz.getDeclaredConstructor().newInstance())
+            }
+        }
+
+    @Test
+    fun `when enum without a function is called then listener is notified`() =
+        enumWithoutFunction().compile(compiler) {
+            assertCompilation()
+
+            val clazz = classLoader.loadClass("Main")
+            val func = clazz.methods.single { it.name == "foo" && it.parameterCount == 0 }
+
+            assertInvoke(listOf("Testable.<init>", "Testable.<init>"), emptyList()) {
+                func.invoke(clazz.getDeclaredConstructor().newInstance())
+            }
+        }
+
     @ParameterizedTest
     @ArgumentsSource(FunctionArgumentsProvider::class)
     fun `when function with annotated parent is called than listener is notified`(arguments: List<Any?>) =
