@@ -2,7 +2,6 @@ package com.herman.krang.internal.transformers
 
 import com.herman.krang.internal.krangInterceptFunctionCall
 import com.herman.krang.internal.krangRuntime
-import org.jetbrains.kotlin.backend.common.deepCopyWithVariables
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.ir.UNDEFINED_OFFSET
@@ -13,6 +12,7 @@ import org.jetbrains.kotlin.ir.builders.irGetObject
 import org.jetbrains.kotlin.ir.builders.irString
 import org.jetbrains.kotlin.ir.declarations.IrFunction
 import org.jetbrains.kotlin.ir.declarations.IrValueParameter
+import org.jetbrains.kotlin.ir.deepCopyWithVariables
 import org.jetbrains.kotlin.ir.expressions.IrBlockBody
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.impl.IrVarargImpl
@@ -55,11 +55,7 @@ fun IrFunction.toKrangFunction(
         putValueArgument(1, argsAsVarArg.deepCopyWithVariables())
         dispatchReceiver = irGetObject(context.krangRuntime)
     }
-    // Apply original statements
-    runCatching {
-        //swallow Synthetic body contains no statements error
-        for (statement in body.statements) +statement
-    }
+    for (statement in body.statements) +statement
 }
 
 // Constructs a new vararg of value parameters

@@ -1,6 +1,6 @@
 [versions]
 #build
-kotlin = "1.7.10"
+kotlin = "1.7.20"
 dokka = "1.7.10"
 maven-publish = "0.21.0"
 build-config = "3.1.0"

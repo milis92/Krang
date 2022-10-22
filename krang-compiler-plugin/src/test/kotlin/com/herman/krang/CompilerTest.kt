@@ -190,7 +190,7 @@ class CompilerTest {
             val clazz = classLoader.loadClass("Main")
             val func = clazz.methods.single { it.name == "foo" && it.parameterCount == 0 }
 
-            assertInvoke(listOf("Testable.<init>", "Testable.<init>"), emptyList()) {
+            assertInvoke(listOf(), emptyList()) {
                 func.invoke(clazz.getDeclaredConstructor().newInstance())
             }
         }
@@ -251,7 +251,7 @@ class CompilerTest {
             val clazz = classLoader.loadClass("Main")
             val func = clazz.methods.single { it.name == "foo" }
 
-            assertInvoke(listOf("Main.<init>", "Main.foo"), arguments) {
+            assertInvoke(listOf("Main.foo"), arguments) {
                 func.invoke(clazz.getDeclaredConstructor().newInstance(), *arguments.toTypedArray())
             }
         }
@@ -265,7 +265,7 @@ class CompilerTest {
             val clazz = classLoader.loadClass("Main")
             val func = clazz.methods.single { it.name == "foo" }
 
-            assertInvoke(listOf("Main.<init>", "Main.foo"), arguments) {
+            assertInvoke(listOf("Main.foo"), arguments) {
                 func.invoke(clazz.getDeclaredConstructor().newInstance(), *arguments.toTypedArray())
             }
         }
@@ -279,7 +279,7 @@ class CompilerTest {
             val clazz = classLoader.loadClass("Main")
             val func = clazz.methods.single { it.name == "foo" }
 
-            assertInvoke(listOf("Main.<init>", "Main.foo"), arguments) {
+            assertInvoke(listOf("Main.foo"), arguments) {
                 func.invoke(clazz.getDeclaredConstructor().newInstance(), *arguments.toTypedArray())
             }
         }

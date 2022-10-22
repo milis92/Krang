@@ -36,7 +36,7 @@ class GodModeTest {
             val clazz = classLoader.loadClass("Main")
             val func = clazz.methods.single { it.name == "foo" }
 
-            assertInvoke(listOf("Main.<init>", "Main.foo"), arguments) {
+            assertInvoke(listOf("Main.foo"), arguments) {
                 func.invoke(clazz.getDeclaredConstructor().newInstance(), *arguments.toTypedArray())
             }
         }

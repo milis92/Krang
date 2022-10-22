@@ -17,13 +17,13 @@
 package com.herman.krang.internal
 
 import com.herman.krang.internal.transformers.toKrangFunction
-import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.declarations.IrClass
-import org.jetbrains.kotlin.ir.declarations.IrDeclarationOrigin
 import org.jetbrains.kotlin.ir.declarations.IrFunction
+import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 import org.jetbrains.kotlin.ir.declarations.IrValueParameter
+import org.jetbrains.kotlin.ir.expressions.IrSyntheticBody
 import org.jetbrains.kotlin.ir.interpreter.getLastOverridden
 import org.jetbrains.kotlin.ir.symbols.IrClassSymbol
 import org.jetbrains.kotlin.ir.types.IrType
@@ -31,15 +31,14 @@ import org.jetbrains.kotlin.ir.util.hasAnnotation
 import org.jetbrains.kotlin.ir.util.isFakeOverriddenFromAny
 import org.jetbrains.kotlin.ir.util.parentClassOrNull
 import org.jetbrains.kotlin.ir.util.superTypes
+import org.jetbrains.kotlin.ir.visitors.IrElementTransformerVoid
 
 class KrangTransformer(
     private val pluginContext: IrPluginContext,
     private val godMode: Boolean
-) : IrElementTransformerVoidWithContext() {
+) : IrElementTransformerVoid() {
 
-    override fun visitFunctionNew(
-        declaration: IrFunction
-    ): IrStatement {
+    override fun visitSimpleFunction(declaration: IrSimpleFunction): IrStatement {
         if (declaration.shouldVisit()) {
             // Construct a new block body and filter out all value parameters that should not be passed to Krang
             declaration.body = declaration.toKrangFunction(pluginContext) { valueParameter ->
@@ -47,19 +46,16 @@ class KrangTransformer(
                 valueParameter.annotatedOrExtendsAnnotated(pluginContext.krangRedactAnnotation)
             }
         }
-        return super.visitFunctionNew(declaration)
+        return super.visitSimpleFunction(declaration)
     }
 
     /**
      * Determines if the function should be transformed by krang
-     * Order of checks:
-     * - If the function body is null - escape
-     * - If the function is synthetic function for lambda - escape
-     * - If godMode is enabled - run the transformation (if previous conditions apply)
-     * - If a function has the Intercept annotation - run the transformation (if previous conditions apply)
+     *
+     * Synthetic functions or functions with empty or synthetic bodies will not be transformed
      */
     private fun IrFunction.shouldVisit(): Boolean {
-        return if (body == null || this.origin == IrDeclarationOrigin.LOCAL_FUNCTION_FOR_LAMBDA)
+        return if (body == null || body is IrSyntheticBody || name.isSpecial)
             false
         else godMode || hasAnnotation(pluginContext.krangInterceptAnnotation)
     }
