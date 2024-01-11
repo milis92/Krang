@@ -22,7 +22,7 @@ dependencyResolutionManagement {
 }
 
 plugins {
-    id("com.gradle.enterprise") version "3.9"
+    id("com.gradle.enterprise") version "3.16.1"
     id("org.ajoberstar.reckon.settings") version "0.17.0-beta.4"
 }
 
