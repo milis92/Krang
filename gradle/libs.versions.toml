@@ -13,7 +13,7 @@ build-config = "5.3.3"
 google-autoService = "1.1.0"
 
 junit = "5.9.3"
-compile-testing = "1.4.9"
+compile-testing = "1.5.0"
 
 [libraries]
 # build
