@@ -9,3 +9,9 @@ allprojects {
 tasks.wrapper {
     distributionType = Wrapper.DistributionType.ALL
 }
+
+tasks.register("versionToFile") {
+    doLast {
+        file("version.txt").writeText(version.toString())
+    }
+}
