@@ -31,7 +31,7 @@ jobs:
 
   deploy:
     name: Deploy
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     needs:
       - verify
     outputs:
@@ -60,7 +60,7 @@ jobs:
   tag-snapshot:
     if: ${{ !endsWith(needs.deploy.outputs.version, 'SNAPSHOT') }}
     name: Tag Release
-    runs-on: "ubuntu-latest"
+    runs-on: ubuntu-latest
     needs:
       - deploy
     steps:

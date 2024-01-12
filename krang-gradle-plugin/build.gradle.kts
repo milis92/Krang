@@ -1,6 +1,3 @@
-@file:Suppress("UnstableApiUsage")
-
-@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     kotlin("jvm")
     `java-gradle-plugin`

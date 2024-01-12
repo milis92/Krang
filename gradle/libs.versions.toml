@@ -10,6 +10,8 @@ dokka = "1.9.10"
 maven-publish = "0.27.0"
 build-config = "5.3.3"
 
+android-agp = "8.2.0"
+
 google-autoService = "1.1.0"
 
 junit = "5.9.3"
@@ -25,6 +27,7 @@ maven-publish = { module = "com.vanniktech.maven.publish:com.vanniktech.maven.pu
 gradle-buildConfig = { module = "com.github.gmazzo.buildconfig:plugin", version.ref = "build-config" }
 detekt = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version.ref = "detekt" }
 detekt-formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detekt" }
+android-gradle = { module = "com.android.tools.build:gradle", version.ref = "android-agp" }
 
 # runtime
 kotlin-compiler-embedable = { module = "org.jetbrains.kotlin:kotlin-compiler-embeddable" }
@@ -41,9 +44,6 @@ kotlin-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit" }
 compileTesting = { module = "com.github.tschuchortdev:kotlin-compile-testing", version.ref = "compile-testing" }
 
 [plugins]
-#kotlin-dokka-plugin = { id = "org.jetbrains.dokka", version.ref = "dokka" }
-#maven-publish-plugin = { id = "com.vanniktech.maven.publish", version.ref = "maven-publish" }
-#gradle-buildConfig = { id = "com.github.gmazzo.buildconfig", version.ref = "build-config" }
 
 [bundles]
 

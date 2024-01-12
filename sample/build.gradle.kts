@@ -1,8 +1,8 @@
-@file:Suppress("UnstableApiUsage")
+import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
 
 plugins {
     kotlin("multiplatform") version "1.9.21"
-    id("com.android.application") version "8.1.3"
+    id("com.android.application") version "8.2.0"
     id("com.github.milis92.krang")
 }
 
@@ -14,34 +14,27 @@ krang {
     godMode.set(true)
 }
 
+kotlin {
+    @OptIn(ExperimentalWasmDsl::class)
+    wasmJs {
+        browser()
+    }
+    androidTarget {
+        compilations.all {
+            kotlinOptions {
+                jvmTarget = "1.8"
+            }
+        }
+    }
+    jvm()
+}
+
 android {
     defaultConfig {
         applicationId = "com.herman.sample.android"
         namespace = "com.herman.sample.android"
 
-        sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
-
         minSdk = 15
-        targetSdk = 29
         compileSdk = 31
-
-        versionCode = 1
-        versionName = "1.0"
     }
-    buildTypes {
-        getByName("release") {
-            isMinifyEnabled = false
-        }
-    }
-}
-
-kotlin {
-    androidTarget {
-    }
-    jvm {
-    }
-}
-
-tasks.wrapper {
-    distributionType = Wrapper.DistributionType.ALL
 }

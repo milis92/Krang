@@ -18,4 +18,5 @@ dependencies {
     implementation(libs.kotlin.dokka)
     implementation(libs.gradle.buildConfig)
     implementation(libs.detekt)
+    implementation(libs.android.gradle)
 }

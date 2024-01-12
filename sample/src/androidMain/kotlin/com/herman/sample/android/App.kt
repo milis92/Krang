@@ -1,16 +1,16 @@
 package com.herman.sample.android
 
 import android.app.Application
-import android.util.Log
 import com.herman.krang.runtime.Krang
+import com.herman.krang.sample.common.Foo
 
 class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        Krang.addListener {name, params ->
 
-        Krang.addListener { functionName, parameters ->
-            Log.d("App", "Function with name:$functionName and ${parameters.joinToString()} called")
         }
+        Foo().bar("bazz")
     }
 }
