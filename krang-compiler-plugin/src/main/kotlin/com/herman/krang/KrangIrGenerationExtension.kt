@@ -26,7 +26,15 @@ class KrangIrGenerationExtension(
     private val godMode: Boolean
 ) : IrGenerationExtension {
 
-    override fun generate(moduleFragment: IrModuleFragment, pluginContext: IrPluginContext) {
-        moduleFragment.transformChildrenVoid(KrangTransformer(pluginContext, godMode))
+    override fun generate(
+        moduleFragment: IrModuleFragment,
+        pluginContext: IrPluginContext
+    ) {
+        moduleFragment.transformChildrenVoid(
+            KrangTransformer(
+                pluginContext = pluginContext,
+                godMode = godMode
+            )
+        )
     }
 }

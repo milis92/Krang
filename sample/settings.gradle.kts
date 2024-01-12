@@ -7,13 +7,13 @@ pluginManagement {
         google()
         mavenCentral()
     }
+    includeBuild("../")
 }
 
 @Suppress("UnstableApiUsage")
 dependencyResolutionManagement {
     repositories {
         google()
-        mavenLocal()
         mavenCentral()
     }
 }

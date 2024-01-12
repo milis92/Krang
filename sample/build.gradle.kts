@@ -1,9 +1,9 @@
 @file:Suppress("UnstableApiUsage")
 
 plugins {
-    kotlin("multiplatform") version "1.7.20"
-    id("com.android.application") version "7.2.2"
-    id("com.github.milis92.krang") version "2.7.0-SNAPSHOT"
+    kotlin("multiplatform") version "1.9.21"
+    id("com.android.application") version "8.1.3"
+    id("com.github.milis92.krang")
 }
 
 group = "com.herman.sample"
@@ -17,6 +17,7 @@ krang {
 android {
     defaultConfig {
         applicationId = "com.herman.sample.android"
+        namespace = "com.herman.sample.android"
 
         sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
 
@@ -35,15 +36,12 @@ android {
 }
 
 kotlin {
-    android()
+    androidTarget {
+    }
     jvm {
-        compilations.all {
-            kotlinOptions.jvmTarget = "11"
-        }
     }
 }
 
 tasks.wrapper {
     distributionType = Wrapper.DistributionType.ALL
 }
-

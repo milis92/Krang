@@ -20,25 +20,26 @@ import com.google.auto.service.AutoService
 import com.herman.krang.KrangCommandLineProcessor.Companion.ARG_ENABLED
 import com.herman.krang.KrangCommandLineProcessor.Companion.ARG_GOD_MODE
 import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
-import org.jetbrains.kotlin.com.intellij.mock.MockProject
-import org.jetbrains.kotlin.compiler.plugin.ComponentRegistrar
+import org.jetbrains.kotlin.compiler.plugin.CompilerPluginRegistrar
+import org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi
 import org.jetbrains.kotlin.config.CompilerConfiguration
 
-@AutoService(ComponentRegistrar::class)
-class KrangComponentRegistrar constructor(
+@OptIn(ExperimentalCompilerApi::class)
+@AutoService(CompilerPluginRegistrar::class)
+class KrangCompilerPluginRegistrar constructor(
     private val enabledByDefault: Boolean = true,
-    private val godModeByDefault: Boolean = false
-) : ComponentRegistrar {
+    private val godModeByDefault: Boolean = false,
+    override val supportsK2: Boolean = true
+) : CompilerPluginRegistrar() {
 
-    override fun registerProjectComponents(
-        project: MockProject,
+    override fun ExtensionStorage.registerExtensions(
         configuration: CompilerConfiguration
     ) {
         val enabled = configuration.get(ARG_ENABLED, enabledByDefault)
         val godMode = configuration.get(ARG_GOD_MODE, godModeByDefault)
 
         if (enabled) {
-            IrGenerationExtension.registerExtension(project, KrangIrGenerationExtension(godMode))
+            IrGenerationExtension.registerExtension(KrangIrGenerationExtension(godMode))
         }
     }
 }

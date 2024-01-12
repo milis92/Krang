@@ -55,9 +55,11 @@ class KrangTransformer(
      * Synthetic functions or functions with empty or synthetic bodies will not be transformed
      */
     private fun IrFunction.shouldVisit(): Boolean {
-        return if (body == null || body is IrSyntheticBody || name.isSpecial)
+        return if (body == null || body is IrSyntheticBody || name.isSpecial) {
             false
-        else godMode || hasAnnotation(pluginContext.krangInterceptAnnotation)
+        } else {
+            godMode || hasAnnotation(pluginContext.krangInterceptAnnotation)
+        }
     }
 
     // Check if the function or a containing class has the supplied annotation
@@ -96,7 +98,9 @@ fun IrFunction.annotatedOrExtendsAnnotated(
             this == this.getLastOverridden() -> false
             else -> getLastOverridden().hasAnnotation(annotationClass)
         }
-    } else false
+    } else {
+        false
+    }
 }
 
 fun IrType.annotatedOrExtendsAnnotated(

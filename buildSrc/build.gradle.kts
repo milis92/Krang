@@ -1,17 +1,21 @@
 plugins {
     `kotlin-dsl`
-    `kotlin-dsl-precompiled-script-plugins`
+}
+
+kotlin {
+    jvmToolchain {
+        languageVersion.set(JavaLanguageVersion.of(libs.versions.java.get()))
+    }
 }
 
 dependencies {
-    implementation(prodLibs.kotlin.gradle.plugin)
-}
-
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-    kotlinOptions.jvmTarget = JavaVersion.VERSION_11.toString()
-}
-
-tasks.withType<JavaCompile> {
-    sourceCompatibility = JavaVersion.VERSION_11.toString()
-    targetCompatibility = JavaVersion.VERSION_11.toString()
+    implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))?.because(
+        "https://github.com/gradle/gradle/issues/15383"
+    )
+    implementation(libs.kotlin.gradle)
+    implementation(libs.kotlin.ksp)
+    implementation(libs.maven.publish)
+    implementation(libs.kotlin.dokka)
+    implementation(libs.gradle.buildConfig)
+    implementation(libs.detekt)
 }

@@ -1,13 +1,26 @@
-@Suppress("UnstableApiUsage")
-dependencyResolutionManagement {
-    versionCatalogs {
-        create("prodLibs") {
-            from(files("../dependencies/libs.versions.toml"))
-        }
-    }
+rootProject.name = "build"
+
+pluginManagement {
     repositories {
         gradlePluginPortal()
         mavenCentral()
-        google()
     }
+}
+
+dependencyResolutionManagement {
+    versionCatalogs {
+        create("libs") {
+            from(files("../libs.versions.toml"))
+        }
+    }
+
+    @Suppress("UnstableApiUsage")
+    repositories {
+        gradlePluginPortal()
+        mavenCentral()
+    }
+}
+
+plugins {
+    id("org.gradle.toolchains.foojay-resolver-convention")
 }

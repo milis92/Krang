@@ -27,15 +27,15 @@ class KrangGradlePlugin : KotlinCompilerPluginSupportPlugin {
 
     companion object {
         // Runtime artefact dependency
-        private const val runtimeArtifact = "$PROJECT_GROUP:krang-runtime:$PROJECT_VERSION"
+        private const val RUNTIME_ARTIFACT = "$PROJECT_GROUP:krang-runtime:$PROJECT_VERSION"
 
         private const val COMPILER_PLUGIN_ARTIFACT_ID = "krang-compiler-plugin"
 
         // Compiler plugin artefact
         private val compilerPluginArtifact = SubpluginArtifact(
-            PROJECT_GROUP,
-            COMPILER_PLUGIN_ARTIFACT_ID,
-            PROJECT_VERSION
+            groupId = PROJECT_GROUP,
+            artifactId = COMPILER_PLUGIN_ARTIFACT_ID,
+            version = PROJECT_VERSION
         )
     }
 
@@ -62,7 +62,7 @@ class KrangGradlePlugin : KotlinCompilerPluginSupportPlugin {
 
         // Add runtime dependency to kotlin source
         kotlinCompilation.defaultSourceSet.dependencies {
-            implementation(runtimeArtifact)
+            implementation(RUNTIME_ARTIFACT)
         }
 
         // Run the optional variant filter to potentially change the config based on the compilation
@@ -76,4 +76,3 @@ class KrangGradlePlugin : KotlinCompilerPluginSupportPlugin {
         }
     }
 }
-
