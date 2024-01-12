@@ -47,7 +47,7 @@ jobs:
       - uses: gradle/gradle-build-action@v2
         with:
           cache-read-only: false
-      - run: ./gradlew -Preckon.stage=${{ inputs.STAGE }} versionToFile publish --no-daemon --no-parallel
+      - run: ./gradlew -Preckon.stage=${{ inputs.STAGE }} versionToFile publish --no-daemon --no-parallel --no-configuration-cache
         env:
           ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.SIGNING_KEY }}
           ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.SIGNING_PASSWORD }}

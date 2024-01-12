@@ -21,7 +21,6 @@ dependencyResolutionManagement {
             from(files("libs.versions.toml"))
         }
     }
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         mavenCentral()
         google()
