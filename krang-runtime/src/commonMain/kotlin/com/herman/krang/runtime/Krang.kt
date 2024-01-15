@@ -18,6 +18,7 @@ package com.herman.krang.runtime
 
 object Krang {
 
+    @Suppress("MemberVisibilityCanBePrivate")
     var enabled = true
     private val functionCallListeners = mutableListOf<FunctionCallListener>()
 
