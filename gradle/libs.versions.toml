@@ -15,7 +15,7 @@ android-agp = "8.2.0"
 google-autoService = "1.1.0"
 
 junit = "5.9.3"
-compile-testing = "1.4.9"
+compile-testing = "0.4.0"
 
 [libraries]
 # build
@@ -41,7 +41,7 @@ junit = { module = "org.junit:junit-bom", version.ref = "junit" }
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter" }
 kotlin-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit" }
 
-compileTesting = { module = "com.github.tschuchortdev:kotlin-compile-testing", version.ref = "compile-testing" }
+compileTesting = { module = "dev.zacsweers.kctfork:core", version.ref = "compile-testing" }
 
 [plugins]
 
