@@ -49,7 +49,7 @@ class KrangTest {
         expectedParameters: List<Any>
     ) {
         compilerExtension.compileAndAssert(
-            resourceClassPath("/${fileName}") ?: return
+            resourceClassPath("/$fileName") ?: return
         ) {
             assertContentEquals(expectedFunctionNames, it.capturedFunctionName)
             assertContentEquals(expectedParameters, it.capturedParameters)

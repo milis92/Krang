@@ -83,7 +83,7 @@ class KrangCompilerTestExtension(
         clazzName: String
     ) {
         val clazz = classLoader.loadClass(clazzName)
-        val func = clazz.methods.first { it.name == "main" && it.parameterCount == 0}
+        val func = clazz.methods.first { it.name == "main" && it.parameterCount == 0 }
 
         func.invoke(null)
     }
@@ -98,8 +98,7 @@ class KrangTestListener : FunctionCallListener {
     }
 }
 
-
-//class CompilerTest {
+// class CompilerTest {
 //
 //
 //    @ParameterizedTest
@@ -343,4 +342,4 @@ class KrangTestListener : FunctionCallListener {
 //                func.invoke(clazz.getDeclaredConstructor().newInstance(), *arguments.toTypedArray())
 //            }
 //        }
-//}
+// }
