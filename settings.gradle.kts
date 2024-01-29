@@ -23,7 +23,7 @@ dependencyResolutionManagement {
 }
 
 plugins {
-    id("com.gradle.enterprise") version "3.15.1"
+    id("com.gradle.enterprise") version "3.16.2"
     id("org.gradle.toolchains.foojay-resolver-convention") version "0.7.0"
     id("org.ajoberstar.reckon.settings") version "0.18.2"
 }
