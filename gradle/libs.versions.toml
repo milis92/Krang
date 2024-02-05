@@ -14,7 +14,7 @@ android-agp = "8.2.0"
 
 google-autoService = "1.1.0"
 
-junit = "5.9.3"
+junit = "5.10.2"
 compile-testing = "0.4.0"
 
 [libraries]
