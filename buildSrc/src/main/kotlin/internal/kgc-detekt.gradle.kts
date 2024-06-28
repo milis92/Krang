@@ -18,7 +18,7 @@ tasks.withType<Detekt> {
     // Configure base path so detekt can properly format reports
     basePath = rootDir.absolutePath
     // Outputs dir
-    reportsDir.set(file(rootDir.resolve("build/reports/detekt/")))
+    reportsDir.set(file(rootDir.resolve("build/reports/detekt/${project.name}")))
     reports {
         sarif.required = true
         xml.required = false
