@@ -33,7 +33,7 @@ jobs:
         uses: microsoft/sarif-actions@v0.1
         with:
           command: "merge build/reports/*/*/*.sarif --recurse true --merge-runs --output-directory=build/reports --output-file=merged.sarif"
-      - uses: reviewdog/action-setup@latest
+      - uses: reviewdog/action-setup@v1
         if: failure()
       - name: Upload reviewdog report
         if: failure()
