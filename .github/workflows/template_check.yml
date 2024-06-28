@@ -8,12 +8,12 @@ jobs:
     name: Verify gradle plugin
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: gradle/wrapper-validation-action@v1
+      - uses: actions/checkout@v4
+      - uses: gradle/actions/wrapper-validation@v3
 
   build:
-    name: Build & test
-    runs-on: ubuntu-latest
+    name: Build
+    runs-on: macos-latest
     needs:
       - verify
     steps:
@@ -24,7 +24,26 @@ jobs:
         with:
           distribution: 'adopt'
           java-version: 17
-      - uses: gradle/gradle-build-action@v2
+      - uses: gradle/actions/setup-gradle@v3
         with:
           cache-read-only: false
-      - run: ./gradlew build
+      - run: ./gradlew build -x test
+      - name: Merge reports
+        if: failure()
+        uses: microsoft/sarif-actions@v0.1
+        with:
+          command: "merge build/reports/*/*/*.sarif --recurse true --merge-runs --output-directory=build/reports --output-file=merged.sarif"
+      - uses: reviewdog/action-setup@v1
+        if: failure()
+      - name: Upload reviewdog report
+        if: failure()
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cat build/reports/merged.sarif | reviewdog -f=sarif -reporter=github-check -level=warning -name="quality checks"
+      - name: Run integration tests
+        run: ./gradlew -p krang-test allTests --continue
+      - uses: test-summary/action@v2
+        with:
+          paths: "krang-test/build/test-results/**/TEST-*.xml"
+        if: always()

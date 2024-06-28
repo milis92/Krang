@@ -1,4 +1,4 @@
-rootProject.name = "build"
+rootProject.name = "buildSrc"
 
 pluginManagement {
     repositories {

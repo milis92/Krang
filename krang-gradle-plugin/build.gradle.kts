@@ -1,7 +1,6 @@
 plugins {
-    kotlin("jvm")
     `java-gradle-plugin`
-    `kgc-module`
+    `kgc-jvm-module`
 }
 
 gradlePlugin {

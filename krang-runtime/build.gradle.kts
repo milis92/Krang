@@ -1,29 +1,13 @@
-import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
-
 plugins {
-    `kotlin-multiplatform`
-    `kgc-module`
+    `kgc-multiplatform-module`
     id("com.android.library")
 }
 
 kotlin {
     kotlin {
-        jvm()
-        androidTarget { publishLibraryVariants("release") }
-
-        iosX64()
-        iosArm64()
-        iosSimulatorArm64()
-
-        @OptIn(ExperimentalWasmDsl::class)
-        wasmJs {
-            browser()
+        androidTarget {
+            publishLibraryVariants("release")
         }
-        js {
-            nodejs()
-        }
-
-        applyDefaultHierarchyTemplate()
     }
 }
 

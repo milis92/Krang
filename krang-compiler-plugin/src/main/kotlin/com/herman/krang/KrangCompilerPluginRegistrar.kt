@@ -20,6 +20,8 @@ import com.google.auto.service.AutoService
 import com.herman.krang.KrangCommandLineProcessor.Companion.ARG_ENABLED
 import com.herman.krang.KrangCommandLineProcessor.Companion.ARG_GOD_MODE
 import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
+import org.jetbrains.kotlin.cli.common.CLIConfigurationKeys
+import org.jetbrains.kotlin.cli.common.messages.MessageCollector
 import org.jetbrains.kotlin.compiler.plugin.CompilerPluginRegistrar
 import org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi
 import org.jetbrains.kotlin.config.CompilerConfiguration
@@ -37,9 +39,15 @@ class KrangCompilerPluginRegistrar constructor(
     ) {
         val enabled = configuration.get(ARG_ENABLED, enabledByDefault)
         val godMode = configuration.get(ARG_GOD_MODE, godModeByDefault)
+        val logger = configuration.get(CLIConfigurationKeys.MESSAGE_COLLECTOR_KEY, MessageCollector.NONE)
 
         if (enabled) {
-            IrGenerationExtension.registerExtension(KrangIrGenerationExtension(godMode))
+            IrGenerationExtension.registerExtension(
+                KrangIrGenerationExtension(
+                    godMode = godMode,
+                    logger = logger
+                )
+            )
         }
     }
 }

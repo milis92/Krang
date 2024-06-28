@@ -1,6 +1,5 @@
 plugins {
-    kotlin("jvm")
-    `kgc-module`
+    `kgc-jvm-module`
 }
 
 dependencies {
@@ -9,8 +8,6 @@ dependencies {
 
     ksp(libs.google.autoService.core)
     implementation(libs.google.autoService.annotations)
-
-    testImplementation(libs.compileTesting)
 }
 
 buildConfig {
