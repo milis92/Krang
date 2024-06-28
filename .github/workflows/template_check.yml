@@ -29,7 +29,7 @@ jobs:
           cache-read-only: false
       - run: ./gradlew build -x test
       - run: ./gradlew  test
-      - uses: test-summary/action@@v2
+      - uses: test-summary/action@v2
         with:
           paths: "krang-test/build/test-results/**/TEST-*.xml"
         if: always()
