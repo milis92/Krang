@@ -32,10 +32,6 @@ tasks.withType<Test>().configureEach {
     }
 }
 
-val javaComponent = components.findByName("java") as? AdhocComponentWithVariants
-javaComponent?.withVariantsFromConfiguration(configurations["testFixturesApiElements"]) { skip() }
-javaComponent?.withVariantsFromConfiguration(configurations["testFixturesRuntimeElements"]) { skip() }
-
 val libs = the<LibrariesForLibs>()
 val testImplementation: Configuration? = configurations.findByName("testImplementation")
 dependencies {

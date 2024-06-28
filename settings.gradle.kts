@@ -23,9 +23,9 @@ dependencyResolutionManagement {
 }
 
 plugins {
-    id("com.gradle.enterprise") version "3.15.1"
-    id("org.gradle.toolchains.foojay-resolver-convention") version "0.7.0"
-    id("org.ajoberstar.reckon.settings") version "0.18.2"
+    id("com.gradle.develocity") version "3.17.5"
+    id("org.gradle.toolchains.foojay-resolver-convention") version "0.8.0"
+    id("org.ajoberstar.reckon.settings") version "0.18.3"
 }
 
 extensions.configure<ReckonExtension>("reckon") {
@@ -50,11 +50,11 @@ extensions.configure<ReckonExtension>("reckon") {
     }
 }
 
-gradleEnterprise {
+develocity {
     buildScan {
-        publishAlways()
-        termsOfServiceUrl = "https://gradle.com/terms-of-service"
-        termsOfServiceAgree = "yes"
+        publishing.onlyIf { true }
+        termsOfUseUrl = "https://gradle.com/help/legal-terms-of-use"
+        termsOfUseAgree = "yes"
     }
 }
 

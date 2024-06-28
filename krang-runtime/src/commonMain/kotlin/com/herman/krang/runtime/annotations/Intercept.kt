@@ -22,15 +22,15 @@ import com.herman.krang.runtime.FunctionCallListener
  * Classes or functions marked with this annotation will be instrumented by krang compiler plugin
  *
  * By default, any function __without__ this annotation will be ignored by Krang, unless god mode is enabled.
- * If god mode is enabled, all valid kotlin functions inside a codebase will be instrumented, regardless if they have this
- * annotation or not.
+ * If god mode is enabled, all valid kotlin functions inside a codebase will be instrumented,
+ * regardless if they have this annotation or not.
  *
  * This annotation is applicable to the class or a specific function.
- * When applied to a class, all contained functions will be instrumented, and will inform [FunctionCallListener] once called.
- * When applied to a function, only that specific function is going to notify the listener.
+ * When applied to a class, all contained functions will be instrumented, and will inform [FunctionCallListener]
+ * once called. When applied to a function, only that specific function is going to notify the listener.
  *
- * _Note on inheritance:_ Krang fully respects inheritance, in as sense that if the parent class or a function is annotated,
- * child function will be instrumented if the parent has the [Intercept] annotation applied.
+ * _Note on inheritance:_ Krang fully respects inheritance, in as sense that if the parent class or a function is
+ * annotated, child function will be instrumented if the parent has the [Intercept] annotation applied.
  *
  * Usage examples:
  *
@@ -77,6 +77,12 @@ import com.herman.krang.runtime.FunctionCallListener
  * }
  * ```
  **/
-@Target(AnnotationTarget.CLASS, AnnotationTarget.FUNCTION)
+@Target(
+    AnnotationTarget.CLASS,
+    AnnotationTarget.FUNCTION,
+    AnnotationTarget.PROPERTY_GETTER,
+    AnnotationTarget.PROPERTY_SETTER,
+    AnnotationTarget.CONSTRUCTOR,
+)
 @Retention(AnnotationRetention.SOURCE)
 annotation class Intercept
