@@ -41,7 +41,8 @@ jobs:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           cat build/reports/merged.sarif | reviewdog -f=sarif -reporter=github-check -level=warning -name="quality checks"
-      - run: ./gradlew -p krang-test allTests --continue
+      - name: Run integration tests
+        run: ./gradlew -p krang-test allTests --continue
       - uses: test-summary/action@v2
         with:
           paths: "krang-test/build/test-results/**/TEST-*.xml"
