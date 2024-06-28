@@ -35,7 +35,7 @@ jobs:
           command: "merge build/reports/*/*/*.sarif --recurse true --merge-runs --output-directory=build/reports --output-file=merged.sarif"
       - uses: reviewdog/action-setup@latest
         if: failure()
-      - name: Run reviewdog
+      - name: Upload reviewdog report
         if: failure()
         env:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
