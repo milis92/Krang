@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+import org.jetbrains.kotlin.gradle.dsl.JsModuleKind
 import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
 
 plugins {
@@ -14,11 +16,10 @@ kotlin {
                 }
             }
         }
-        compilations.matching { it.name == "main" || it.name == "test" }.configureEach {
-            kotlinOptions {
-                sourceMap = true
-                moduleKind = "umd"
-            }
+        @OptIn(ExperimentalKotlinGradlePluginApi::class)
+        compilerOptions {
+            sourceMap = true
+            moduleKind = JsModuleKind.MODULE_UMD
         }
     }
 

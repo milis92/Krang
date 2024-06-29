@@ -43,7 +43,7 @@ class KrangTransformer(
             // Construct a new block body and filter out all value parameters that should not be passed to Krang
             declaration.body = declaration.toKrangFunction(pluginContext) { valueParameter ->
                 // Filter all value parameters that are annotated with Redact Annotation
-                valueParameter.annotatedOrExtendsAnnotated(pluginContext.krangRedactAnnotation)
+                valueParameter.annotatedOrExtendsAnnotated(krangRedactAnnotation)
             }
             logger.log(
                 message = "Transformed by Krang: ${declaration.name}",
@@ -63,7 +63,7 @@ class KrangTransformer(
         return if (body == null || isKrangListener() || name.isAnonymous) {
             false
         } else {
-            godMode || hasAnnotation(pluginContext.krangInterceptAnnotation)
+            godMode || hasAnnotation(krangInterceptAnnotation)
         }
     }
 
@@ -75,7 +75,7 @@ class KrangTransformer(
 
     private fun IrFunction.isKrangListener(): Boolean {
         return parentClassOrNull?.allSuperInterfaces()?.any { parent ->
-            parent.classId == pluginContext.krangFunctionCallListenerClassId
+            parent.classId == krangFunctionCallListenerClassId
         } == true
     }
 }

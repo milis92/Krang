@@ -13,7 +13,6 @@ import org.jetbrains.kotlin.ir.builders.irGetObject
 import org.jetbrains.kotlin.ir.builders.irString
 import org.jetbrains.kotlin.ir.declarations.IrFunction
 import org.jetbrains.kotlin.ir.declarations.IrValueParameter
-import org.jetbrains.kotlin.ir.deepCopyWithVariables
 import org.jetbrains.kotlin.ir.expressions.IrBlockBody
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.impl.IrVarargImpl
@@ -54,7 +53,7 @@ fun IrFunction.toKrangFunction(
     // Insert krang probe
     +irCall(context.krangNotifyListeners).apply {
         putValueArgument(0, irString(kotlinFqName.asString()))
-        putValueArgument(1, argsAsVarArg.deepCopyWithVariables())
+        putValueArgument(1, argsAsVarArg)
         dispatchReceiver = irGetObject(context.krangRuntimeClassSymbol)
     }
     for (statement in body.statements) +statement
