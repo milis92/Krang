@@ -17,37 +17,34 @@
 package com.herman.krang.internal
 
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
+import org.jetbrains.kotlin.backend.jvm.functionByName
 import org.jetbrains.kotlin.ir.symbols.IrClassSymbol
 import org.jetbrains.kotlin.ir.symbols.IrFunctionSymbol
+import org.jetbrains.kotlin.ir.util.functions
 import org.jetbrains.kotlin.ir.util.getSimpleFunction
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.FqName
 
-// Reference to the Krang Intercept annotation
-val IrPluginContext.krangInterceptAnnotation: FqName
+val krangInterceptAnnotation: FqName
     get() = FqName("com.herman.krang.runtime.annotations.Intercept")
 
-// Reference to the Krang Redact annotation
-val IrPluginContext.krangRedactAnnotation: FqName
+val krangRedactAnnotation: FqName
     get() = FqName("com.herman.krang.runtime.annotations.Redact")
 
-val IrPluginContext.krangRuntime: FqName
+val krangRuntime: FqName
     get() = FqName("com.herman.krang.runtime.Krang")
 
-val IrPluginContext.krangRuntimeClassId: ClassId
+val krangRuntimeClassId: ClassId
     get() = ClassId.topLevel(krangRuntime)
 
-// Reference to the Krang Runtime
 val IrPluginContext.krangRuntimeClassSymbol: IrClassSymbol
-    get() = referenceClass(krangRuntimeClassId) ?: throw ClassNotFoundException()
+    get() =  referenceClass(krangRuntimeClassId) ?: throw ClassNotFoundException()
 
-val IrPluginContext.krangFunctioNCallListener: FqName
+val krangFunctioNCallListener: FqName
     get() = FqName("com.herman.krang.runtime.FunctionCallListener")
 
-// Reference to the Krang FunctionCallListener interface
-val IrPluginContext.krangFunctionCallListenerClassId: ClassId
+val krangFunctionCallListenerClassId: ClassId
     get() = ClassId.topLevel(krangFunctioNCallListener)
 
-// Reference to the runtime interceptor function
 val IrPluginContext.krangNotifyListeners: IrFunctionSymbol
-    get() = krangRuntimeClassSymbol.getSimpleFunction("notifyListeners") ?: throw NoSuchMethodException()
+    get() = krangRuntimeClassSymbol.functionByName("notifyListeners") ?: throw NoSuchMethodException()
