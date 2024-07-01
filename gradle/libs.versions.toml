@@ -16,7 +16,7 @@ autoservice-annotations = "1.1.1"
 autoservice-ksp = "1.2.0"
 
 junit = "5.10.1"
-compile-testing = "0.4.0"
+compile-testing = "0.5.1"
 
 [libraries]
 # build
