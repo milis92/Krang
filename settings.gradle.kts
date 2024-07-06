@@ -1,4 +1,3 @@
-import org.ajoberstar.reckon.core.Version
 import org.ajoberstar.reckon.gradle.ReckonExtension
 
 rootProject.name = "krang"
@@ -30,23 +29,13 @@ plugins {
 
 extensions.configure<ReckonExtension>("reckon") {
     setDefaultInferredScope("minor")
+    stages("alpha", "beta", "rc", "final")
 
-    snapshots()
-
-    setScopeCalc(calcScopeFromProp())
+    setScopeCalc(calcScopeFromProp().or(calcScopeFromCommitMessages()))
     setStageCalc(calcStageFromProp())
 
     setTagWriter { version ->
         "v$version"
-    }
-
-    // Don't consider published snapshots as valid versions
-    setTagParser { tagName ->
-        if (tagName.endsWith("SNAPSHOT")) {
-            java.util.Optional.empty()
-        } else {
-            Version.parse(tagName.removePrefix("v"))
-        }
     }
 }
 
