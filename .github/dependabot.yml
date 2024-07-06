@@ -5,9 +5,11 @@ updates:
       schedule:
           interval: "daily"
       rebase-strategy: "disabled"
+      target-branch: dev
 
     - package-ecosystem: "github-actions"
       directory: "/"
       schedule:
           interval: "weekly"
       rebase-strategy: "disabled"
+      target-branch: dev
