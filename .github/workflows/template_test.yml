@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: gradle/actions/wrapper-validation@v3
+      - uses: gradle/actions/wrapper-validation@v4
   test:
     name: Run integration tests
     runs-on: macos-latest
@@ -23,7 +23,7 @@ jobs:
         with:
           distribution: 'adopt'
           java-version: 17
-      - uses: gradle/actions/setup-gradle@v3
+      - uses: gradle/actions/setup-gradle@v4
         with:
           cache-read-only: false
       - uses: actions/cache@v4
