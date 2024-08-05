@@ -27,7 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: gradle/actions/wrapper-validation@v3
+      - uses: gradle/actions/wrapper-validation@v4
 
   deploy:
     name: Deploy
@@ -44,7 +44,7 @@ jobs:
         with:
           distribution: 'adopt'
           java-version: 17
-      - uses: gradle/actions/setup-gradle@v3
+      - uses: gradle/actions/setup-gradle@v4
         with:
           cache-read-only: false
       - run: ./gradlew -Preckon.stage=${{ inputs.STAGE }} versionToFile publish --no-daemon --no-configuration-cache
