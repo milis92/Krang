@@ -26,7 +26,6 @@ import org.jetbrains.kotlin.cli.common.messages.MessageCollector
 import org.jetbrains.kotlin.cli.common.messages.MessageUtil
 import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.declarations.*
-import org.jetbrains.kotlin.ir.interpreter.getLastOverridden
 import org.jetbrains.kotlin.ir.types.IrType
 import org.jetbrains.kotlin.ir.util.*
 import org.jetbrains.kotlin.ir.visitors.IrElementTransformerVoid
@@ -69,8 +68,8 @@ class KrangTransformer(
 
     // Check if the function or a containing class has the supplied annotation
     private fun IrFunction.hasAnnotation(annotationClass: FqName): Boolean {
-        return parentClassOrNull?.annotatedOrExtendsAnnotated(annotationClass) == true ||
-            annotatedOrExtendsAnnotated(annotationClass)
+        return annotatedOrOverridesAnnotated(annotationClass)
+                || parentClassOrNull?.annotatedOrExtendsAnnotated(annotationClass) == true
     }
 
     private fun IrFunction.isKrangListener(): Boolean {
@@ -80,48 +79,25 @@ class KrangTransformer(
     }
 }
 
-// Returns true if the class or its parent has the supplied annotation
-fun IrClass.annotatedOrExtendsAnnotated(
+private fun List<IrType>.annotatedOrExtendsAnnotated(
     annotationClass: FqName
-): Boolean {
-    val parentHasAnnotation = superTypes.map {
-        it.hasAnnotation(annotationClass)
-    }.contains(true)
+): Boolean = any { it.hasAnnotation(annotationClass) }
 
-    return hasAnnotation(annotationClass) || parentHasAnnotation
-}
-
-// Returns true if the value parameter or its TypeArgument has supplied annotation
-fun IrValueParameter.annotatedOrExtendsAnnotated(
+// Returns true if the class or any of its supertypes is annotated with supplied annotation
+private fun IrClass.annotatedOrExtendsAnnotated(
     annotationClass: FqName
-): Boolean {
-    return hasAnnotation(annotationClass) || type.annotatedOrExtendsAnnotated(annotationClass)
-}
+): Boolean = hasAnnotation(annotationClass) || superTypes.annotatedOrExtendsAnnotated(annotationClass)
+
+// Returns true if the ValueParameter or its TypeArgument has supplied annotation
+private fun IrValueParameter.annotatedOrExtendsAnnotated(
+    annotationClass: FqName
+): Boolean = hasAnnotation(annotationClass) || type.hasAnnotation(annotationClass)
+        || type.superTypes().annotatedOrExtendsAnnotated(annotationClass)
 
 // Returns true if a function or its super counterpart is annotated with supplied annotation
-fun IrFunction.annotatedOrExtendsAnnotated(
+private fun IrFunction.annotatedOrOverridesAnnotated(
     annotationClass: FqName
-): Boolean {
-    return if (!isFakeOverriddenFromAny()) {
-        return when {
-            hasAnnotation(annotationClass) -> true
-            this == this.getLastOverridden() -> false
-            else -> getLastOverridden().hasAnnotation(annotationClass)
-        }
-    } else {
-        false
-    }
-}
-
-fun IrType.annotatedOrExtendsAnnotated(
-    annotationClass: FqName
-): Boolean {
-    val superTypes = superTypes()
-    superTypes.forEach {
-        it.hasAnnotation(annotationClass)
-    }
-    return hasAnnotation(annotationClass)
-}
+): Boolean = hasAnnotation(annotationClass) || annotations.any { it.isAnnotation(annotationClass) }
 
 fun MessageCollector.log(
     message: String,

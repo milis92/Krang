@@ -47,4 +47,4 @@ val krangFunctionCallListenerClassId: ClassId
     get() = ClassId.topLevel(krangFunctioNCallListener)
 
 val IrPluginContext.krangNotifyListeners: IrFunctionSymbol
-    get() = krangRuntimeClassSymbol.functionByName("notifyListeners") ?: throw NoSuchMethodException()
+    get() = krangRuntimeClassSymbol.functionByName("notifyListeners")

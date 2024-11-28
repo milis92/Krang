@@ -12,5 +12,5 @@ out/
 /sample/android/local.properties
 /version.txt
 /kotlin-js-store/
-/krang-test/kotlin-js-store/
-/.kotlin/
+/*/kotlin-js-store/
+*/.kotlin/

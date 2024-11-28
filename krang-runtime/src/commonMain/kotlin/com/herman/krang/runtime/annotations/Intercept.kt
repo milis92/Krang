@@ -17,6 +17,7 @@
 package com.herman.krang.runtime.annotations
 
 import com.herman.krang.runtime.FunctionCallListener
+import com.herman.krang.runtime.TracingContext
 
 /**
  * Classes or functions marked with this annotation will be instrumented by krang compiler plugin
@@ -85,4 +86,13 @@ import com.herman.krang.runtime.FunctionCallListener
     AnnotationTarget.CONSTRUCTOR,
 )
 @Retention(AnnotationRetention.SOURCE)
+@Deprecated(
+    message = "This annotation is deprecated and will be removed in the next major release. Use @Trace annotation",
+    replaceWith = ReplaceWith(
+        expression = "Trace",
+        "com.herman.krang.runtime.annotations.Trace"
+    )
+)
 annotation class Intercept
+
+annotation class Trace
