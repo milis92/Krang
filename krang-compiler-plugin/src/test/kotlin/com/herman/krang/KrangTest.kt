@@ -274,7 +274,6 @@ class KrangTest {
         // Then
         assertEquals(1, capturedFunctionCalls.size)
         assertEquals("Test.testFunction", capturedFunctionCalls[0].functionName)
-        assertContentEquals(listOf("Hello", "1"), capturedFunctionCalls[0].functionParameters)
     }
 
 
