@@ -4,32 +4,32 @@ package com.herman.krang.fixtures
 
 import com.herman.krang.KrangFunctionCall
 import com.herman.krang.KrangTestArgument
-import com.herman.krang.runtime.annotations.Intercept
+import com.herman.krang.runtime.annotations.Trace
 
 
-@Intercept
+@Trace
 fun mainFunctionOnly() {
     fun localFunction() {}
     localFunction()
 }
 
 fun localFunctionOnly() {
-    @Intercept
+    @Trace
     fun localFunction() {
     }
     localFunction()
 }
 
 fun localFunctionWithArguments() {
-    @Intercept
+    @Trace
     fun localFunctionWithArguments(a: Int, b: String) {
     }
     localFunctionWithArguments(1, "test")
 }
 
-@Intercept
+@Trace
 fun localFunction() {
-    @Intercept
+    @Trace
     fun localFunction() {
     }
     localFunction()
@@ -37,18 +37,18 @@ fun localFunction() {
 
 data class MemberFunctionArgument(val a: Int, val b: String)
 
-@Intercept
+@Trace
 fun localFunctionWithArguments(a: Int, b: String, c: MemberFunctionArgument, d: () -> Unit) {
-    @Intercept
+    @Trace
     fun localFunctionWithArguments(a: Int, b: String, c: MemberFunctionArgument, d: () -> Unit){
     }
     localFunctionWithArguments(a, b, c, d)
 }
 
 
-@Intercept
+@Trace
 fun localFunctionWithSomeArguments(a: Int, b: String, c: MemberFunctionArgument, d: () -> Unit){
-    @Intercept
+    @Trace
     fun localFunctionWithSomeArguments(a: MemberFunctionArgument) {
     }
     localFunctionWithSomeArguments(MemberFunctionArgument(1, "test"))

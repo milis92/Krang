@@ -26,7 +26,7 @@ import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.FqName
 
 val krangInterceptAnnotation: FqName
-    get() = FqName("com.herman.krang.runtime.annotations.Intercept")
+    get() = FqName("com.herman.krang.runtime.annotations.Trace")
 
 val krangRedactAnnotation: FqName
     get() = FqName("com.herman.krang.runtime.annotations.Redact")

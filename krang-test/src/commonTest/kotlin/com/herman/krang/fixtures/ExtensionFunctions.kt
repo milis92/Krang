@@ -4,14 +4,14 @@ package com.herman.krang.fixtures
 
 import com.herman.krang.KrangFunctionCall
 import com.herman.krang.KrangTestArgument
-import com.herman.krang.runtime.annotations.Intercept
+import com.herman.krang.runtime.annotations.Trace
 
 // Define the extension functions
-@Intercept
+@Trace
 fun String.extensionFunction() {
 }
 
-@Intercept
+@Trace
 fun String.extensionFunctionWithArguments(a: Int, b: String, c: () -> Unit) {
 }
 

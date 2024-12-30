@@ -91,7 +91,8 @@ import com.herman.krang.runtime.TracingContext
     replaceWith = ReplaceWith(
         expression = "Trace",
         "com.herman.krang.runtime.annotations.Trace"
-    )
+    ),
+    level = DeprecationLevel.ERROR
 )
 annotation class Intercept
 

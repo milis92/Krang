@@ -23,13 +23,13 @@ class KrangTest {
         val sourceFile = SourceFile.kotlin(
             name = "Main.kt",
             contents = """
-            import com.herman.krang.runtime.annotations.Intercept
+            import com.herman.krang.runtime.annotations.Trace
 
             fun main() {
                 testFunction()
             }
 
-            @Intercept
+            @Trace
             fun testFunction() {
                 // Do nothing
             }
@@ -61,9 +61,9 @@ class KrangTest {
             contents = """
             package com.herman.namespaced
 
-            import com.herman.krang.runtime.annotations.Intercept
+            import com.herman.krang.runtime.annotations.Trace
 
-            @Intercept
+            @Trace
             fun testFunction() {
                 // Do nothing
             }
@@ -84,13 +84,13 @@ class KrangTest {
         val sourceFile = SourceFile.kotlin(
             name = "Main.kt",
             contents = """
-            import com.herman.krang.runtime.annotations.Intercept
+            import com.herman.krang.runtime.annotations.Trace
 
             fun main() {
                 testFunction("Hello", 1)
             }
 
-            @Intercept
+            @Trace
             fun testFunction(message: String, number: Int) {
                 // Do nothing
             }
@@ -112,7 +112,7 @@ class KrangTest {
         val sourceFile = SourceFile.kotlin(
             name = "Main.kt",
             contents = """
-            import com.herman.krang.runtime.annotations.Intercept
+            import com.herman.krang.runtime.annotations.Trace
             import com.herman.krang.runtime.FunctionCallListener
 
             fun main() {
@@ -120,7 +120,7 @@ class KrangTest {
             }
 
             object KrangListener : FunctionCallListener {
-                @Intercept
+                @Trace
                 override fun onFunctionCalled(functionName: String, parameters: Array<out Any?>) {
                     // Do nothing
                 }
@@ -141,7 +141,7 @@ class KrangTest {
         val sourceFile = SourceFile.kotlin(
             name = "Main.kt",
             contents = """
-            import com.herman.krang.runtime.annotations.Intercept
+            import com.herman.krang.runtime.annotations.Trace
 
             fun main() {
                 val test = Test()
@@ -149,7 +149,7 @@ class KrangTest {
             }
 
             class Test {
-                @Intercept
+                @Trace
                 fun testFunction() {
                     // Do nothing
                 }
@@ -172,14 +172,14 @@ class KrangTest {
         val sourceFile = SourceFile.kotlin(
             name = "Main.kt",
             contents = """
-            import com.herman.krang.runtime.annotations.Intercept
+            import com.herman.krang.runtime.annotations.Trace
 
             fun main() {
                 val test = Test()
                 test.testFunction()
             }
 
-            @Intercept
+            @Trace
             class Test {
                 fun testFunction() {
                     // Do nothing
@@ -202,19 +202,19 @@ class KrangTest {
         val sourceFile = SourceFile.kotlin(
             name = "Main.kt",
             contents = """
-            import com.herman.krang.runtime.annotations.Intercept
+            import com.herman.krang.runtime.annotations.Trace
 
             fun main() {
                 val test = Test()
                 test.testFunction()
             }
 
-            interface Interceptable {
-                @Intercept
+            interface Traceable {
+                @Trace
                 fun testFunction()
             }
 
-            open class Parent : Interceptable {
+            open class Parent : Traceable {
                 override fun testFunction() {
                     // Do nothing
                 }
@@ -242,19 +242,19 @@ class KrangTest {
         val sourceFile = SourceFile.kotlin(
             name = "Main.kt",
             contents = """
-            import com.herman.krang.runtime.annotations.Intercept
+            import com.herman.krang.runtime.annotations.Trace
 
             fun main() {
                 val test = Test()
                 test.testFunction()
             }
 
-            @Intercept
-            interface Interceptable {
+            @Trace
+            interface Traceable {
                 fun testFunction()
             }
 
-            open class Parent : Interceptable {
+            open class Parent : Traceable {
                 override fun testFunction() {
                     // Do nothing
                 }
@@ -283,13 +283,13 @@ class KrangTest {
         val sourceFile = SourceFile.kotlin(
             name = "Main.kt",
             contents = """
-            import com.herman.krang.runtime.annotations.Intercept
+            import com.herman.krang.runtime.annotations.Trace
 
             fun main() {
                 "Hello".testFunction()
             }
 
-            @Intercept
+            @Trace
             fun String.testFunction(){
                 // Do nothing
             }
@@ -311,7 +311,7 @@ class KrangTest {
         val sourceFile = SourceFile.kotlin(
             name = "Main.kt",
             contents = """
-            import com.herman.krang.runtime.annotations.Intercept
+            import com.herman.krang.runtime.annotations.Trace
 
             fun main() {
                 variableWithGetterAndSetter = 2
@@ -319,10 +319,10 @@ class KrangTest {
             }
 
             var variableWithGetterAndSetter = 1
-                @Intercept
+                @Trace
                 get() = field
             
-                @Intercept
+                @Trace
                 set(value) {
                     field = value
                 }
