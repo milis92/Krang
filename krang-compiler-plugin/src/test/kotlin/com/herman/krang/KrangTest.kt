@@ -256,7 +256,7 @@ class KrangTest {
     }
 
     @Test
-    fun memberFunctionWithAnnotatedParentCallNotifiesKrang(){
+    fun memberFunctionWithAnnotatedParentCallNotifiesKrang() {
         // Given
         val sourceFile = SourceFile.kotlin(
             name = "Main.kt",
@@ -286,7 +286,7 @@ class KrangTest {
     }
 
     @Test
-    fun memberFunctionWithAnnotatedFileCallNotifiesKrang(){
+    fun memberFunctionWithAnnotatedFileCallNotifiesKrang() {
         // Given
         val sourceFile = SourceFile.kotlin(
             name = "Main.kt",
@@ -349,11 +349,14 @@ class KrangTest {
         // Then
         assertEquals(1, capturedFunctionCalls.size)
         assertEquals("Test.testFunction", capturedFunctionCalls[0].functionName)
-        assertEquals("@CustomTrace(message=Custom Trace)", capturedFunctionCalls[0].tracingContext?.annotation.toString())
+        assertEquals(
+            "@CustomTrace(message=Custom Trace)",
+            capturedFunctionCalls[0].tracingContext?.annotation.toString()
+        )
     }
 
     @Test
-    fun memberFunctionWithCustomTraceAnnotationParentNotifiesKrang(){
+    fun memberFunctionWithCustomTraceAnnotationParentNotifiesKrang() {
         // Given
         val sourceFile = SourceFile.kotlin(
             name = "Main.kt",
@@ -385,7 +388,10 @@ class KrangTest {
         // Then
         assertEquals(1, capturedFunctionCalls.size)
         assertEquals("Test.testFunction", capturedFunctionCalls[0].functionName)
-        assertEquals("@CustomTrace(message=Custom Trace)", capturedFunctionCalls[0].tracingContext?.annotation.toString())
+        assertEquals(
+            "@CustomTrace(message=Custom Trace)",
+            capturedFunctionCalls[0].tracingContext?.annotation.toString()
+        )
     }
 
     @Test
@@ -452,4 +458,3 @@ class KrangTest {
         assertEquals(0, capturedFunctionCalls[0].functionParameters.size)
     }
 }
-

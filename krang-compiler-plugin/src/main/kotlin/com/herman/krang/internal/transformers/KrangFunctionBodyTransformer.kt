@@ -72,7 +72,8 @@ fun IrFunction.toKrangFunction(
                     }
                     .map { valueParameter ->
                         irGet(valueParameter)
-                    })
+                    }
+            )
         )
 
         dispatchReceiver = irGetObject(KrangRuntimeReferences.RUNTIME.symbol(context))

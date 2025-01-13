@@ -44,8 +44,10 @@ object Krang {
         tracingContext: TracingContext,
         vararg arguments: Any?
     ) {
-        if (enabled) functionCallListeners.forEach {
-            it.onFunctionCalled(functionName, arguments, tracingContext)
+        if (enabled) {
+            functionCallListeners.forEach {
+                it.onFunctionCalled(functionName, arguments, tracingContext)
+            }
         }
     }
 }

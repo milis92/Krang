@@ -18,8 +18,6 @@ krang {
 
 @OptIn(ExperimentalKotlinGradlePluginApi::class)
 kotlin {
-    applyDefaultHierarchyTemplate()
-
     androidTarget {
         compilerOptions {
            jvmTarget = JvmTarget.JVM_1_8
@@ -75,6 +73,8 @@ kotlin {
             implementation(kotlin("test"))
         }
     }
+
+    applyDefaultHierarchyTemplate()
 }
 
 android {

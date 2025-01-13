@@ -15,8 +15,6 @@
  */
 package com.herman.krang.runtime.annotations
 
-import com.herman.krang.runtime.FunctionCallListener
-
 @Target(
     AnnotationTarget.CLASS,
     AnnotationTarget.FUNCTION,
@@ -35,13 +33,12 @@ import com.herman.krang.runtime.FunctionCallListener
 )
 annotation class Intercept
 
-
 /**
  * Classes or functions marked with this annotation will be instrumented by krang compiler plugin
  *
  * By default, any function __without__ this annotation will be ignored by Krang, unless god mode is enabled.
- * If god mode is enabled, anything that can be represented as a valid kotlin functions inside a codebase will be instrumented,
- * regardless if they have this annotation or not.
+ * If god mode is enabled, anything that can be represented as a valid kotlin functions inside a codebase
+ * will be instrumented, regardless if they have this annotation or not.
  *
  * This annotation is applicable to the multiple targets:
  * - Class - all functions inside the class will be instrumented

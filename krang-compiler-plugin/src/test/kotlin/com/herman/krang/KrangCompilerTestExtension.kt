@@ -98,7 +98,7 @@ data class KrangFunctionCall(
 
 private class KrangTestListener : FunctionCallListener {
     val capturedFunctionCalls = mutableListOf<KrangFunctionCall>()
-    override fun onFunctionCalled(name: String , parameters: Array<out Any?>, tracingContext: TracingContext) {
+    override fun onFunctionCalled(name: String, parameters: Array<out Any?>, tracingContext: TracingContext) {
         capturedFunctionCalls.add(KrangFunctionCall(name, parameters.toList(), tracingContext))
     }
 }

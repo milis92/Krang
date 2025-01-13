@@ -37,5 +37,5 @@ private fun IrAnnotationContainer.getAnnotation(name: FqName): IrConstructorCall
  */
 internal fun IrValueParameter.hasAnnotation(annotationClass: FqName): Boolean {
     return (this as IrDeclaration).findAnnotation(annotationClass) != null ||
-            type.getClass()?.hasAnnotation(annotationClass) == true
+        type.getClass()?.hasAnnotation(annotationClass) == true
 }

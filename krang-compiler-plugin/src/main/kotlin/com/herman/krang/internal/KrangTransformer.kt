@@ -41,7 +41,6 @@ class KrangTransformer(
     override fun visitSimpleFunction(declaration: IrSimpleFunction): IrStatement {
         if (declaration.supportedByKrang()) {
             val krangInterceptAnnotation = declaration.findAnnotation(KrangRuntimeReferences.TRACE_ANNOTATION)
-            // If god mode is disabled and the function is not annotated with KrangInterceptAnnotation then skip transformation
             if (!godMode && krangInterceptAnnotation == null) {
                 return super.visitSimpleFunction(declaration)
             } else {
