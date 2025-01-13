@@ -39,7 +39,7 @@ internal object KrangRuntimeReferences {
     val TRACING_CONTEXT: FqName =
         FqName("com.herman.krang.runtime.TracingContext")
 
-    val NOTIFY_LISTENERS: String = "notifyListeners"
+    const val NOTIFY_LISTENERS: String = "notifyListeners"
 }
 
 internal val FqName.classId: ClassId
