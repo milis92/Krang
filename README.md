@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img src="krang.png" width="150px" />
+  <img src="krang.png" width="150px"/>
 <p>Kotlin Krang</p>
 </h1>
 
@@ -7,9 +7,11 @@
 [![Maven metadata URL](https://img.shields.io/maven-metadata/v?label=Release&metadataUrl=https://repo1.maven.org/maven2/com/github/milis92/krang/krang-gradle-plugin/maven-metadata.xml)](https://oss.sonatype.org/content/repositories/snapshots/com/github/milis92/krang/krang-gradle-plugin/)
 [![Maven metadata URL](https://img.shields.io/maven-metadata/v?label=Snapshot&metadataUrl=https://oss.sonatype.org/content/repositories/snapshots/com/github/milis92/krang/krang-gradle-plugin/maven-metadata.xml)](https://oss.sonatype.org/content/repositories/snapshots/com/github/milis92/krang/krang-gradle-plugin/)
 
-Kotlin Compiler plugin that gives you the ability to be notified every time annotated function is called.  
-General purpose is for effortless logging or analytics, but it can (but probably shouldn't) be used for more advanced
-use-cases.
+### Kotlin instrumentation library that gives you the ability to be notified every time annotated function is called.
+
+General purpose is effortless tracing, logging or analytics, but it can (and probably shouldn't) be used for more
+advanced
+use-cases like creating hooks for when certain function is called or even for AOP-like behavior.
 
 ---
 
@@ -56,121 +58,182 @@ class Foo {
 </tr>
 </table>
 
-_Note that this is all done during transformation phase of the compilation, your source code won't be polluted by Krang_
+_Note that this is all done during transformation phase of the compilation, your source code won't be polluted by Krang
+runtime calls_
 
 ---
 
 ## :memo: Usage
 
-### Intercepting individual functions
+Krang can intercept anything that has a form of a function, including:
+- Functions (local, member, top-level, inline, infix, extension, etc.)
+- Constructors
+- Getters and Setters
 
-To get notified every time when a function is called simply annotate that function with `@Intercept` annotation.  
-Note that Krang supports any valid function, for example extension, nested, inline functions, etc.
+### Intercepting functions
+
+To intercept a function, simply annotate it with `@Trace` annotation
 
 ```kotlin
 fun main() {
     // Register krang listener
-    Krang.addListener { functionName, parameters ->
-        println("Function with name:$functionName and ${parameters.joinToString()} invoked")
+    Krang.addListener { functionName, parameters, context ->
+        println("Function with name: $functionName and ${parameters.joinToString()} invoked")
     }
 
-    // Call annotated function - Will print Function with name:bar and bzz invoked
-    Foo().bar("bzz")
+    Foo().bar("baz") // Prints Function with name: bar and baz invoked
 }
 
 class Foo {
-    // Decorate a function with @Intercept annotation
-    @Intercept
+    @Trace
     fun bar(baz: String) {
+        // Your code
     }
 }
 ```
 
-### Intercepting all functions in a class
+### Intercepting constructors
 
-In some cases its might be useful to intercept all function calls in a given class.  
-To do this, simply annotate desired class with `@Intercept` annotation
+If you want to intercept constructor calls, annotate the constructor with `@Trace` annotation
 
 ```kotlin
 fun main() {
     // Register krang listener
-    Krang.addListener { functionName, parameters ->
+    Krang.addListener { functionName, parameters, context ->
+        println("Function with name:$functionName invoked for constructor call")
+    }
+
+    Foo() // Prints Function with name <Init> invoked for constructor call
+}
+
+class Foo @Trace constructor() {
+    // Your code
+}
+```
+
+### Intercepting getters and setters
+
+Getter and setters to properties can be intercepted as well
+
+```kotlin
+fun main() {
+    // Register krang listener
+    Krang.addListener { functionName, parameters, context ->
+        println("Function with name:$functionName invoked")
+    }
+
+    val foo = Foo()
+    foo.bar = "baz" // Prints Function with name <set-bar> invoked
+    println(foo.bar) // Prints Function with name <get-bar> invoked
+}
+
+class Foo {
+    var bar: String = ""
+        @Trace set
+        @Trace get
+}
+```
+
+### Intercepting all supported declarations in a class
+
+In some cases its might be useful to be notified every time any declaration in a class is called.
+To do this, simply annotate desired class with `@Trace` annotation
+
+```kotlin
+fun main() {
+    // Register krang listener
+    Krang.addListener { functionName, parameters, context ->
         println("Function with name:$functionName and ${parameters.joinToString()} invoked")
     }
 
-    // Call annotated function - Will print:
-    // Function with name: <Init> invoked for constructor call
-    // Function with name bar invoked
-    Foo().bar("bzz")
+    Foo().bar("baz") // Prints Function with name bar invoked and baz invoked
 }
 
-// Decorate a class with @Intercept annotation
-@Intercept
+@Trace
 class Foo {
     fun bar(baz: String) {
+        // Your code
+    }
+}
+```
+
+### Intercepting all supported declarations in a file
+
+If you want to intercept calls in a file, annotate the file with `@Trace` annotation
+
+```kotlin
+@file:Trace
+
+fun main() {
+    // Register krang listener
+    Krang.addListener { functionName, parameters, context ->
+        println("Function with name:$functionName and ${parameters.joinToString()} invoked")
+    }
+
+    Foo().bar("baz") // Prints Function with name bar invoked and baz invoked
+}
+
+class Foo {
+    fun bar(baz: String) {
+        // Your code
     }
 }
 ```
 
 ### Redacting sensitive parameters
 
-If you want to omit specific parameters from being reported to krang, annotate desiered value parameter with `@Redact`
-annotation
+By default, all parameters are passed to `Krang`, __unless explicitly marked with `@Redact` annotation__.  
+This allows developers to control and limit the information that flows through `Krang`,   
+which can be particularly useful when dealing with large or sensitive data objects.
 
+`@Redact` can be applied to either a value parameter directly or a class that is used as a type of value parameter. 
+When applied to a class, all instances of that class will be redacted and will not be passed to `Krang`.
+
+#### Redacting a value parameter
 ```kotlin
 fun main() {
     // Register krang listener
-    Krang.addListener { functionName, parameters ->
+    Krang.addListener { functionName, parameters, context ->
         println("Function with name:$functionName and ${parameters.joinToString()} invoked")
     }
 
-    // Call annotated function - Will print Function with name:bar invoked
-    Foo().bar("bzz")
+    Foo().bar("bzz") // Prints print Function with name:bar invoked and empty parameters
 }
 
 class Foo {
-    // Decorate a function with @Intercept annotation
-    // Value parameters market with Redact annotation will not be passed to Krang
-    @Intercept
+    @Trace
     fun bar(@Redact baz: String) {
+        // Your code
     }
 }
 ```
 
-### Inheritance
-
-Krang supports inheritance for both class and function transformations.  
-This effectively means that Krang will check if a class or a function overrides a type that has @Intercept or @Redact
-annotations and will apply a transformation based on that.
-
+#### Redacting a value parameter type class
 ```kotlin
 fun main() {
     // Register krang listener
-    Krang.addListener { functionName, parameters ->
+    Krang.addListener { functionName, parameters, context ->
         println("Function with name:$functionName and ${parameters.joinToString()} invoked")
     }
 
-    // Call annotated function - Will print Function with name:bar invoked
-    Foo().bar(Test())
+    Foo().bar(Test()) // Prints Function with name:bar invoked and empty parameters
 }
 
-// Your custom type whose children should be intercepted
-@Intercept
-interface Interceptable
-
-// Your custom type that should always be omitted from Krang
 @Redact
 data class Test(val test: Int = 1)
 
-class Foo : Interceptable {
-    fun bar(test: Test) {
+class Foo {
+    @Trace
+    fun bar(baz: Test) {
+        // Your code
     }
 }
 ```
 
 ### Intercepting every function in a codebase
 
-If you want to intercept all functions in a codebase enable godMode
+If you want to intercept all functions in a codebase enable `godMode`.
+God mode will intercept all valid declaration regardless of @Trace annotations.
 
 ```kotlin
 // In your build.gradle
@@ -182,7 +245,7 @@ krang {
 // In your source
 fun main() {
     // Register krang listener
-    Krang.addListener { functionName, parameters ->
+    Krang.addListener { functionName, parameters, context ->
         println("Function with name:$functionName and ${parameters.joinToString()} invoked")
     }
 
@@ -199,6 +262,38 @@ class Foo {
 }
 ```
 
+### Passing arbitrary context to Krang
+
+If you want to pass some additional data to `Krang`, for example a log level, you can do so by using a custom `Trace` annotation.  
+To create a custom `Trace` annotation, simply create an annotation that has `@Trace` as a meta-annotation.  
+Custom annotation can have any number of properties, and they will be passed to `Krang` runtime in a form of `context` parameter.
+
+```kotlin
+enum class LogLevel {
+    INFO, DEBUG, ERROR
+}
+
+@Trace
+annotation class CustomTrace(val logLevel: LogLevel)  
+
+fun main() {
+    // Register krang listener
+    Krang.addListener { functionName, parameters, context ->
+        (context as? CustomTrace)?.let {
+            println("Function with name:$functionName invoked and ${parameters.joinToString()} invoked with log level: ${it.logLevel}")
+        }
+    }
+
+    Foo().bar("bzz") // Prints Function with name:bar invoked and bzz invoked with log level: INFO
+}
+
+@CustomTrace(LogLevel.INFO)
+class Foo {
+    fun bar(baz: String) {
+        // Your code
+    }
+}
+```
 ### Disabling Krang
 
 ##### During runtime
@@ -225,66 +320,21 @@ krang {
 > Plugin is published on Maven central.  
 > Note that runtime dependency is automatically applied, and you don't have to add anything explicitly.
 
-<details open>
-<summary>Kotlin</summary>
-
 ```kotlin
-//Kotlin
-buildscript {
+// In your projects root settings.gradle.kts
+pluginManagement {
     repositories {
         mavenCentral()
+        // or maven("https://oss.sonatype.org/content/repositories/snapshots") for snapshots
     }
-    dependencies {
-        classpath("com.github.milis92.krang:krang-gradle-plugin:$latest_version_here")
-    }
-}
-
-apply(plugin = "com.github.milis92.krang")
-
-krang {
-    enabled.set(true) // true by default
-    godMode.set(true) // false by default
 }
 ```
-
-</details>
-
-<details>
-<summary>Groovy</summary>
-
-```groovy
-//Groovy
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath "com.github.milis92.krang:krang-gradle-plugin:$latest_version_here"
-    }
-}
-
-apply plugin: "com.github.milis92.krang"
-```
-
-</details>
-
-<details>
-<summary>Snapshots</summary> 
-
 ```kotlin
-buildscript {
-    repositories {
-        maven("https://oss.sonatype.org/content/repositories/snapshots")
-    }
-    dependencies {
-        classpath("com.github.milis92.krang:krang-gradle-plugin:$latest_version_here")
-    }
+// In a build.gradle.kts for a gradle module where you want to use Krang
+plugins {
+    id("com.github.milis92.krang") version "$latest_version_here"
 }
-
-apply(plugin = "com.github.milis92.krang")
 ```
-
-</details>
 
 ### Variant Filtering
 
@@ -308,36 +358,3 @@ krang {
     }
 }
 ```
-
-## :cloud: Enabling Kotlin IR backend
-
-> This plugin works only with kotlin IR compiler backend witch is enabled by default from Kotlin > 1.5!
-
-##### Kotlin/JVM
-
-```kotlin
-//For kotlin < 1.5
-tasks.withType<KotlinCompile>().configureEach {
-    kotlinOptions {
-        useIR = true
-    }
-}
-```
-
-##### Kotlin/JS
-
-```kotlin
-target {
-    js(IR) {
-
-    }
-}
-```
-
-##### Kotlin/Native
-
-IR already enabled by default!
-
----
-> Big shutout to [Brian Norman](https://github.com/bnorm)
-> and his awesome [blog series](https://blog.bnorm.dev/writing-your-second-compiler-plugin-part-1) on Compiler plugins
