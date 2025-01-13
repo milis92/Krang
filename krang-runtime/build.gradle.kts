@@ -4,10 +4,8 @@ plugins {
 }
 
 kotlin {
-    kotlin {
-        androidTarget {
-            publishLibraryVariants("release")
-        }
+    androidTarget {
+        publishLibraryVariants("release")
     }
 }
 

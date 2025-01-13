@@ -17,9 +17,8 @@
 package com.herman.krang.runtime
 
 /**
- * When a function call occurs, the onFunctionCalled function will be invoked, providing the name of the function
- * and an array of parameters as arguments.
+ * When instrumented function is called, this listener will be notified.
  */
 fun interface FunctionCallListener {
-    fun onFunctionCalled(functionName: String, parameters: Array<out Any?>)
+    fun onFunctionCalled(name: String, parameters: Array<out Any?>, tracingContext: TracingContext)
 }

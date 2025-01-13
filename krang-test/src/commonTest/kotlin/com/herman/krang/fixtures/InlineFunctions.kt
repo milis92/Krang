@@ -4,30 +4,30 @@ package com.herman.krang.fixtures
 
 import com.herman.krang.KrangFunctionCall
 import com.herman.krang.KrangTestArgument
-import com.herman.krang.runtime.annotations.Intercept
+import com.herman.krang.runtime.annotations.Trace
 
 // Define the inline functions
-@Intercept
+@Trace
 inline fun inlineFunction() {
 }
 
-@Intercept
+@Trace
 inline fun inlineFunctionWithArguments(a: Int, b: String) {
 }
 
-@Intercept
+@Trace
 inline fun <T> inlineFunctionWithGenericArguments(a: T) {
 }
 
-@Intercept
+@Trace
 inline fun inlineFunctionWithNullableArgument(a: Int?, b: String?) {
 }
 
-@Intercept
+@Trace
 inline fun inlineFunctionWithDefaultArgument(a: Int, b: String = "default") {
 }
 
-@Intercept
+@Trace
 inline fun inlineFunctionWithLambda(
     a: Int,
     b: String,

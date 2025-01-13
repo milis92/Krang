@@ -4,7 +4,6 @@ plugins {
     id("org.jetbrains.dokka")
 }
 
-val dokkaPlugin by configurations
 val libs = the<LibrariesForLibs>()
 dependencies {
     dokkaPlugin(libs.kotlin.dokka.versioning)

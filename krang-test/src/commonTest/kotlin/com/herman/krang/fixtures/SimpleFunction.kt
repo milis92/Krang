@@ -4,17 +4,17 @@ package com.herman.krang.fixtures
 
 import com.herman.krang.KrangFunctionCall
 import com.herman.krang.KrangTestArgument
-import com.herman.krang.runtime.annotations.Intercept
+import com.herman.krang.runtime.annotations.Trace
 
 data class SimpleFunctionArgument(val a: Int, val b: String)
 
-@Intercept
+@Trace
 fun simpleFunction() {}
 
-@Intercept
+@Trace
 fun simpleFunctionWithBlockBody() = run {}
 
-@Intercept
+@Trace
 fun simpleFunctionWithArguments(
     a: Int,
     b: String,
@@ -22,12 +22,12 @@ fun simpleFunctionWithArguments(
     c: () -> Unit
 ) {}
 
-@Intercept
+@Trace
 fun simpleFunctionWithLambda(
     c: (Int,  String) -> String
 ){}
 
-@Intercept
+@Trace
 fun simpleFunctionWithDefaultArguments(
     a: Int = 1,
     b: String = "test",
@@ -35,7 +35,7 @@ fun simpleFunctionWithDefaultArguments(
     c: (String) -> Unit = { }
 ) {}
 
-@Intercept
+@Trace
 fun simpleFunctionWithSomeDefaultArguments(
     a: Int = 1,
     b: String = "test",
@@ -43,7 +43,7 @@ fun simpleFunctionWithSomeDefaultArguments(
     c: (String) -> Unit
 ) {}
 
-@Intercept
+@Trace
 fun simpleFunctionWithNullableArguments(
     a: Int?,
     b: String?,
@@ -51,10 +51,10 @@ fun simpleFunctionWithNullableArguments(
     c: () -> Unit
 ) {}
 
-@Intercept
+@Trace
 fun simpleExpressionFunction() = 1 + 1
 
-@Intercept
+@Trace
 fun simpleExpressionFunctionWithArguments(a: Int, b: String) = a + b.length
 
 val simpleFunctionsTestArguments = sequenceOf(

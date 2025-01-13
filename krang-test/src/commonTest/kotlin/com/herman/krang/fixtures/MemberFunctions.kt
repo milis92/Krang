@@ -4,31 +4,31 @@ package com.herman.krang.fixtures
 
 import com.herman.krang.KrangFunctionCall
 import com.herman.krang.KrangTestArgument
-import com.herman.krang.runtime.annotations.Intercept
+import com.herman.krang.runtime.annotations.Trace
 
 class MemberFunctionHolder {
-    @Intercept
+    @Trace
     fun memberFunction() {
     }
 
-    @Intercept
+    @Trace
     fun memberFunctionWithArguments(a: Int, b: String, c: () -> Unit) {
     }
 }
 
 class MembersInsideCompanionObject {
     companion object {
-        @Intercept
+        @Trace
         fun memberFunction() {
         }
 
-        @Intercept
+        @Trace
         fun memberFunctionWithArguments(a: Int, b: String, c: () -> Unit) {
         }
     }
 }
 
-@Intercept
+@Trace
 class MembersWithClassAnnotation(){
     fun memberFunction() {
     }

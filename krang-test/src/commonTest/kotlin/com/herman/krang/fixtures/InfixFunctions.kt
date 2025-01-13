@@ -4,24 +4,24 @@ package com.herman.krang.fixtures
 
 import com.herman.krang.KrangFunctionCall
 import com.herman.krang.KrangTestArgument
-import com.herman.krang.runtime.annotations.Intercept
+import com.herman.krang.runtime.annotations.Trace
 
-@Intercept
+@Trace
 infix fun Int.simpleInfixFunction(b: Int) {
 }
 
-@Intercept
+@Trace
 infix fun Int.simpleInfixFunctionWithBlockBody(b: Int) = {}
 
-@Intercept
+@Trace
 infix fun Int.simpleInfixFunctionWithArguments(b: Int) {
 }
 
-@Intercept
+@Trace
 infix fun Int.simpleInfixFunctionWithArguments(a: () -> Unit) {
 }
 
-@Intercept
+@Trace
 infix fun Int.simpleInfixFunctionWithNullableArguments(b: Int?) {
 }
 
