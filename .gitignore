@@ -7,10 +7,9 @@ out/
 .idea/
 *.iml
 /secring.gpg
-/local.properties
-/sample/local.properties
-/sample/android/local.properties
+local.properties
+/krang-test/local.properties
 /version.txt
 /kotlin-js-store/
-/krang-test/kotlin-js-store/
-/.kotlin/
+/*/kotlin-js-store/
+*/.kotlin/

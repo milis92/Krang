@@ -25,12 +25,12 @@ import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSeverity
 import org.jetbrains.kotlin.cli.common.messages.MessageCollector
 import org.jetbrains.kotlin.cli.common.messages.MessageUtil
 import org.jetbrains.kotlin.ir.IrStatement
-import org.jetbrains.kotlin.ir.declarations.*
-import org.jetbrains.kotlin.ir.interpreter.getLastOverridden
-import org.jetbrains.kotlin.ir.types.IrType
-import org.jetbrains.kotlin.ir.util.*
+import org.jetbrains.kotlin.ir.declarations.IrDeclaration
+import org.jetbrains.kotlin.ir.declarations.IrFunction
+import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
+import org.jetbrains.kotlin.ir.util.classId
+import org.jetbrains.kotlin.ir.util.parentClassOrNull
 import org.jetbrains.kotlin.ir.visitors.IrElementTransformerVoid
-import org.jetbrains.kotlin.name.FqName
 
 class KrangTransformer(
     private val pluginContext: IrPluginContext,
@@ -39,88 +39,35 @@ class KrangTransformer(
 ) : IrElementTransformerVoid() {
 
     override fun visitSimpleFunction(declaration: IrSimpleFunction): IrStatement {
-        if (declaration.shouldVisit()) {
-            // Construct a new block body and filter out all value parameters that should not be passed to Krang
-            declaration.body = declaration.toKrangFunction(pluginContext) { valueParameter ->
-                // Filter all value parameters that are annotated with Redact Annotation
-                valueParameter.annotatedOrExtendsAnnotated(krangRedactAnnotation)
+        if (declaration.supportedByKrang()) {
+            val krangInterceptAnnotation = declaration.findAnnotation(KrangRuntimeReferences.TRACE_ANNOTATION)
+            if (!godMode && krangInterceptAnnotation == null) {
+                return super.visitSimpleFunction(declaration)
+            } else {
+                declaration.body = declaration.toKrangFunction(
+                    context = pluginContext,
+                    traceAnnotation = krangInterceptAnnotation,
+                ) { valueParameter ->
+                    // Filter all value parameters that are annotated with Redact Annotation
+                    valueParameter.hasAnnotation(KrangRuntimeReferences.REDACT_ANNOTATION)
+                }
+                logger.log(
+                    message = "Krang: Tracing for ${declaration.name} enabled",
+                    declaration = declaration
+                )
             }
-            logger.log(
-                message = "Transformed by Krang: ${declaration.name}",
-                severity = CompilerMessageSeverity.INFO,
-                declaration = declaration
-            )
         }
         return super.visitSimpleFunction(declaration)
     }
 
-    /**
-     * Determines if the function should be transformed by krang
-     *
-     * Synthetic functions or functions with empty or synthetic bodies will not be transformed
-     */
-    private fun IrFunction.shouldVisit(): Boolean {
-        return if (body == null || isKrangListener() || name.isAnonymous) {
-            false
-        } else {
-            godMode || hasAnnotation(krangInterceptAnnotation)
-        }
-    }
-
-    // Check if the function or a containing class has the supplied annotation
-    private fun IrFunction.hasAnnotation(annotationClass: FqName): Boolean {
-        return parentClassOrNull?.annotatedOrExtendsAnnotated(annotationClass) == true ||
-            annotatedOrExtendsAnnotated(annotationClass)
-    }
+    private fun IrFunction.supportedByKrang(): Boolean =
+        !(body == null || isKrangListener() || name.isAnonymous)
 
     private fun IrFunction.isKrangListener(): Boolean {
         return parentClassOrNull?.allSuperInterfaces()?.any { parent ->
-            parent.classId == krangFunctionCallListenerClassId
+            parent.classId == KrangRuntimeReferences.FUNCTION_CALL_LISTENER.classId
         } == true
     }
-}
-
-// Returns true if the class or its parent has the supplied annotation
-fun IrClass.annotatedOrExtendsAnnotated(
-    annotationClass: FqName
-): Boolean {
-    val parentHasAnnotation = superTypes.map {
-        it.hasAnnotation(annotationClass)
-    }.contains(true)
-
-    return hasAnnotation(annotationClass) || parentHasAnnotation
-}
-
-// Returns true if the value parameter or its TypeArgument has supplied annotation
-fun IrValueParameter.annotatedOrExtendsAnnotated(
-    annotationClass: FqName
-): Boolean {
-    return hasAnnotation(annotationClass) || type.annotatedOrExtendsAnnotated(annotationClass)
-}
-
-// Returns true if a function or its super counterpart is annotated with supplied annotation
-fun IrFunction.annotatedOrExtendsAnnotated(
-    annotationClass: FqName
-): Boolean {
-    return if (!isFakeOverriddenFromAny()) {
-        return when {
-            hasAnnotation(annotationClass) -> true
-            this == this.getLastOverridden() -> false
-            else -> getLastOverridden().hasAnnotation(annotationClass)
-        }
-    } else {
-        false
-    }
-}
-
-fun IrType.annotatedOrExtendsAnnotated(
-    annotationClass: FqName
-): Boolean {
-    val superTypes = superTypes()
-    superTypes.forEach {
-        it.hasAnnotation(annotationClass)
-    }
-    return hasAnnotation(annotationClass)
 }
 
 fun MessageCollector.log(

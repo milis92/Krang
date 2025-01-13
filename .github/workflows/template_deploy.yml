@@ -68,5 +68,5 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           title: ${{ needs.deploy.outputs.version }}
           automatic_release_tag: ${{ needs.deploy.outputs.version }}
-          prerelease: ${{ inputs.STAGE  == 'alpha' }}
-          draft: ${{ inputs.STAGE  == 'beta' }}
+          prerelease: ${{ inputs.STAGE  == 'rc' }}
+          draft: ${{ inputs.STAGE  == 'dev' }}

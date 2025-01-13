@@ -20,7 +20,9 @@ object Krang {
 
     @Suppress("MemberVisibilityCanBePrivate")
     var enabled = true
-    private val functionCallListeners = mutableListOf<FunctionCallListener>()
+
+    private val functionCallListeners =
+        mutableListOf<FunctionCallListener>()
 
     /**
      * Add new Krang listener
@@ -39,8 +41,13 @@ object Krang {
     @Suppress("unused")
     fun notifyListeners(
         functionName: String,
+        tracingContext: TracingContext,
         vararg arguments: Any?
     ) {
-        if (enabled) functionCallListeners.forEach { it.onFunctionCalled(functionName, arguments) }
+        if (enabled) {
+            functionCallListeners.forEach {
+                it.onFunctionCalled(functionName, arguments, tracingContext)
+            }
+        }
     }
 }

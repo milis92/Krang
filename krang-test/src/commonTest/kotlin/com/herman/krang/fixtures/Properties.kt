@@ -2,7 +2,7 @@ package com.herman.krang.fixtures
 
 import com.herman.krang.KrangFunctionCall
 import com.herman.krang.KrangTestArgument
-import com.herman.krang.runtime.annotations.Intercept
+import com.herman.krang.runtime.annotations.Trace
 
 val propertiesTestArguments = sequenceOf(
     KrangTestArgument(
@@ -73,38 +73,36 @@ val propertiesTestArguments = sequenceOf(
 )
 
 val propertyWithGetter = 1
-    @Intercept
+    @Trace
     get() = field
 
 var variableWithSetter = 1
-    @Intercept
+    @Trace
     set(value) {
         field = value
     }
 
 var variableWithGetter = 1
-    @Intercept
+    @Trace
     get() = field
 
 var variableWithGetterAndSetter = 1
-    @Intercept
+    @Trace
     get() = field
-
-    @Intercept
+    @Trace
     set(value) {
         field = value
     }
 
 class PropertyHolder {
     val property = 1
-        @Intercept
+        @Trace
         get() = field
 
     var variable = 1
-        @Intercept
+        @Trace
         get() = field
-
-        @Intercept
+        @Trace
         set(value) {
             field = value
         }

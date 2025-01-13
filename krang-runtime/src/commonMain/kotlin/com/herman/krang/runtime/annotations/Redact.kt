@@ -17,20 +17,22 @@
 package com.herman.krang.runtime.annotations
 
 /**
- * This annotation is used to mark function parameters that shouldn't be passed to Krang during runtime.
+ * Use `@Redact` to mark function value parameters that should not be passed to `Krang` during runtime.
 
- * By default, all parameters are passed to krang, unless explicitly marked with this annotation.
+ * By default, all parameters are passed to `Krang`, __unless explicitly marked with this annotation__.
  *
- * This mechanism allows developers to control and limit the information that flows
- * through Krang's, which can be particularly useful when dealing
- * with large data objects or sensitive data.
+ * This allows developers to control and limit the information that flows through `Krang`,
+ * which can be particularly useful when dealing with large data or sensitive data objects.
  *
- * Example usage:
+ * #### Usage:
+ * `@Redact` annotation can be applied to either a value parameter directly or a class type
+ * definition used as a value parameter.
+ *
+ * ##### Explicitly marking value parameters with `@Redact` annotation:
  *
  * ```
  * class MyClass {
- *
- *     @Intercept
+ *     @Trace
  *     fun myFunction(@Redact param: Any) {
  *         // Implementation
  *     }
@@ -38,17 +40,46 @@ package com.herman.krang.runtime.annotations
  *
  * fun main() {
  *     Krang.addListener { name, arguments ->
- *         println("Function with $name and ${arguments.joinToString()} called")
+ *         println("Function with $name and $arguments called")
  *     }
  *
  *     MyClass().myFunction(Any())
  * }
- *
- *
  * ```
  *
- * In this example, when  myFunction gets called, parameter `param` is not going to be passed to krang,
- * and arguments is going to be an empty array
+ * In this example, when  myFunction gets called, parameter `param` is not going to be passed to `Krang`,
+ * and `arguments` in the listener is going to be an empty array
+ *
+ * #### Marking class type with `@Redact` annotation:
+ *
+ * __NOTE: Properties of the annotated class are still going to be passed to `Krang` if used directly.__
+ *
+ * ```
+ * @Redact
+ * data class DataThatShouldBeRedacted(val data: String)
+ *
+ * class MyClass {
+ *    @Trace
+ *    fun myFunction(param: DataThatShouldBeRedacted) {
+ *    // Implementation
+ *    }
+ * }
+ *
+ * fun main() {
+ *     Krang.addListener { name, arguments ->
+ *         println("Function with $name and $arguments called")
+ *     }
+ *
+ *     MyClass().myFunction(DataThatShouldBeRedacted("sensitive data"))
+ * }
+ * ```
+ *
+ * In this example, when `myFunction` gets called, parameter `param` is not going to be passed to `Krang`,
+ * and `arguments` in the listener is going to be an empty array
  */
+@Target(
+    AnnotationTarget.CLASS,
+    AnnotationTarget.VALUE_PARAMETER
+)
 @Retention(AnnotationRetention.SOURCE)
 annotation class Redact
