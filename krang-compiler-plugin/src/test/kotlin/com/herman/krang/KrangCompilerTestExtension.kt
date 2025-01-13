@@ -17,6 +17,7 @@ package com.herman.krang
 
 import com.herman.krang.runtime.FunctionCallListener
 import com.herman.krang.runtime.Krang
+import com.herman.krang.runtime.TracingContext
 import com.tschuchort.compiletesting.JvmCompilationResult
 import com.tschuchort.compiletesting.KotlinCompilation
 import com.tschuchort.compiletesting.SourceFile
@@ -80,7 +81,7 @@ class KrangCompilerTestExtension(
         return krangTestListener.capturedFunctionCalls
     }
 
-    fun JvmCompilationResult.invokeMainFunction(classId: String) {
+    private fun JvmCompilationResult.invokeMainFunction(classId: String) {
         val mainMethod = classLoader.tryLoadClass(classId)?.methods?.firstOrNull {
             it.name == "main" && it.parameterCount == 0
         } ?: fail("function main() not found")
@@ -91,12 +92,13 @@ class KrangCompilerTestExtension(
 
 data class KrangFunctionCall(
     val functionName: String,
-    val functionParameters: List<Any?>
+    val functionParameters: List<Any?>,
+    val tracingContext: TracingContext
 )
 
 private class KrangTestListener : FunctionCallListener {
     val capturedFunctionCalls = mutableListOf<KrangFunctionCall>()
-    override fun onFunctionCalled(functionName: String, vararg parameters: Any?) {
-        capturedFunctionCalls.add(KrangFunctionCall(functionName, parameters.toList()))
+    override fun onFunctionCalled(name: String , parameters: Array<out Any?>, tracingContext: TracingContext) {
+        capturedFunctionCalls.add(KrangFunctionCall(name, parameters.toList(), tracingContext))
     }
 }

@@ -1,12 +1,14 @@
 package com.herman.krang
 
 import com.herman.krang.runtime.FunctionCallListener
+import com.herman.krang.runtime.TracingContext
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
 
 data class KrangFunctionCall(
     val functionName: String,
-    val functionArguments: List<Any?>
+    val functionArguments: List<Any?>,
+    val tracingContext: TracingContext? = null
 ) {
     private val printableName: String = "Name: $functionName"
     private val printableArguments: String = buildString {
@@ -66,13 +68,11 @@ class KrangTestListener : FunctionCallListener {
     val capturedFunctionCalls
         get() = _capturedFunctionCalls.toList()
 
-    override fun onFunctionCalled(
-        functionName: String,
-        vararg parameters: Any?
-    ) {
+    override fun onFunctionCalled(name: String, parameters: Array<out Any?>, tracingContext: TracingContext) {
         _capturedFunctionCalls += KrangFunctionCall(
-            functionName = functionName,
-            functionArguments = parameters.toList()
+            functionName = name,
+            functionArguments = parameters.toList(),
+            tracingContext = tracingContext
         )
     }
 }

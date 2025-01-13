@@ -1,12 +1,9 @@
 package com.herman.krang.runtime
 
-data class SourceLocation(
-    val path: String,
-    val line: Int,
-    val column: Int,
-)
-
-data class TracingContext(
-    val annotationInstance: Any,
-    val functionSourceLocation: SourceLocation,
-)
+/**
+ * A class that holds the tracing context of a function call
+ *
+ * @param annotation Annotation that is used to trace the function call
+ * or null if function is instrumented without explicit trace annotation
+ */
+data class TracingContext(val annotation: Any?)

@@ -16,35 +16,41 @@
 
 package com.herman.krang.internal
 
+import com.herman.krang.runtime.FunctionCallListener
+import com.herman.krang.runtime.Krang
+import com.herman.krang.runtime.TracingContext
+import com.herman.krang.runtime.annotations.Redact
+import com.herman.krang.runtime.annotations.Trace
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.backend.jvm.functionByName
 import org.jetbrains.kotlin.ir.symbols.IrClassSymbol
 import org.jetbrains.kotlin.ir.symbols.IrFunctionSymbol
-import org.jetbrains.kotlin.ir.util.functions
-import org.jetbrains.kotlin.ir.util.getSimpleFunction
-import org.jetbrains.kotlin.name.ClassId
-import org.jetbrains.kotlin.name.FqName
+import org.jetbrains.kotlin.name.*
 
-val krangInterceptAnnotation: FqName
-    get() = FqName("com.herman.krang.runtime.annotations.Trace")
+internal object KrangRuntimeReferences {
+    val TRACE_ANNOTATION: FqName =
+        FqName(Trace::class.qualifiedName!!)
 
-val krangRedactAnnotation: FqName
-    get() = FqName("com.herman.krang.runtime.annotations.Redact")
+    val REDACT_ANNOTATION: FqName =
+        FqName(Redact::class.qualifiedName!!)
 
-val krangRuntime: FqName
-    get() = FqName("com.herman.krang.runtime.Krang")
+    val RUNTIME: FqName =
+        FqName(Krang::class.qualifiedName!!)
 
-val krangRuntimeClassId: ClassId
-    get() = ClassId.topLevel(krangRuntime)
+    val FUNCTION_CALL_LISTENER: FqName =
+        FqName(FunctionCallListener::class.qualifiedName!!)
 
-val IrPluginContext.krangRuntimeClassSymbol: IrClassSymbol
-    get() =  referenceClass(krangRuntimeClassId) ?: throw ClassNotFoundException()
+    val TRACING_CONTEXT: FqName =
+        FqName(TracingContext::class.qualifiedName!!)
 
-val krangFunctioNCallListener: FqName
-    get() = FqName("com.herman.krang.runtime.FunctionCallListener")
+    val NOTIFY_LISTENERS: String = "notifyListeners"
+}
 
-val krangFunctionCallListenerClassId: ClassId
-    get() = ClassId.topLevel(krangFunctioNCallListener)
+internal val FqName.classId: ClassId
+    get() = ClassId.topLevel(this)
 
-val IrPluginContext.krangNotifyListeners: IrFunctionSymbol
-    get() = krangRuntimeClassSymbol.functionByName("notifyListeners")
+fun FqName.symbol(context: IrPluginContext): IrClassSymbol =
+    context.referenceClass(this.classId) ?: throw ClassNotFoundException("Class not found with $this")
+
+fun IrClassSymbol.functionWithName(name: String): IrFunctionSymbol =
+    this.functionByName(name)

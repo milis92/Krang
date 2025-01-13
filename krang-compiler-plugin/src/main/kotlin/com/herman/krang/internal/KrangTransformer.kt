@@ -19,19 +19,18 @@ package com.herman.krang.internal
 import com.herman.krang.internal.transformers.toKrangFunction
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.backend.common.serialization.mangle.ir.isAnonymous
-import org.jetbrains.kotlin.backend.jvm.ir.fileParentOrNull
 import org.jetbrains.kotlin.backend.jvm.ir.psiElement
 import org.jetbrains.kotlin.backend.wasm.ir2wasm.allSuperInterfaces
 import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSeverity
 import org.jetbrains.kotlin.cli.common.messages.MessageCollector
 import org.jetbrains.kotlin.cli.common.messages.MessageUtil
 import org.jetbrains.kotlin.ir.IrStatement
-import org.jetbrains.kotlin.ir.declarations.*
-import org.jetbrains.kotlin.ir.types.IrType
-import org.jetbrains.kotlin.ir.types.classOrNull
-import org.jetbrains.kotlin.ir.util.*
+import org.jetbrains.kotlin.ir.declarations.IrDeclaration
+import org.jetbrains.kotlin.ir.declarations.IrFunction
+import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
+import org.jetbrains.kotlin.ir.util.classId
+import org.jetbrains.kotlin.ir.util.parentClassOrNull
 import org.jetbrains.kotlin.ir.visitors.IrElementTransformerVoid
-import org.jetbrains.kotlin.name.FqName
 
 class KrangTransformer(
     private val pluginContext: IrPluginContext,
@@ -40,101 +39,37 @@ class KrangTransformer(
 ) : IrElementTransformerVoid() {
 
     override fun visitSimpleFunction(declaration: IrSimpleFunction): IrStatement {
-        if (declaration.shouldVisit()) {
-            // Construct a new block body and filter out all value parameters that should not be passed to Krang
-            declaration.body = declaration.toKrangFunction(pluginContext) { valueParameter ->
-                // Filter all value parameters that are annotated with Redact Annotation
-                valueParameter.hasAnnotation(krangRedactAnnotation)
+        if (declaration.supportedByKrang()) {
+            val krangInterceptAnnotation = declaration.findAnnotation(KrangRuntimeReferences.TRACE_ANNOTATION)
+            // If god mode is disabled and the function is not annotated with KrangInterceptAnnotation then skip transformation
+            if (!godMode && krangInterceptAnnotation == null) {
+                return super.visitSimpleFunction(declaration)
+            } else {
+                declaration.body = declaration.toKrangFunction(
+                    context = pluginContext,
+                    traceAnnotation = krangInterceptAnnotation,
+                ) { valueParameter ->
+                    // Filter all value parameters that are annotated with Redact Annotation
+                    valueParameter.hasAnnotation(KrangRuntimeReferences.REDACT_ANNOTATION)
+                }
+                logger.log(
+                    message = "Krang: Tracing for ${declaration.name} enabled",
+                    declaration = declaration
+                )
             }
-            logger.log(
-                message = "Transformed by Krang: ${declaration.name}",
-                severity = CompilerMessageSeverity.INFO,
-                declaration = declaration
-            )
         }
         return super.visitSimpleFunction(declaration)
     }
 
-    /**
-     * Determines if the function should be transformed by krang
-     *
-     * Synthetic functions or functions with empty or synthetic bodies will not be transformed
-     */
-    private fun IrFunction.shouldVisit(): Boolean {
-        return if (body == null  || isKrangListener() || name.isAnonymous) {
-            false
-        } else {
-            godMode || hasAnnotation(krangInterceptAnnotation)
-        }
-    }
+    private fun IrFunction.supportedByKrang(): Boolean =
+        !(body == null || isKrangListener() || name.isAnonymous)
 
     private fun IrFunction.isKrangListener(): Boolean {
         return parentClassOrNull?.allSuperInterfaces()?.any { parent ->
-            parent.classId == krangFunctionCallListenerClassId
+            parent.classId == KrangRuntimeReferences.FUNCTION_CALL_LISTENER.classId
         } == true
     }
 }
-
-/**
- * Checks if the function is annotated with the supplied annotation
- *
- * Check will include:
- * - Function itself
- * - Super function in case of an override
- * - Parent class with its super types
- * - Containing file
- *
- * @param annotation: FqName of the annotation to check for
- * @return true if the function or any of its "parents" is annotated with the supplied annotation
- */
-private fun IrFunction.hasAnnotation(
-    annotation: FqName
-): Boolean {
-    return if ((this as IrDeclaration).hasAnnotation(annotation)) {
-        true
-    } else if (this is IrSimpleFunction) {
-        allOverridden(includeSelf = true).any {
-            (it as IrDeclaration).hasAnnotation(annotation)
-        }
-    } else {
-        false
-    }
-}
-
-private fun IrDeclaration.hasAnnotation(
-    annotation: FqName
-): Boolean = fileParentOrNull?.hasAnnotation(annotation) == true ||
-        parentClassOrNull?.annotatedOrOverridesAnnotatedWith(annotation) == true ||
-        (this as IrAnnotationContainer).hasAnnotation(annotation)
-
-private fun IrClass.annotatedOrOverridesAnnotatedWith(
-    annotationClass: FqName
-): Boolean = (this as IrDeclaration).hasAnnotation(annotationClass)
-        || superTypes.annotatedOrOverridesAnnotatedWith(annotationClass)
-
-private fun List<IrType>.annotatedOrOverridesAnnotatedWith(
-    annotationClass: FqName
-): Boolean = any {
-    it.hasAnnotation(annotationClass) || it.superTypes().annotatedOrOverridesAnnotatedWith(annotationClass)
-}
-
-
-/**
- * Checks if the value parameter is annotated with the supplied annotation
- *
- * Check will include:
- * - Value parameter itself
- * - Type of the value parameter
- * - Super types of the value parameter
- *
- * @param annotationClass: FqName of the annotation to check for
- * @return true if the value parameter or any of its "parents" is annotated with the supplied annotation
- */
-private fun IrValueParameter.hasAnnotation(
-    annotationClass: FqName
-): Boolean = (this as IrDeclaration).hasAnnotation(annotationClass) ||
-        type.hasAnnotation(annotationClass) ||
-        type.superTypes().annotatedOrOverridesAnnotatedWith(annotationClass)
 
 fun MessageCollector.log(
     message: String,
