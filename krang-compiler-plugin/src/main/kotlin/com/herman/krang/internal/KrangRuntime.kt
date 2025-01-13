@@ -16,32 +16,28 @@
 
 package com.herman.krang.internal
 
-import com.herman.krang.runtime.FunctionCallListener
-import com.herman.krang.runtime.Krang
-import com.herman.krang.runtime.TracingContext
-import com.herman.krang.runtime.annotations.Redact
-import com.herman.krang.runtime.annotations.Trace
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.backend.jvm.functionByName
 import org.jetbrains.kotlin.ir.symbols.IrClassSymbol
 import org.jetbrains.kotlin.ir.symbols.IrFunctionSymbol
-import org.jetbrains.kotlin.name.*
+import org.jetbrains.kotlin.name.ClassId
+import org.jetbrains.kotlin.name.FqName
 
 internal object KrangRuntimeReferences {
     val TRACE_ANNOTATION: FqName =
-        FqName(Trace::class.qualifiedName!!)
+        FqName("com.herman.krang.runtime.annotations.Trace")
 
     val REDACT_ANNOTATION: FqName =
-        FqName(Redact::class.qualifiedName!!)
+        FqName("com.herman.krang.runtime.annotations.Redact")
 
     val RUNTIME: FqName =
-        FqName(Krang::class.qualifiedName!!)
+        FqName("com.herman.krang.runtime.Krang")
 
     val FUNCTION_CALL_LISTENER: FqName =
-        FqName(FunctionCallListener::class.qualifiedName!!)
+        FqName("com.herman.krang.runtime.FunctionCallListener")
 
     val TRACING_CONTEXT: FqName =
-        FqName(TracingContext::class.qualifiedName!!)
+        FqName("com.herman.krang.runtime.TracingContext")
 
     val NOTIFY_LISTENERS: String = "notifyListeners"
 }
