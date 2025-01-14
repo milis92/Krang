@@ -3,9 +3,7 @@
 <p>Kotlin Krang</p>
 </h1>
 
-
-[![Maven metadata URL](https://img.shields.io/maven-metadata/v?label=Release&metadataUrl=https://repo1.maven.org/maven2/com/github/milis92/krang/krang-gradle-plugin/maven-metadata.xml)](https://oss.sonatype.org/content/repositories/snapshots/com/github/milis92/krang/krang-gradle-plugin/)
-[![Maven metadata URL](https://img.shields.io/maven-metadata/v?label=Snapshot&metadataUrl=https://oss.sonatype.org/content/repositories/snapshots/com/github/milis92/krang/krang-gradle-plugin/maven-metadata.xml)](https://oss.sonatype.org/content/repositories/snapshots/com/github/milis92/krang/krang-gradle-plugin/)
+![Maven Central Version](https://img.shields.io/maven-central/v/com.github.milis92.krang/krang-gradle-plugin?link=https%3A%2F%2Fcentral.sonatype.com%2Fartifact%2Fcom.github.milis92.krang%2Fkrang-gradle-plugin)
 
 ### Kotlin instrumentation library that gives you the ability to be notified every time annotated function is called.
 
@@ -325,10 +323,10 @@ krang {
 pluginManagement {
     repositories {
         mavenCentral()
-        // or maven("https://oss.sonatype.org/content/repositories/snapshots") for snapshots
     }
 }
 ```
+
 ```kotlin
 // In a build.gradle.kts for a gradle module where you want to use Krang
 plugins {
