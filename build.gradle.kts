@@ -12,6 +12,6 @@ tasks.wrapper {
 
 tasks.register("versionToFile") {
     doLast {
-        file("version.txt").writeText(version.toString())
+        file("version.txt").writeText("v$version")
     }
 }
