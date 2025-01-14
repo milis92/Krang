@@ -3,8 +3,7 @@ name: Release Candidate
 on:
   push:
     branches:
-      - release/**
-      - hotfix/**
+      - dev
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -25,5 +24,5 @@ jobs:
       - verify
     uses: ./.github/workflows/template_deploy.yml
     with:
-      STAGE: rc
+      STAGE: beta
     secrets: inherit

@@ -29,7 +29,7 @@ plugins {
 
 extensions.configure<ReckonExtension>("reckon") {
     setDefaultInferredScope("minor")
-    stages("dev", "rc", "final")
+    stages("alpha", "beta", "production")
 
     setScopeCalc(calcScopeFromProp().or(calcScopeFromCommitMessages()))
     setStageCalc(calcStageFromProp())
