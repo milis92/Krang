@@ -11,7 +11,7 @@ dokka = "2.0.0"
 maven-publish = "0.30.0"
 build-config = "5.3.5"
 
-android-agp = "8.3.2"
+android-agp = "8.8.0"
 
 autoservice-annotations = "1.1.1"
 autoservice-ksp = "1.2.0"
